@@ -1,12 +1,29 @@
 package dev.agentcraft.server;
 
+import com.google.gson.JsonObject;
 import dev.agentcraft.server.audit.AuditLog;
+import dev.agentcraft.server.body.Bodies;
+import dev.agentcraft.server.body.BodyManager;
+import dev.agentcraft.server.body.Stations;
+import dev.agentcraft.server.bridge.BridgeClient;
+import dev.agentcraft.server.bridge.MessageRouter;
+import dev.agentcraft.server.bridge.TokenSource;
 import dev.agentcraft.server.command.AgentCommand;
 import dev.agentcraft.server.config.PluginSettings;
 import dev.agentcraft.server.config.SettingsException;
 import dev.agentcraft.server.config.SettingsLoader;
+import dev.agentcraft.server.notify.Notifier;
+import dev.agentcraft.server.state.TeamView;
+import dev.agentcraft.server.tools.ToolExecutor;
+import dev.agentcraft.server.tools.ToolGate;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import java.io.IOException;
 import java.time.Clock;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -18,6 +35,11 @@ public class AgentCraftPlugin extends JavaPlugin {
     private PluginSettings settings;
     private Integrations integrations;
     private AuditLog audit;
+    private TeamView teamView;
+    private Stations stations;
+    private BodyManager bodies;
+    private BridgeClient bridge;
+    private String token;
 
     @Override
     public void onEnable() {
@@ -33,23 +55,137 @@ public class AgentCraftPlugin extends JavaPlugin {
         integrations = Integrations.detect(getServer().getPluginManager());
         audit = new AuditLog(getDataPath().resolve(settings.auditFile()), Clock.systemUTC(), getLogger());
 
+        teamView = new TeamView();
+        stations = new Stations(getDataPath().resolve("stations.yml").toFile(), getLogger());
+        bodies = new BodyManager(this, stations, new Bodies(settings.npcBackend(), getLogger()), getLogger());
+        Notifier notifier = new Notifier(teamView);
+        teamView.addListener(bodies);
+        teamView.addListener(notifier);
+        getServer().getPluginManager().registerEvents(notifier, this);
+
+        ToolGate gate = new ToolGate(settings.role(), settings.toolCallsPerMinute(), System::currentTimeMillis);
+        ToolExecutor tools = new ToolExecutor(gate, bodies, audit, this::send);
+        MessageRouter router = new MessageRouter(teamView, tools, notifier, getLogger());
+
         getLifecycleManager()
                 .registerEventHandler(
                         LifecycleEvents.COMMANDS,
                         event ->
                                 event.registrar().register(AgentCommand.build(this), "AgentCraft: agenti AI come NPC"));
 
+        Bukkit.getGlobalRegionScheduler().execute(this, () -> {
+            bodies.removeStrays();
+            Location base = stations.base();
+            base.getWorld().addPluginChunkTicket(base.getBlockX() >> 4, base.getBlockZ() >> 4, this);
+        });
+
+        startBridge(router);
         getLogger()
                 .info("AgentCraft ready: server '" + settings.serverId() + "' ("
                         + settings.role().wireName() + "), foreman at " + settings.bridgeUri() + ", integrations "
                         + integrations);
     }
 
+    private void startBridge(MessageRouter router) {
+        Optional<String> resolved;
+        try {
+            resolved = TokenSource.resolve(System.getenv(), getDataPath(), settings.tokenFile());
+        } catch (IOException e) {
+            getLogger().severe("bridge token: " + e.getMessage());
+            return;
+        }
+        if (resolved.isEmpty()) {
+            getLogger().warning("No bridge token: set AGENTCRAFT_TOKEN (or bridge.token-file). Agents stay offline.");
+            return;
+        }
+        this.token = resolved.get();
+        bridge = new BridgeClient(
+                settings.bridgeUri(),
+                this.token,
+                this::hello,
+                env -> {
+                    if (isEnabled()) {
+                        Bukkit.getGlobalRegionScheduler().execute(this, () -> router.handle(env));
+                    }
+                },
+                up -> getLogger().info(up ? "connected to the foreman" : "foreman connection lost, retrying"),
+                getLogger(),
+                Duration.ofSeconds(settings.reconnectMinSeconds()),
+                Duration.ofSeconds(settings.reconnectMaxSeconds()));
+        bridge.start();
+    }
+
+    private JsonObject hello() {
+        JsonObject server = new JsonObject();
+        server.addProperty("id", settings.serverId());
+        server.addProperty("role", settings.role().wireName());
+        server.addProperty("mcVersion", Bukkit.getMinecraftVersion());
+        String software = (Bukkit.getName() + " " + Bukkit.getVersion()).strip();
+        server.addProperty("software", software.length() > 64 ? software.substring(0, 64) : software);
+
+        JsonObject caps = new JsonObject();
+        caps.addProperty("citizens", integrations.citizens());
+        caps.addProperty("worldguard", integrations.worldGuard());
+        caps.addProperty("worldedit", integrations.worldEdit());
+        caps.addProperty("luckperms", integrations.luckPerms());
+        caps.addProperty("spark", integrations.spark());
+
+        JsonObject limits = new JsonObject();
+        limits.addProperty("blocksPerTick", settings.blocksPerTick());
+        limits.addProperty("maxJobVolume", settings.maxJobVolume());
+        limits.addProperty("maxInspectVolume", settings.maxInspectVolume());
+        limits.addProperty("toolCallsPerMinute", settings.toolCallsPerMinute());
+
+        JsonObject hello = new JsonObject();
+        hello.addProperty("v", 1);
+        hello.addProperty("type", "hello");
+        hello.addProperty("token", token);
+        hello.addProperty("pluginVersion", getPluginMeta().getVersion());
+        hello.add("server", server);
+        hello.add("capabilities", caps);
+        hello.add("limits", limits);
+        try {
+            hello.addProperty(
+                    "token",
+                    TokenSource.resolve(System.getenv(), getDataPath(), settings.tokenFile())
+                            .orElse(""));
+        } catch (IOException e) {
+            getLogger().severe("bridge token: " + e.getMessage());
+        }
+        return hello;
+    }
+
     @Override
     public void onDisable() {
+        if (bridge != null) {
+            bridge.stop();
+        }
+        if (bodies != null) {
+            bodies.removeAll();
+        }
         if (audit != null) {
             audit.close();
         }
+    }
+
+    /** Sends a message to the foreman (dropped while disconnected). */
+    public void send(JsonObject msg) {
+        if (bridge != null) {
+            bridge.send(msg);
+        }
+    }
+
+    /** Sends an intent and completes with the foreman's ack. */
+    public CompletableFuture<JsonObject> request(JsonObject msg) {
+        if (bridge == null) {
+            return CompletableFuture.failedFuture(
+                    new IllegalStateException("bridge non configurato (manca AGENTCRAFT_TOKEN)"));
+        }
+        return bridge.request(msg);
+    }
+
+    public boolean isBridgeConnected() {
+        return bridge != null && bridge.isConnected();
     }
 
     public PluginSettings settings() {
@@ -62,5 +198,13 @@ public class AgentCraftPlugin extends JavaPlugin {
 
     public AuditLog audit() {
         return audit;
+    }
+
+    public TeamView teamView() {
+        return teamView;
+    }
+
+    public Stations stations() {
+        return stations;
     }
 }

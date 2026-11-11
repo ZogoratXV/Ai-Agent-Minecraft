@@ -9,6 +9,7 @@ dependencies:
     Citizens:
       load: BEFORE
       required: false
+      join-classpath: true
     WorldGuard:
       load: BEFORE
       required: false

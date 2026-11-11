@@ -13,14 +13,18 @@ repositories {
     mavenCentral()
     maven("https://repo.purpurmc.org/snapshots") { name = "purpur" }
     maven("https://repo.papermc.io/repository/maven-public/") { name = "papermc" }
+    maven("https://maven.citizensnpcs.co/repo") { name = "citizens" }
 }
 
 val purpurApiVersion: String by project
 val mockbukkitVersion: String by project
 val junitVersion: String by project
+val citizensVersion: String by project
 
 dependencies {
     compileOnly("org.purpurmc.purpur:purpur-api:$purpurApiVersion")
+    // optional at runtime: only used when Citizens is installed
+    compileOnly("net.citizensnpcs:citizens-main:$citizensVersion") { isTransitive = false }
 
     testImplementation("org.purpurmc.purpur:purpur-api:$purpurApiVersion")
     testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v26.2:$mockbukkitVersion")

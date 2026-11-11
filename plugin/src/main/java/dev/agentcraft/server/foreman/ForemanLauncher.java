@@ -315,6 +315,51 @@ public final class ForemanLauncher {
         }
     }
 
+    /**
+     * How to run npm. With foreman.npm: auto, npm's own script is run with the Node we use
+     * ({@code node npm-cli.js}): on Windows "npm" is a .cmd script that Java cannot start directly.
+     */
+    private List<String> npmCommand() {
+        if (!"auto".equals(opts.npm())) {
+            return List.of(npm);
+        }
+        try {
+            Process p = new ProcessBuilder(node, "-p", "process.execPath")
+                    .redirectErrorStream(true)
+                    .start();
+            String exec;
+            try (InputStream in = p.getInputStream()) {
+                exec = new String(in.readNBytes(1000)).strip();
+            }
+            p.waitFor(20, TimeUnit.SECONDS);
+            Optional<Path> cli = npmCliNextTo(Path.of(exec));
+            if (cli.isPresent()) {
+                return List.of(node, cli.get().toString());
+            }
+        } catch (IOException | RuntimeException e) {
+            log.fine("cannot locate npm-cli.js: " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return List.of(npm);
+    }
+
+    /** npm's script for a Node executable: next to node.exe on Windows, in ../lib elsewhere. */
+    public static Optional<Path> npmCliNextTo(Path nodeExecutable) {
+        Path dir = nodeExecutable.toAbsolutePath().getParent();
+        if (dir == null) {
+            return Optional.empty();
+        }
+        for (Path candidate : List.of(
+                dir.resolve("node_modules/npm/bin/npm-cli.js"),
+                dir.resolve("../lib/node_modules/npm/bin/npm-cli.js").normalize())) {
+            if (Files.isRegularFile(candidate)) {
+                return Optional.of(candidate);
+            }
+        }
+        return Optional.empty();
+    }
+
     /** The key from foreman.api-key-file, if set. Only the foreman process gets it. */
     private Optional<String> apiKey() {
         return opts.apiKeyFile() == null ? Optional.empty() : readSecret(opts.apiKeyFile(), "foreman.api-key-file");
@@ -344,7 +389,9 @@ public final class ForemanLauncher {
                 "{\n  \"private\": true,\n  \"type\": \"module\",\n  \"dependencies\": {\n"
                         + "    \"@anthropic-ai/claude-agent-sdk\": \"" + AGENT_SDK_VERSION + "\"\n  }\n}\n");
         log.info("installing the Claude Agent SDK " + AGENT_SDK_VERSION + " with npm (first start only)...");
-        ProcessBuilder npmInstall = new ProcessBuilder(npm, "install", "--omit=dev", "--no-audit", "--no-fund")
+        List<String> npmCmd = new ArrayList<>(npmCommand());
+        npmCmd.addAll(List.of("install", "--omit=dev", "--no-audit", "--no-fund"));
+        ProcessBuilder npmInstall = new ProcessBuilder(npmCmd)
                 .directory(opts.workDir().toFile())
                 .redirectErrorStream(true)
                 .redirectOutput(ProcessBuilder.Redirect.appendTo(logFile().toFile()));

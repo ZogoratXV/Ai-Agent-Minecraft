@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { decide, type PolicyContext } from '../src/policy.js';
+import { win32 } from 'node:path';
+import { decide, frozenMatch, type PolicyContext } from '../src/policy.js';
 
 const wt = '/srv/wt/castigo/lucciola-t2';
 const worker: PolicyContext = {
@@ -128,5 +129,22 @@ describe('policy: existing version folders are frozen', () => {
     expect(sh('mv modules/CastigoBanca-2.7.0-alpha.1 modules/x', ctx)).toBe('deny');
     expect(sh('git rm -r modules/CastigoBanca-2.7.0-alpha.1', ctx)).toBe('deny');
     expect(sh('echo x > modules/CastigoBanca-2.7.0-alpha.1/a.txt', ctx)).toBe('deny');
+  });
+});
+
+describe('policy: Windows paths', () => {
+  it('matches frozen version folders with backslashes and drive letters', () => {
+    const root = 'C:\\Users\\x\\wt\\lucciola-t1';
+    const frozen = ['modules/CastigoBanca-2.7.0-alpha.1'];
+    expect(
+      frozenMatch(root, frozen, 'C:\\Users\\x\\wt\\lucciola-t1\\modules\\CastigoBanca-2.7.0-alpha.1\\pom.xml', win32),
+    ).toBe(frozen[0]);
+    expect(
+      frozenMatch(root, frozen, 'C:/Users/x/wt/lucciola-t1/modules/CastigoBanca-2.7.0-alpha.1/src/A.java', win32),
+    ).toBe(frozen[0]);
+    expect(frozenMatch(root, frozen, 'modules\\CastigoBanca-2.7.0-alpha.1\\a.txt', win32)).toBe(frozen[0]);
+    expect(
+      frozenMatch(root, frozen, 'C:\\Users\\x\\wt\\lucciola-t1\\modules\\CastigoBanca-2.7.0-alpha.2\\pom.xml', win32),
+    ).toBeUndefined();
   });
 });

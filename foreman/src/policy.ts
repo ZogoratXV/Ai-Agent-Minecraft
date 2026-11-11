@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { isAbsolute, relative, resolve, sep } from 'node:path';
+import path, { isAbsolute, relative, resolve, sep } from 'node:path';
 import { GIT_REDIRECT_VARS, GIT_SAFETY_VARS } from './gitsafety.js';
 
 /**
@@ -25,9 +25,22 @@ export interface PolicyContext {
   frozen?: readonly string[];
 }
 
+/**
+ * The frozen folder `p` falls in, if any. Frozen folders are written with "/"; the path is
+ * compared with "/" too, so it also works with Windows paths ("C:\\...\\modules\\X").
+ */
+export function frozenMatch(
+  root: string,
+  frozen: readonly string[],
+  p: string,
+  impl: Pick<typeof path, 'relative' | 'resolve' | 'sep'> = path,
+): string | undefined {
+  const rel = impl.relative(root, impl.resolve(root, p)).split(impl.sep).join('/');
+  return frozen.find((f) => rel === f || rel.startsWith(`${f}/`));
+}
+
 function frozenHit(ctx: PolicyContext, p: string): string | undefined {
-  const rel = relative(ctx.root, resolve(ctx.root, p));
-  return (ctx.frozen ?? []).find((f) => rel === f || rel.startsWith(f + sep));
+  return frozenMatch(ctx.root, ctx.frozen ?? [], p);
 }
 
 const FROZEN_MSG = (f: string) =>

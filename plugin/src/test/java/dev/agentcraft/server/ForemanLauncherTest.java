@@ -65,6 +65,26 @@ class ForemanLauncherTest {
     }
 
     @Test
+    void findsNpmScriptNextToNodeOnWindowsAndUnix(@TempDir Path dir) throws Exception {
+        Path win = dir.resolve("node-win");
+        Files.createDirectories(win.resolve("node_modules/npm/bin"));
+        Files.writeString(win.resolve("node_modules/npm/bin/npm-cli.js"), "");
+        assertEquals(
+                Optional.of(win.resolve("node_modules/npm/bin/npm-cli.js")),
+                ForemanLauncher.npmCliNextTo(win.resolve("node.exe")));
+
+        Path unix = dir.resolve("node-unix");
+        Files.createDirectories(unix.resolve("bin"));
+        Files.createDirectories(unix.resolve("lib/node_modules/npm/bin"));
+        Files.writeString(unix.resolve("lib/node_modules/npm/bin/npm-cli.js"), "");
+        assertEquals(
+                Optional.of(unix.resolve("lib/node_modules/npm/bin/npm-cli.js")),
+                ForemanLauncher.npmCliNextTo(unix.resolve("bin/node")));
+
+        assertTrue(ForemanLauncher.npmCliNextTo(dir.resolve("nowhere/node")).isEmpty());
+    }
+
+    @Test
     void createsAPrivateRandomToken(@TempDir Path dir) throws Exception {
         Path f = dir.resolve("token.txt");
         String a = ForemanLauncher.createTokenFile(f);

@@ -3,6 +3,11 @@ import type { Station, AgentState } from '@agentcraft-server/protocol';
 import type { Backend, ToolPort } from '../backend.js';
 import type { Clock } from '../clock.js';
 import type { DecisionT, GoalT, TaskT, TeamState } from '../state.js';
+import type { Blueprint, PluginToForeman } from '@agentcraft-server/protocol';
+import { BuildCoordinator } from '../build.js';
+import house from '../../../blueprints/examples/casa-medievale.json' with { type: 'json' };
+
+const BUILD_WORDS = /costru|casa|edific|torre|castell|capanna|ponte|build/i;
 
 type StationT = z.infer<typeof Station>;
 type StateT = z.infer<typeof AgentState>;
@@ -20,13 +25,29 @@ export interface SimOptions {
 export class SimBackend implements Backend {
   private readonly waiting = new Map<string, (d: DecisionT) => void>();
   private readonly abort = new AbortController();
+  private readonly builds: BuildCoordinator;
+  private readonly buildDone = new Map<string, (ok: boolean) => void>();
+  private readonly rotations = new Map<string, 0 | 90 | 180 | 270>();
+  private readonly buildRegions = new Map<string, string>();
 
   constructor(
     private readonly state: TeamState,
     private readonly tools: ToolPort,
     private readonly clock: Clock,
     private readonly opts: SimOptions,
-  ) {}
+  ) {
+    this.builds = new BuildCoordinator(state, tools, {
+      onChangesRequested: (taskId, feedback) => void this.redesign(taskId, feedback),
+      onFinished: (taskId, ok) => {
+        this.buildDone.get(taskId)?.(ok);
+        this.buildDone.delete(taskId);
+      },
+    });
+  }
+
+  onJobProgress(msg: Extract<PluginToForeman, { type: 'job.progress' }>): void {
+    this.builds.onJobProgress(msg);
+  }
 
   start(): void {
     this.state.setStatus({ backend: 'sim', auth: 'ok', message: 'squadra simulata, nessun uso delle API' });
@@ -37,7 +58,8 @@ export class SimBackend implements Backend {
   }
 
   onGoal(goal: GoalT): void {
-    this.runGoal(goal).catch((e: unknown) => {
+    const run = BUILD_WORDS.test(goal.text) ? this.runBuild(goal) : this.runGoal(goal);
+    run.catch((e: unknown) => {
       if (this.abort.signal.aborted) return;
       this.state.patchGoal(goal.id, { status: 'failed' });
       this.state.addFeed({ kind: 'error', text: `sim: ${e instanceof Error ? e.message : String(e)}` });
@@ -51,6 +73,10 @@ export class SimBackend implements Backend {
   }
 
   onDecisionAnswered(d: DecisionT): void {
+    if (this.builds.handles(d)) {
+      void this.builds.onDecision(d);
+      return;
+    }
     this.waiting.get(d.id)?.(d);
     this.waiting.delete(d.id);
   }
@@ -164,6 +190,89 @@ export class SimBackend implements Backend {
       await this.act(lead, 'idle', 'base', 'segue la squadra');
     }
     this.state.patchTask(t.id, { status: 'blocked', blockedReason: 'troppe richieste di modifica' });
+  }
+
+  // ------------------------------------------------------------------ building
+
+  private async runBuild(goal: GoalT): Promise<void> {
+    const lead = 'bussola';
+    const architect = 'matita';
+    await this.act(lead, 'thinking', 'desk', `pianifica ${goal.id}`);
+    await this.say(lead, 'Una costruzione! Lo affido a Matita.');
+    await this.step(lead);
+    const t = this.createTask(goal, {
+      title: `Progetto: ${goal.text}`.slice(0, 120),
+      kind: 'build',
+      assignee: architect,
+      deps: [],
+    });
+    this.state.patchGoal(goal.id, { status: 'active' });
+    await this.act(lead, 'idle', 'base', 'segue la squadra');
+
+    this.state.patchTask(t.id, { status: 'doing' });
+    await this.act(architect, 'inspecting', 'library', 'cerca il terreno', t.id);
+    const regions = await this.tools.callTool(
+      architect,
+      { tool: 'world.regions', args: {} },
+      { requestedBy: 'sim', taskId: t.id },
+    );
+    const list = ((regions.result ?? {}) as { regions?: Array<{ name: string; size: string }> }).regions ?? [];
+    const region = list.find((r) =>
+      r.size
+        .split('x')
+        .map(Number)
+        .every((n) => n >= 9),
+    );
+    if (!regions.ok || !region) {
+      await this.say(architect, 'Mi serve una zona di almeno 9x9x9: /agent region pos1, pos2, create <nome>.');
+      this.state.patchTask(t.id, { status: 'blocked', blockedReason: 'nessuna regione di almeno 9x9x9' });
+      this.state.patchGoal(goal.id, { status: 'failed' });
+      await this.act(architect, 'blocked', 'podium', 'serve una regione');
+      return;
+    }
+    await this.step(architect);
+    await this.act(architect, 'editing', 'desk', 'disegna una casa medievale', t.id);
+    await this.say(architect, `Disegno una casa medievale nella regione ${region.name}.`);
+    await this.step(architect);
+    this.buildRegions.set(t.id, region.name);
+    const done = new Promise<boolean>((resolve) => this.buildDone.set(t.id, resolve));
+    await this.propose(t.id, architect, region.name, 0);
+    const ok = await done;
+    this.state.patchGoal(goal.id, { status: ok ? 'done' : 'cancelled', progress: 1 });
+    await this.say(lead, ok ? 'La casa è pronta. Bel lavoro, squadra!' : 'Costruzione chiusa senza edificio.');
+  }
+
+  private async propose(
+    taskId: string,
+    architect: string,
+    region: string,
+    rotation: 0 | 90 | 180 | 270,
+  ): Promise<void> {
+    this.rotations.set(taskId, rotation);
+    const err = await this.builds.propose({
+      taskId,
+      architect,
+      blueprint: house as unknown as Blueprint,
+      region,
+      rotation,
+      requestedBy: 'sim',
+    });
+    if (err) {
+      await this.say(architect, `Il progetto non va bene: ${err}`.slice(0, 250));
+      this.state.patchTask(taskId, { status: 'blocked', blockedReason: err.slice(0, 400) });
+      this.buildDone.get(taskId)?.(false);
+      this.buildDone.delete(taskId);
+    }
+  }
+
+  /** Sim answer to "Modifica": turn the house by 90 degrees and show it again. */
+  private async redesign(taskId: string, feedback: string): Promise<void> {
+    const architect = 'matita';
+    const next = (((this.rotations.get(taskId) ?? 0) + 90) % 360) as 0 | 90 | 180 | 270;
+    await this.act(architect, 'editing', 'desk', 'rivede il progetto', taskId);
+    await this.say(architect, `Ricevuto ("${feedback.slice(0, 60)}"): giro la casa di 90 gradi.`);
+    await this.step(architect);
+    await this.propose(taskId, architect, this.buildRegions.get(taskId) ?? '', next);
   }
 
   // ------------------------------------------------------------------ helpers

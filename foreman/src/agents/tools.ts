@@ -27,9 +27,15 @@ export interface TeamApi {
   requestChanges(from: string, taskId: string, feedback: string): string;
   /** unread messages for the agent, cleared once read */
   drainInbox(agentId: string): string;
+  worldRegions(agentId: string): Promise<string>;
+  worldInspect(agentId: string, region: string): Promise<string>;
+  submitBlueprint(
+    agentId: string,
+    a: { blueprint: unknown; region: string; anchor?: [number, number, number]; rotation?: 0 | 90 | 180 | 270 },
+  ): Promise<string>;
 }
 
-export function buildTools(agentId: string, lead: boolean, api: TeamApi): ToolDef[] {
+export function buildTools(agentId: string, lead: boolean, api: TeamApi, architect = false): ToolDef[] {
   const wrap =
     (fn: (args: Record<string, unknown>) => string | Promise<string>) => async (args: Record<string, unknown>) => {
       try {
@@ -95,7 +101,43 @@ export function buildTools(agentId: string, lead: boolean, api: TeamApi): ToolDe
       handler: wrap((a) => api.reportStatus(agentId, String(a.activity))),
     },
   ];
-  if (!lead) {
+  if (architect) {
+    tools.push(
+      {
+        name: 'world_regions',
+        description:
+          'The authorized build regions (name, world, min, max, size). You may only build inside one of them.',
+        shape: {},
+        handler: wrap(() => api.worldRegions(agentId)),
+      },
+      {
+        name: 'world_inspect',
+        description: 'Summary of a region: groundY (highest non-air block at the centre) and the most common blocks.',
+        shape: { region: z.string().min(1).max(64) },
+        handler: wrap((a) => api.worldInspect(agentId, String(a.region))),
+      },
+      {
+        name: 'submit_blueprint',
+        description:
+          'Submit your blueprint (format described in your instructions) for a region. It is validated, shown to the admins as ghost blocks and they decide. Fix and resubmit if it returns errors. anchor = world block where blueprint (0,0,0) goes (default: region min corner); rotation 0/90/180/270 clockwise.',
+        shape: {
+          blueprint: z.record(z.string(), z.unknown()),
+          region: z.string().min(1).max(64),
+          anchor: z.tuple([z.number().int(), z.number().int(), z.number().int()]).optional(),
+          rotation: z.union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)]).optional(),
+        },
+        handler: wrap((a) =>
+          api.submitBlueprint(agentId, {
+            blueprint: a.blueprint,
+            region: String(a.region),
+            ...(a.anchor ? { anchor: a.anchor as [number, number, number] } : {}),
+            ...(a.rotation !== undefined ? { rotation: a.rotation as 0 | 90 | 180 | 270 } : {}),
+          }),
+        ),
+      },
+    );
+  }
+  if (!lead && !architect) {
     tools.push({
       name: 'update_task',
       description:
@@ -119,7 +161,7 @@ export function buildTools(agentId: string, lead: boolean, api: TeamApi): ToolDe
         shape: {
           title: z.string().min(1).max(120),
           description: z.string().max(4000).optional(),
-          kind: z.enum(['code', 'qa', 'analysis', 'generic']),
+          kind: z.enum(['code', 'qa', 'analysis', 'build', 'generic']),
           assignee: z.string().max(64).optional(),
           deps: z.array(z.string().max(64)).default([]),
           module: z.string().max(300).optional(),

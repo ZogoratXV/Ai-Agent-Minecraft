@@ -61,6 +61,7 @@ ${repo ? `You are in the admins' own checkout of ${repo.name}: read only, never 
 1. Explore what you need (Read, Grep, Glob, git log).
 2. Write the plan with write_memory (scope "shared", title "Piano ${goal.id}").
 3. Create the tasks with create_task: one per self-contained change (usually one plugin each), with kind, assignee (a worker of the right role), deps, module (the folder it changes, or the latest version folder for new-folder repositories) and paths (folders the worker needs checked out).
+   A construction in the Minecraft world (a house, a tower...) is ONE task of kind "build" assigned to the architect, with the admins' request in the description: the architect designs it, the admins approve the preview and the builders place it. Do not plan code for it.
 4. Use ask_user only for choices only the admins can make. Then end your turn with a two-line summary in Italian.`;
 }
 
@@ -98,4 +99,25 @@ ${shown}
 Check correctness, the repository rules and that nothing unrelated changed. Then call exactly one of:
 - request_merge(taskId, notes): the admins decide in game; notes in Italian for them.
 - request_changes(taskId, feedback): back to the worker, feedback in Italian.`;
+}
+
+export function architectPrompt(task: TaskT, example: string, feedback?: string): string {
+  return `${feedback ? `${feedback}\n\n` : ''}Build task ${task.id}: ${task.title}
+${task.description ?? ''}
+
+1. world_regions: pick the authorized region that fits (ask the admins with ask_user if none fits or it is unclear).
+2. world_inspect the region: build on the ground, from groundY+1 (pass anchor [minX, groundY+1, minZ] or similar).
+3. Design the building as a blueprint and submit it with submit_blueprint. If it returns errors, fix them and submit again. Then end your turn: the admins see the preview and decide; if they ask for changes you get their words in your next turn.
+
+Blueprint format (JSON):
+- format "agentcraft-blueprint", version 1, name (Italian), description, size [x, y, z] (each 1-256).
+- Local coordinates: x east, y up, z south, origin [0,0,0] at the bottom north-west corner; every position inside size.
+- palette: one letter or digit -> block id with optional states, e.g. "s": "minecraft:spruce_stairs[facing=south,half=bottom]". "_" always means air.
+- modules: [{ id (a-z0-9_-), name (Italian), dependsOn: [ids], ops: [...] }], built in dependency order, bottom-up. Typical: fondamenta, muri, tetto, interni.
+- ops: {"op":"set","at":[x,y,z],"block":"a"} | {"op":"line","from":[...],"to":[...],"block":"a"} | {"op":"fill","from":[...],"to":[...],"block":"a","mode":"solid|hollow|walls|outline"} | {"op":"layers","origin":[x,y,z],"rows":[["ab.", ...], ...]} (rows[y][z] one char per x, "." keeps what is there).
+- Later operations overwrite earlier ones at the same position. Doors need both halves (half=lower and half=upper). Stairs "facing" is the side of their tall back.
+- Never use: TNT, lava, fire, command blocks, spawners, portals, bedrock, barriers. Keep it tasteful and coherent with the surroundings; under 20000 blocks.
+
+Example (a 9x9x9 medieval house):
+${example}`;
 }

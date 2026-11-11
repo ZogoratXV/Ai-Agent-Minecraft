@@ -1,4 +1,4 @@
-import type { ToolInvocation } from '@agentcraft-server/protocol';
+import type { PluginToForeman, ToolInvocation } from '@agentcraft-server/protocol';
 import type { ToolOutcome } from './bridge.js';
 import type { DecisionT, GoalT } from './state.js';
 
@@ -25,4 +25,5 @@ export interface Backend {
   onRepoAdd?(path: string): Promise<unknown>;
   onDiff?(taskId: string): Promise<unknown>;
   onRepoPush?(repoId: string | undefined, by: string): Promise<unknown>;
+  onJobProgress?(msg: Extract<PluginToForeman, { type: 'job.progress' }>): void;
 }

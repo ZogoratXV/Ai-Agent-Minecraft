@@ -115,6 +115,7 @@ if (cfg.backend === 'sim') {
     home,
     serverName: cfg.serverName,
     log,
+    tools: bridge,
   });
   await team.init(cfg.repos.map((r) => dropUndefined({ ...r, path: resolve(r.path) }) as RepoSettings));
   backend = team;

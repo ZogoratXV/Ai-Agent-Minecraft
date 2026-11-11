@@ -185,6 +185,7 @@ export class Foreman {
         if (!this.backend?.onRepoPush) throw new Error('push is available with the real agents (backend claude)');
         return this.backend.onRepoPush(intent.repoId, intent.actor.name);
       case 'job.progress':
+        this.backend?.onJobProgress?.(intent);
         return undefined;
       case 'world.event':
         this.state.addFeed({ kind: intent.kind.endsWith('error') ? 'error' : 'system', text: intent.text });

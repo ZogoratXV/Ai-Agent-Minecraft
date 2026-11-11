@@ -14,7 +14,11 @@ import { ROLES } from '../roles.js';
 import type { AgentT, DecisionT, GoalT, TaskT, TeamState } from '../state.js';
 import type { Store } from '../store.js';
 import { detectApiAuth, NO_API_AUTH_MESSAGE, NO_LOGIN_MESSAGE, withAuthMode } from './auth.js';
-import { basePrompt, planPrompt, qaPrompt, repoPrompt, reviewPrompt, workPrompt } from './prompts.js';
+import { architectPrompt, basePrompt, planPrompt, qaPrompt, repoPrompt, reviewPrompt, workPrompt } from './prompts.js';
+import type { PluginToForeman } from '@agentcraft-server/protocol';
+import type { ToolPort } from '../backend.js';
+import { BuildCoordinator } from '../build.js';
+import house from '../../../blueprints/examples/casa-medievale.json' with { type: 'json' };
 import type { Permission, Runner, TurnResult } from './runner.js';
 import { buildTools, type TeamApi } from './tools.js';
 
@@ -72,6 +76,8 @@ export interface TeamOptions {
   log?: (line: string) => void;
   /** environment the agents start from (default process.env) */
   baseEnv?: NodeJS.ProcessEnv;
+  /** the plugin's world tools (the bridge); needed for building */
+  tools?: ToolPort;
 }
 
 const PERMISSION_OPTIONS = ['Allow once', 'Always allow for this agent', 'Deny'];
@@ -91,9 +97,26 @@ export class TeamBackend implements Backend, TeamApi {
   private data: Persisted;
   private stopped = false;
   private readonly log: (line: string) => void;
+  private readonly builds?: BuildCoordinator;
 
   constructor(private readonly o: TeamOptions) {
     this.log = o.log ?? (() => {});
+    if (o.tools) {
+      this.builds = new BuildCoordinator(o.state, o.tools, {
+        onChangesRequested: (taskId, feedback) => {
+          const rt = this.rt(taskId);
+          rt.feedback = `The admins asked for changes to your design: ${feedback}`;
+          this.o.state.patchTask(taskId, { status: 'doing' });
+          this.enqueue({ kind: 'work', taskId });
+          this.pump();
+        },
+        onFinished: (taskId) => {
+          this.goalProgress(this.o.state.tasks.get(taskId)?.goalId);
+          this.save();
+          this.pump();
+        },
+      });
+    }
     this.data = {
       runtime: {},
       grants: {},
@@ -160,6 +183,12 @@ export class TeamBackend implements Backend, TeamApi {
       if (g.status === 'planning' && tasks.length === 0) this.enqueue({ kind: 'plan', goalId: g.id });
     }
     for (const t of s.tasks.values()) {
+      if (t.kind === 'build' && (t.status === 'doing' || t.status === 'review')) {
+        // an open build decision does not survive a restart: the architect submits again
+        if (t.status === 'review') s.patchTask(t.id, { status: 'doing' });
+        this.enqueue({ kind: 'work', taskId: t.id });
+        continue;
+      }
       if (t.status === 'doing') this.enqueue({ kind: 'work', taskId: t.id });
       if (t.status === 'review') {
         const open = [...s.decisions.values()].some(
@@ -188,7 +217,15 @@ export class TeamBackend implements Backend, TeamApi {
     this.pump();
   }
 
+  onJobProgress(msg: Extract<PluginToForeman, { type: 'job.progress' }>): void {
+    this.builds?.onJobProgress(msg);
+  }
+
   onDecisionAnswered(d: DecisionT): void {
+    if (this.builds?.handles(d)) {
+      void this.builds.onDecision(d);
+      return;
+    }
     const resolve = this.waiting.get(d.id);
     if (resolve) {
       this.waiting.delete(d.id);
@@ -436,6 +473,7 @@ export class TeamBackend implements Backend, TeamApi {
     const t = this.task(taskId);
     if (t.status === 'cancelled' || t.status === 'done') return;
     const rt = this.rt(taskId);
+    if (t.kind === 'build') return this.design(t, agentId, signal);
     if (!rt.repoId && t.repoId && this.o.repos.repos.has(t.repoId)) rt.repoId = t.repoId;
     const agent = this.o.state.agents.get(agentId)!;
     const repo = rt.repoId ? this.o.repos.get(rt.repoId) : undefined;
@@ -492,6 +530,83 @@ export class TeamBackend implements Backend, TeamApi {
     } else {
       this.o.state.patchTask(taskId, { status: 'blocked', blockedReason: 'il lavoro si è fermato senza update_task' });
     }
+  }
+
+  /** The architect designs a building and submits it; the admins decide on the preview. */
+  private async design(t: TaskT, agentId: string, signal: AbortSignal): Promise<void> {
+    const rt = this.rt(t.id);
+    this.o.state.patchTask(t.id, { status: 'doing' });
+    this.setAgent(agentId, 'thinking', 'desk', `progetta ${t.id}`, t.id, true);
+    const feedback = rt.feedback;
+    rt.feedback = undefined;
+    const res = await this.turn({
+      agentId,
+      cwd: this.scratch(t.id),
+      writer: false,
+      repo: undefined,
+      prompt: architectPrompt(t, JSON.stringify(house), feedback),
+      resume: rt.sessions[agentId],
+      signal,
+      taskId: t.id,
+    });
+    if (res.sessionId) rt.sessions[agentId] = res.sessionId;
+    if (signal.aborted) return;
+    const now = this.task(t.id);
+    if (!res.ok) {
+      this.o.state.patchTask(t.id, {
+        status: 'blocked',
+        blockedReason: `progetto non riuscito: ${res.error ?? 'errore'}`.slice(0, 400),
+      });
+      return;
+    }
+    if (now.status === 'review' || now.status === 'blocked' || now.status === 'cancelled') return;
+    if (!rt.nudged) {
+      rt.nudged = true;
+      rt.feedback = 'You ended your turn without submit_blueprint. Design the building and submit it.';
+      this.enqueue({ kind: 'work', taskId: t.id });
+    } else {
+      this.o.state.patchTask(t.id, { status: 'blocked', blockedReason: 'nessun progetto consegnato' });
+    }
+  }
+
+  async worldRegions(agentId: string): Promise<string> {
+    if (!this.o.tools) return 'Building is not available (no plugin connection).';
+    const r = await this.o.tools.callTool(agentId, { tool: 'world.regions', args: {} }, { requestedBy: agentId });
+    return r.ok ? JSON.stringify(r.result) : `Error: ${r.error?.message}`;
+  }
+
+  async worldInspect(agentId: string, region: string): Promise<string> {
+    if (!this.o.tools) return 'Building is not available (no plugin connection).';
+    const r = await this.o.tools.callTool(
+      agentId,
+      { tool: 'world.inspect', args: { region: { region }, detail: 'summary' } },
+      { requestedBy: agentId, deadlineMs: 60_000 },
+    );
+    return r.ok ? JSON.stringify(r.result) : `Error (${r.error?.code}): ${r.error?.message}`;
+  }
+
+  async submitBlueprint(
+    agentId: string,
+    a: { blueprint: unknown; region: string; anchor?: [number, number, number]; rotation?: 0 | 90 | 180 | 270 },
+  ): Promise<string> {
+    if (!this.builds) return 'Building is not available (no plugin connection).';
+    const t = [...this.o.state.tasks.values()].find(
+      (x) => x.assignee === agentId && x.kind === 'build' && x.status === 'doing',
+    );
+    if (!t) throw new Error('you have no build task in progress');
+    const goal = t.goalId ? this.o.state.goals.get(t.goalId) : undefined;
+    const err = await this.builds.propose({
+      taskId: t.id,
+      architect: agentId,
+      blueprint: a.blueprint as never,
+      region: a.region,
+      ...(a.anchor ? { anchor: a.anchor } : {}),
+      ...(a.rotation !== undefined ? { rotation: a.rotation } : {}),
+      requestedBy: goal?.createdBy ?? agentId,
+    });
+    if (err) return `Not accepted: ${err}. Fix it and call submit_blueprint again.`;
+    this.o.state.patchTask(t.id, { status: 'review', summary: `Progetto consegnato per la regione ${a.region}.` });
+    return 'Submitted: the admins see the preview and decide. End your turn now.';
   }
 
   /** Commit the worker's changes, run the tests, then review (or back to the worker once). */
@@ -648,7 +763,7 @@ export class TeamBackend implements Backend, TeamApi {
         join(this.o.home, 'claude-config'),
         this.o.cfg.useClaudeLogin,
       ),
-      tools: buildTools(t.agentId, agent.role === 'lead', this),
+      tools: buildTools(t.agentId, agent.role === 'lead', this, agent.role === 'architect'),
       canUseTool: (tool, input) =>
         this.permission(
           t.agentId,
@@ -936,7 +1051,9 @@ export class TeamBackend implements Backend, TeamApi {
     const goal = [...s.goals.values()].filter((g) => g.status === 'planning' || g.status === 'active').pop();
     for (const d of a.deps) if (!s.tasks.has(d)) throw new Error(`unknown dependency '${d}'`);
     if (a.assignee && !s.agents.has(a.assignee)) throw new Error(`unknown agent '${a.assignee}'`);
-    const kind = (['code', 'qa', 'analysis', 'generic'].includes(a.kind) ? a.kind : 'generic') as TaskT['kind'];
+    const kind = (
+      ['code', 'qa', 'analysis', 'build', 'generic'].includes(a.kind) ? a.kind : 'generic'
+    ) as TaskT['kind'];
     const now = this.o.clock.now();
     const t = s.putTask({
       id: s.nextId('t'),

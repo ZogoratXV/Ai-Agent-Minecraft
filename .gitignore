@@ -24,3 +24,6 @@ foreman/.agentcraft/
 staging/server/
 staging/.env
 *.log
+
+# bundled foreman (built, then embedded in the plugin jar)
+foreman/dist/

@@ -39,10 +39,28 @@ tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-processing", "-Xlint:-serial"))
 }
 
+// The foreman, bundled into one JS file, ships inside the jar so the plugin can start it itself.
+// Needs Node 22 and `npm ci` at the repository root; skip with -PskipForemanBundle.
+val repoRoot = rootDir.resolve("..")
+val foremanBundle = repoRoot.resolve("foreman/dist/foreman.mjs")
+val skipForemanBundle = providers.gradleProperty("skipForemanBundle").isPresent
+val bundleForeman by tasks.registering(Exec::class) {
+    workingDir = repoRoot
+    commandLine("npm", "run", "bundle", "--workspace", "foreman", "--silent")
+    inputs.dir(repoRoot.resolve("foreman/src"))
+    inputs.dir(repoRoot.resolve("protocol/src"))
+    inputs.file(repoRoot.resolve("package-lock.json"))
+    outputs.file(foremanBundle)
+}
+
 tasks.processResources {
     val props = mapOf("version" to project.version)
     inputs.properties(props)
     filesMatching("paper-plugin.yml") { expand(props) }
+    if (!skipForemanBundle) {
+        dependsOn(bundleForeman)
+        from(foremanBundle) { into("foreman") }
+    }
 }
 
 tasks.test {

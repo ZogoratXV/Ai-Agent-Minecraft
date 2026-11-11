@@ -42,6 +42,7 @@ class SettingsLoaderTest {
         }
         YamlConfiguration c = defaults();
         c.set("bridge.url", "ws://192.168.1.10:7878");
+        c.set("foreman.managed", false);
         assertEquals("192.168.1.10", SettingsLoader.load(c).bridgeUri().getHost());
     }
 
@@ -64,6 +65,28 @@ class SettingsLoaderTest {
         c.set("bridge.url", "http://127.0.0.1:7878");
         SettingsException e = assertThrows(SettingsException.class, () -> SettingsLoader.load(c));
         assertEquals(3, e.problems().size(), e.problems().toString());
+    }
+
+    @Test
+    void managedForemanDefaultsAndChecks() {
+        PluginSettings s = SettingsLoader.load(defaults());
+        assertTrue(s.foreman().managed());
+        assertEquals("sim", s.foreman().backend());
+
+        YamlConfiguration lan = defaults();
+        lan.set("bridge.url", "ws://192.168.1.10:7878");
+        assertThrows(SettingsException.class, () -> SettingsLoader.load(lan), "managed foreman must be local");
+        lan.set("foreman.managed", false);
+        assertEquals("192.168.1.10", SettingsLoader.load(lan).bridgeUri().getHost());
+
+        YamlConfiguration bad = defaults();
+        bad.set("foreman.backend", "gpt");
+        bad.set("foreman.extra-args", java.util.List.of("--port", "9"));
+        assertEquals(
+                2,
+                assertThrows(SettingsException.class, () -> SettingsLoader.load(bad))
+                        .problems()
+                        .size());
     }
 
     @Test

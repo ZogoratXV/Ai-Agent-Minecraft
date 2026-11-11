@@ -1,0 +1,263 @@
+package dev.agentcraft.server.foreman;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HexFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Starts and supervises the foreman bundled in the jar ({@code foreman/foreman.mjs}) with the
+ * local Node, so admins only install the plugin. Everything runs on a daemon thread; the server
+ * thread never waits for the process. If a foreman is already listening on the bridge port (for
+ * example started by hand), nothing is launched and that one is used.
+ */
+public final class ForemanLauncher {
+    public static final int MIN_NODE_MAJOR = 22;
+    private static final long LOG_ROTATE_BYTES = 10L * 1024 * 1024;
+    private static final int MAX_FAST_FAILURES = 5;
+
+    public record Options(
+            String node, String backend, URI bridge, List<String> extraArgs, Path workDir, String token) {}
+
+    private final Options opts;
+    private final Supplier<InputStream> bundle;
+    private final Logger log;
+    private volatile boolean stopped;
+    private volatile Process process;
+    private Thread supervisor;
+
+    public ForemanLauncher(Options opts, Supplier<InputStream> bundle, Logger log) {
+        // absolute: the process runs inside workDir, a relative script path would resolve twice
+        this.opts = new Options(
+                opts.node(),
+                opts.backend(),
+                opts.bridge(),
+                opts.extraArgs(),
+                opts.workDir().toAbsolutePath(),
+                opts.token());
+        this.bundle = bundle;
+        this.log = log;
+    }
+
+    // ------------------------------------------------------------------ pure helpers (tested)
+
+    /** "v22.23.4" -> 22; empty if the output is not a Node version. */
+    public static Optional<Integer> nodeMajor(String versionOutput) {
+        Matcher m = Pattern.compile("^v?(\\d+)\\.\\d+").matcher(versionOutput.strip());
+        return m.find() ? Optional.of(Integer.parseInt(m.group(1))) : Optional.empty();
+    }
+
+    /** Command line of the foreman process. The token goes in the environment, never here. */
+    public static List<String> command(Options o, Path script) {
+        List<String> cmd = new ArrayList<>(List.of(
+                o.node(),
+                script.toString(),
+                "--backend",
+                o.backend(),
+                "--host",
+                o.bridge().getHost().replace("[", "").replace("]", ""),
+                "--port",
+                String.valueOf(o.bridge().getPort() > 0 ? o.bridge().getPort() : 7878),
+                "--home",
+                o.workDir().resolve("home").toString()));
+        cmd.addAll(o.extraArgs());
+        return cmd;
+    }
+
+    /** A random token of 48 hex characters, written with owner-only permissions. */
+    public static String createTokenFile(Path file) throws IOException {
+        byte[] bytes = new byte[24];
+        new java.security.SecureRandom().nextBytes(bytes);
+        String token = HexFormat.of().formatHex(bytes);
+        Files.createDirectories(file.toAbsolutePath().getParent());
+        Files.writeString(file, token + "\n");
+        try {
+            Files.setPosixFilePermissions(file, java.nio.file.attribute.PosixFilePermissions.fromString("rw-------"));
+        } catch (UnsupportedOperationException ignored) {
+            // not a POSIX file system (Windows): the plugin folder's own permissions apply
+        }
+        return token;
+    }
+
+    // ------------------------------------------------------------------ lifecycle
+
+    public void start() {
+        supervisor = new Thread(this::supervise, "AgentCraft-Foreman");
+        supervisor.setDaemon(true);
+        supervisor.start();
+    }
+
+    public void stop() {
+        stopped = true;
+        Process p = process;
+        if (p != null && p.isAlive()) {
+            p.destroy(); // SIGTERM: the foreman saves and closes
+            try {
+                if (!p.waitFor(5, TimeUnit.SECONDS)) {
+                    p.destroyForcibly();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                p.destroyForcibly();
+            }
+        }
+        if (supervisor != null) {
+            supervisor.interrupt();
+        }
+    }
+
+    private void supervise() {
+        Path script;
+        try {
+            if (!checkNode()) {
+                return;
+            }
+            script = extract();
+        } catch (IOException e) {
+            log.warning("cannot prepare the foreman: " + e.getMessage());
+            return;
+        }
+        int fastFailures = 0;
+        long backoffMs = 2_000;
+        while (!stopped) {
+            if (isListening()) {
+                log.info("a foreman is already running at " + opts.bridge() + ": using it");
+                sleep(30_000);
+                continue;
+            }
+            long started = System.currentTimeMillis();
+            try {
+                rotateLog();
+                ProcessBuilder pb = new ProcessBuilder(command(opts, script))
+                        .directory(opts.workDir().toFile())
+                        .redirectErrorStream(true)
+                        .redirectOutput(
+                                ProcessBuilder.Redirect.appendTo(logFile().toFile()));
+                Map<String, String> env = pb.environment();
+                env.put("AGENTCRAFT_TOKEN", opts.token());
+                process = pb.start();
+                log.info("foreman started (pid " + process.pid() + ", backend " + opts.backend() + "), log: "
+                        + logFile());
+                int code = process.waitFor();
+                if (stopped) {
+                    return;
+                }
+                log.warning("foreman exited with code " + code + ", see " + logFile());
+            } catch (IOException e) {
+                log.warning("cannot start the foreman: " + e.getMessage());
+            } catch (InterruptedException e) {
+                return;
+            }
+            boolean fast = System.currentTimeMillis() - started < 30_000;
+            fastFailures = fast ? fastFailures + 1 : 0;
+            if (fastFailures >= MAX_FAST_FAILURES) {
+                log.severe("the foreman keeps failing at start-up; giving up until the next server start. See "
+                        + logFile());
+                return;
+            }
+            backoffMs = fast ? Math.min(60_000, backoffMs * 2) : 2_000;
+            sleep(backoffMs);
+        }
+    }
+
+    private boolean checkNode() {
+        try {
+            Process p = new ProcessBuilder(opts.node(), "--version")
+                    .redirectErrorStream(true)
+                    .start();
+            String out;
+            try (InputStream in = p.getInputStream()) {
+                out = new String(in.readNBytes(200));
+            }
+            p.waitFor(10, TimeUnit.SECONDS);
+            Optional<Integer> major = nodeMajor(out);
+            if (major.isEmpty() || major.get() < MIN_NODE_MAJOR) {
+                log.warning("foreman.managed needs Node " + MIN_NODE_MAJOR + "+, found '" + out.strip()
+                        + "'. Install Node or start the foreman yourself.");
+                return false;
+            }
+            return true;
+        } catch (IOException e) {
+            log.warning("Node not found ('" + opts.node() + "'): install Node " + MIN_NODE_MAJOR
+                    + "+ or set foreman.node, or start the foreman yourself.");
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    /** Copies the bundled script out of the jar when it changed. */
+    private Path extract() throws IOException {
+        Files.createDirectories(opts.workDir());
+        Path script = opts.workDir().resolve("foreman.mjs");
+        byte[] bytes;
+        try (InputStream in = bundle.get()) {
+            if (in == null) {
+                throw new IOException("this jar was built without the foreman bundle");
+            }
+            bytes = in.readAllBytes();
+        }
+        if (Files.exists(script) && sha256(Files.readAllBytes(script)).equals(sha256(bytes))) {
+            return script;
+        }
+        Path tmp = opts.workDir().resolve("foreman.mjs.tmp");
+        Files.write(tmp, bytes);
+        Files.move(tmp, script, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        return script;
+    }
+
+    private boolean isListening() {
+        String host = opts.bridge().getHost().replace("[", "").replace("]", "");
+        int port = opts.bridge().getPort() > 0 ? opts.bridge().getPort() : 7878;
+        try (Socket s = new Socket()) {
+            s.connect(new InetSocketAddress(host, port), 500);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private Path logFile() {
+        return opts.workDir().resolve("foreman.log");
+    }
+
+    private void rotateLog() throws IOException {
+        Path f = logFile();
+        if (Files.exists(f) && Files.size(f) > LOG_ROTATE_BYTES) {
+            Files.move(f, opts.workDir().resolve("foreman.log.1"), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    private void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private static String sha256(byte[] b) {
+        try {
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b));
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+}

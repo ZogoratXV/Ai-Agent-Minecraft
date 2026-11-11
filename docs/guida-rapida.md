@@ -12,39 +12,29 @@ veri (che lavorano su codice e mondo) arrivano dalla Fase 4. Riferimento complet
 | Foreman   | Node **22** sulla stessa macchina del server (o nella stessa rete privata)                                                                                                            |
 | Opzionale | **Citizens** (NPC con skin e pathfinding di Citizens; senza, si usano i Mannequin vanilla). WorldGuard, WorldEdit, LuckPerms e spark vengono rilevati; li useremo nelle prossime fasi |
 
-## 2. Il token (obbligatorio)
+## 2. Il foreman parte da solo
 
-Plugin e foreman si riconoscono con un segreto condiviso di almeno 16 caratteri. Generalo una volta:
+Il foreman (il "cervello" degli agenti) è dentro il jar. Con `foreman.managed: true` (default) il
+plugin, all'avvio del server:
 
-```sh
-openssl rand -hex 24
-```
+1. controlla che ci sia **Node 22+** (`node --version`); se manca lo scrive in console e gli
+   agenti restano scollegati;
+2. genera un token segreto in `plugins/AgentCraftServer/token.txt`, se non ce n'è già uno;
+3. avvia il foreman, lo riavvia se si ferma e lo spegne insieme al server.
 
-Dallo a **entrambi**, in uno di questi due modi (mai nei file versionati su git):
+File e log del foreman: `plugins/AgentCraftServer/foreman/` (`foreman.log`). Non c'è niente da
+avviare a mano.
 
-- **Variabile d'ambiente** `AGENTCRAFT_TOKEN`, sia nello script di avvio del server Minecraft sia
-  dove avvii il foreman.
-- **File**: se il pannello del server non permette variabili d'ambiente, metti il token in
-  `plugins/AgentCraftServer/token.txt` e scrivi `token-file: token.txt` in `config.yml`. Per il
-  foreman: `"tokenFile": "/percorso/token.txt"` in `foreman/config.json`.
-
-Se il token manca il plugin si avvia lo stesso ma resta scollegato (avviso in console).
-
-## 3. Avviare il foreman
-
-```sh
-git clone https://github.com/ZogoratXV/Ai-Agent-Minecraft && cd Ai-Agent-Minecraft
-npm ci
-cd foreman && npm start -- --backend sim
-```
-
-Ascolta su `ws://127.0.0.1:7878`, solo in locale. Per cambiare porta, velocità della squadra
-simulata, nomi o colori degli NPC copia `foreman/config.example.json` in `foreman/config.json`.
+**Se preferisci avviarlo tu** (altra macchina, servizio di sistema): imposta
+`foreman.managed: false`, dai lo stesso token a entrambi con la variabile `AGENTCRAFT_TOKEN` (o
+`bridge.token-file` nel plugin e `"tokenFile"` in `foreman/config.json`) e avvia
+`npm ci && cd foreman && npm start -- --backend sim`. Se un foreman è già acceso su `bridge.url`,
+il plugin usa quello anche con `managed: true`.
 
 ## 4. Installare il plugin
 
 1. Prendi il jar: dall'artefatto `agentcraft-server-plugin` della CI su GitHub, oppure
-   `cd plugin && ./gradlew build` (esce in `plugin/build/libs/`).
+   `npm ci && cd plugin && ./gradlew build` (esce in `plugin/build/libs/`).
 2. Copialo in `plugins/` e avvia il server: viene creato `plugins/AgentCraftServer/config.yml`.
 3. Modifica la configurazione (sezione 5) e **riavvia il server**: per ora non c'è un comando di reload.
 4. In gioco, `/agent status` deve dire **Foreman: connesso**.

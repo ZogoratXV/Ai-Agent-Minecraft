@@ -4,3 +4,5 @@ protocol/schema/
 protocol/examples/
 docs/protocol.md
 package-lock.json
+foreman/dist/
+staging/server/

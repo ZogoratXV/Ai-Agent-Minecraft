@@ -22,7 +22,15 @@ public record PluginSettings(
         CommandRunAs commandRunAs,
         int toolCallsPerMinute,
         String auditFile,
-        NpcBackend npcBackend) {
+        NpcBackend npcBackend,
+        Foreman foreman) {
+
+    /** The foreman the plugin starts itself ({@code managed}), or an external one. */
+    public record Foreman(boolean managed, String node, String backend, List<String> extraArgs) {
+        public Foreman {
+            extraArgs = List.copyOf(extraArgs);
+        }
+    }
 
     public enum CommandRunAs {
         CONSOLE,

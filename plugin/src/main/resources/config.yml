@@ -1,6 +1,7 @@
 # AgentCraft Server - plugin configuration.
 # Secrets never go in this file: the bridge token comes from the AGENTCRAFT_TOKEN environment
-# variable or from the file named in bridge.token-file (keep it outside git).
+# variable or from the file named in bridge.token-file (keep it outside git). With
+# foreman.managed and no token set, one is generated in plugins/AgentCraftServer/token.txt.
 
 server:
   # Free-form id, shown to the agents (e.g. "survival", "staging").
@@ -9,10 +10,24 @@ server:
   # On production, staging-only tools (player.simulate) are always refused.
   role: staging
 
+foreman:
+  # true = the plugin starts the foreman bundled in its jar with the local Node (22+),
+  # restarts it if it stops and stops it with the server. Its files and log are in
+  # plugins/AgentCraftServer/foreman/. If a foreman is already running at bridge.url
+  # (started by hand), that one is used instead.
+  managed: true
+  # Node executable (full path if it is not on the PATH).
+  node: node
+  # sim = scripted team, no API usage. claude = real agents (from phase 4; needs ANTHROPIC_API_KEY
+  # in the server's environment).
+  backend: sim
+  # Extra command line options for the foreman, e.g. ['--step-ms', '1000'].
+  extra-args: []
+
 bridge:
   # Where the foreman listens. Only loopback or private network addresses are accepted.
   url: ws://127.0.0.1:7878
-  # Optional: read the token from this file instead of AGENTCRAFT_TOKEN.
+  # Optional: read the token from this file (in the plugin folder) instead of AGENTCRAFT_TOKEN.
   token-file: ''
   # Reconnect backoff in seconds.
   reconnect-min-seconds: 2

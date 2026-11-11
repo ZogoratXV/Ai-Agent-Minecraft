@@ -46,12 +46,11 @@ Dopo aver cambiato `protocol/src`, rigenera schema, fixture e doc con `npm run g
 
 ## Installazione rapida (oggi)
 
-1. Esporta il token condiviso (almeno 16 caratteri) **sia** per il server **sia** per il foreman:
-   `export AGENTCRAFT_TOKEN=$(openssl rand -hex 24)`. Non va mai scritto nei file versionati.
-2. Avvia il foreman: `npm ci && cd foreman && npm start -- --backend sim`.
-3. Copia il jar in `plugins/` e avvia il server: viene creato `plugins/AgentCraftServer/config.yml`.
-   Imposta `server.role` (`production` o `staging`) e, se serve, l'indirizzo del foreman.
-4. `/agent status` deve dire `Foreman: connesso`. Poi `/agent base set base` dove vuoi la base,
+1. Serve Node 22+ sulla macchina del server: il foreman è dentro il jar e lo avvia il plugin,
+   generando da solo il token.
+2. Copia il jar in `plugins/` e avvia il server: viene creato `plugins/AgentCraftServer/config.yml`.
+   Imposta `server.role` (`production` o `staging`) e riavvia.
+3. `/agent status` deve dire `Foreman: connesso`. Poi `/agent base set base` dove vuoi la base,
    e `/agent goal prova` per vedere la squadra simulata al lavoro.
 
 Guida rapida di configurazione: [docs/guida-rapida.md](docs/guida-rapida.md). Tutti i comandi: [docs/admin-guide.md](docs/admin-guide.md).

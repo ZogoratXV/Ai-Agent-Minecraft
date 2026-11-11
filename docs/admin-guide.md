@@ -4,11 +4,10 @@ Documento vivo: cresce a ogni fase. La versione completa arriva nella Fase 7.
 
 ## Avvio (oggi: backend simulato)
 
-```sh
-export AGENTCRAFT_TOKEN=$(openssl rand -hex 24)   # stesso valore per foreman e server Minecraft
-cd foreman && npm start -- --backend sim          # foreman su ws://127.0.0.1:7878
-# poi avvia il server Purpur con il plugin, con la stessa AGENTCRAFT_TOKEN nell'ambiente
-```
+Con Node 22+ sulla macchina basta il jar: il plugin avvia il foreman incluso, genera il token
+(`plugins/AgentCraftServer/token.txt`) e lo sorveglia (`foreman.managed: true`). Per un foreman
+esterno: `foreman.managed: false`, stessa `AGENTCRAFT_TOKEN` per entrambi, e
+`cd foreman && npm start -- --backend sim`.
 
 Il plugin si collega da solo e si ricollega se il foreman si riavvia. `/agent status` mostra
 `Foreman: connesso`. Il backend `sim` è una squadra scriptata che non usa le API: serve a provare
@@ -69,3 +68,4 @@ tetto, gli agenti si mettono in pausa e gli admin vengono avvisati (Fase 4). Tut
 
 `ACCEPT_EULA=true staging/e2e-sim.sh` avvia foreman (sim) e un server Purpur 26.2 con il plugin,
 gioca un obiettivo intero dalla console e controlla task, decisioni, movimenti e audit.
+Con `MODE=managed` il foreman lo avvia il plugin, con il token generato.

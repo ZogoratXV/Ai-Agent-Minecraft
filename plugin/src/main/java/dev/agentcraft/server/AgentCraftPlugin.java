@@ -12,12 +12,14 @@ import dev.agentcraft.server.command.AgentCommand;
 import dev.agentcraft.server.config.PluginSettings;
 import dev.agentcraft.server.config.SettingsException;
 import dev.agentcraft.server.config.SettingsLoader;
+import dev.agentcraft.server.foreman.ForemanLauncher;
 import dev.agentcraft.server.notify.Notifier;
 import dev.agentcraft.server.state.TeamView;
 import dev.agentcraft.server.tools.ToolExecutor;
 import dev.agentcraft.server.tools.ToolGate;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.Optional;
@@ -39,6 +41,7 @@ public class AgentCraftPlugin extends JavaPlugin {
     private Stations stations;
     private BodyManager bodies;
     private BridgeClient bridge;
+    private ForemanLauncher launcher;
     private String token;
 
     @Override
@@ -94,11 +97,36 @@ public class AgentCraftPlugin extends JavaPlugin {
             getLogger().severe("bridge token: " + e.getMessage());
             return;
         }
+        if (resolved.isEmpty() && settings.foreman().managed()) {
+            try {
+                java.nio.file.Path file = getDataPath().resolve("token.txt");
+                resolved = Files.exists(file)
+                        ? TokenSource.resolve(java.util.Map.of(), getDataPath(), "token.txt")
+                        : Optional.of(ForemanLauncher.createTokenFile(file));
+            } catch (IOException e) {
+                getLogger().severe("cannot create the bridge token: " + e.getMessage());
+                return;
+            }
+        }
         if (resolved.isEmpty()) {
             getLogger().warning("No bridge token: set AGENTCRAFT_TOKEN (or bridge.token-file). Agents stay offline.");
             return;
         }
         this.token = resolved.get();
+        if (settings.foreman().managed()) {
+            PluginSettings.Foreman f = settings.foreman();
+            launcher = new ForemanLauncher(
+                    new ForemanLauncher.Options(
+                            f.node(),
+                            f.backend(),
+                            settings.bridgeUri(),
+                            f.extraArgs(),
+                            getDataPath().resolve("foreman"),
+                            token),
+                    () -> getResource("foreman/foreman.mjs"),
+                    getLogger());
+            launcher.start();
+        }
         bridge = new BridgeClient(
                 settings.bridgeUri(),
                 this.token,
@@ -144,14 +172,6 @@ public class AgentCraftPlugin extends JavaPlugin {
         hello.add("server", server);
         hello.add("capabilities", caps);
         hello.add("limits", limits);
-        try {
-            hello.addProperty(
-                    "token",
-                    TokenSource.resolve(System.getenv(), getDataPath(), settings.tokenFile())
-                            .orElse(""));
-        } catch (IOException e) {
-            getLogger().severe("bridge token: " + e.getMessage());
-        }
         return hello;
     }
 
@@ -159,6 +179,9 @@ public class AgentCraftPlugin extends JavaPlugin {
     public void onDisable() {
         if (bridge != null) {
             bridge.stop();
+        }
+        if (launcher != null) {
+            launcher.stop();
         }
         if (bodies != null) {
             bodies.removeAll();

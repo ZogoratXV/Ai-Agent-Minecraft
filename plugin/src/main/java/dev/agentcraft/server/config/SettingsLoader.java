@@ -86,6 +86,35 @@ public final class SettingsLoader {
             errors.add("audit.file must be a file name inside the plugin folder");
         }
 
+        boolean managed = cfg.getBoolean("foreman.managed", true);
+        String node = cfg.getString("foreman.node", "node");
+        String backend = cfg.getString("foreman.backend", "sim");
+        if (!"sim".equals(backend) && !"claude".equals(backend)) {
+            errors.add("foreman.backend must be 'sim' or 'claude'");
+        }
+        if (node == null || node.isBlank()) {
+            errors.add("foreman.node must name the Node executable");
+        }
+        List<String> extraArgs = cfg.getStringList("foreman.extra-args");
+        for (String a : extraArgs) {
+            if (a.length() > 200 || a.chars().anyMatch(c -> c < 0x20)) {
+                errors.add("foreman.extra-args entries must be short plain text");
+            }
+            if (a.startsWith("--host")
+                    || a.startsWith("--port")
+                    || a.startsWith("--home")
+                    || a.startsWith("--backend")) {
+                errors.add("foreman.extra-args must not set " + a.split("=")[0]
+                        + " (set it in bridge.url / foreman.backend)");
+            }
+        }
+        if (managed && bridge != null && bridge.getHost() != null) {
+            String h = bridge.getHost();
+            if (!h.equals("127.0.0.1") && !h.equalsIgnoreCase("localhost") && !h.equals("[::1]")) {
+                errors.add("foreman.managed needs bridge.url on 127.0.0.1 or localhost (or set managed: false)");
+            }
+        }
+
         if (!errors.isEmpty()) {
             throw new SettingsException(errors);
         }
@@ -106,7 +135,8 @@ public final class SettingsLoader {
                 runAs,
                 positive(cfg, "limits.tool-calls-per-minute", 60, errors),
                 auditFile,
-                npc);
+                npc,
+                new PluginSettings.Foreman(managed, node, backend, extraArgs));
     }
 
     /** Loopback or private ranges only, without any DNS lookup. */

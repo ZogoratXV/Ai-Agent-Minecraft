@@ -1,0 +1,23 @@
+{
+  "name": "@agentcraft-server/foreman",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AgentCraft Server foreman: orchestrates the AI agents and talks to the Purpur plugin over a local WebSocket.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@agentcraft-server/protocol": "0.1.0",
+    "ws": "^8.22.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1"
+  }
+}

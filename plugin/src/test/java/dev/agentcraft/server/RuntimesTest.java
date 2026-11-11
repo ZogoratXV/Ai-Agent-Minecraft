@@ -74,10 +74,28 @@ class RuntimesTest {
     }
 
     @Test
+    void unzipRefusesPathsOutsideTheTarget(@TempDir Path dir) throws Exception {
+        Path zip = dir.resolve("evil.zip");
+        try (var out = new java.util.zip.ZipOutputStream(Files.newOutputStream(zip))) {
+            out.putNextEntry(new java.util.zip.ZipEntry("../escaped.txt"));
+            out.write(1);
+            out.closeEntry();
+        }
+        Method m = Runtimes.class.getDeclaredMethod("unzip", Path.class, Path.class);
+        m.setAccessible(true);
+        Path into = Files.createDirectories(dir.resolve("into"));
+        var e = assertThrows(java.lang.reflect.InvocationTargetException.class, () -> m.invoke(null, zip, into));
+        assertTrue(e.getCause().getMessage().contains("unsafe path"));
+        assertFalse(Files.exists(dir.resolve("escaped.txt")));
+    }
+
+    @Test
     void picksThePinnedNodeBuildOnlyForLinuxX64AndArm64() {
         assertTrue(Runtimes.nodeFor("Linux", "amd64").orElseThrow().url().contains("linux-x64"));
         assertTrue(Runtimes.nodeFor("Linux", "aarch64").orElseThrow().url().contains("linux-arm64"));
-        assertTrue(Runtimes.nodeFor("Windows 11", "amd64").isEmpty());
+        assertTrue(Runtimes.nodeFor("Windows 11", "amd64").orElseThrow().url().endsWith("win-x64.zip"));
+        assertEquals("", Runtimes.nodeFor("Windows 11", "amd64").orElseThrow().binDir());
+        assertTrue(Runtimes.nodeFor("Mac OS X", "aarch64").orElseThrow().url().contains("darwin-arm64"));
         assertTrue(Runtimes.nodeFor("Linux", "riscv64").isEmpty());
         assertEquals("SHA-512", Runtimes.MAVEN.algorithm());
     }

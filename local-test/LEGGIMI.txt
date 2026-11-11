@@ -1,0 +1,42 @@
+AGENTCRAFT - SERVER DI PROVA SUL TUO PC
+=======================================
+
+Un server Minecraft Purpur 26.2 con il plugin AgentCraftServer gia' dentro,
+per provare tutto sul tuo computer prima di metterlo sul server vero.
+
+COSA SERVE
+- Java 25 (Temurin): https://adoptium.net/temurin/releases/?version=25
+  Su Windows scarica il file .msi e installalo (lascia spuntato "Set JAVA_HOME / add to PATH").
+- Minecraft Java Edition 26.2 per entrare nel server.
+- Connessione a internet al primo avvio: lo script scarica Purpur (~50 MB) e il plugin
+  scarica Node (~30-60 MB) nella sua cartella. Entrambi vengono verificati con l'impronta
+  ufficiale. Non serve installare Node.
+- Circa 3 GB di RAM libera.
+
+AVVIO
+- Windows: doppio clic su start.bat
+- macOS / Linux: apri il Terminale in questa cartella e scrivi  ./start.sh
+La prima volta ti chiede di accettare l'EULA di Minecraft (scrivi s e Invio).
+
+Quando nella finestra compare "Done", e poco dopo "connected to the foreman":
+1. Nella finestra del server scrivi:  op <il tuo nome Minecraft>
+2. Apri Minecraft 26.2 > Multigiocatore > Connessione diretta > localhost
+3. In gioco:
+   /agent status          deve dire "Foreman: connesso"
+   /agent base set base   la base degli agenti dove sei
+   /agent goal prova      la squadra simulata lavora: gli NPC camminano, parlano,
+                          ti fanno una domanda e chiedono il "Merge" con pulsanti in chat
+   /agent tasks           i task devono finire "done"
+   /agent help            tutti i comandi
+
+Per fermare il server scrivi  stop  nella finestra.
+
+NOTE
+- La squadra e' SIMULATA: non usa l'API di Claude, non costa nulla e non tocca codice.
+- Opzionale: metti Citizens (per Minecraft 26.2) nella cartella plugins per avere NPC con
+  aspetto da giocatore; senza Citizens si usano i Mannequin di Minecraft.
+- File utili da mandarci se qualcosa non va:
+  logs/latest.log
+  plugins/AgentCraftServer/foreman/foreman.log
+- Per ricominciare da zero cancella la cartella mondo-prova e plugins/AgentCraftServer
+  (non il file .jar).

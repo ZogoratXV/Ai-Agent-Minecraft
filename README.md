@@ -45,6 +45,12 @@ ACCEPT_EULA=true staging/e2e-sim.sh  # prova completa su un vero Purpur 26.2 (ac
 Dopo aver cambiato `protocol/src`, rigenera schema, fixture e doc con `npm run gen:protocol`
 (la CI fallisce se non sono aggiornati).
 
+## Provarlo sul proprio PC
+
+`staging/make-local-kit.sh` crea `AgentCraft-test-locale-<versione>.zip`: un server Purpur 26.2 di
+prova con il plugin già dentro. Si scompatta e si avvia con `start.bat` (Windows) o `start.sh`
+(macOS/Linux); serve solo Java 25. Istruzioni nel `LEGGIMI.txt` del kit.
+
 ## Installazione rapida (oggi)
 
 1. Serve Node 22+ sulla macchina del server: il foreman è dentro il jar e lo avvia il plugin,

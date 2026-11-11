@@ -160,9 +160,9 @@ public final class ForemanLauncher {
                 return false;
             }
             Path bin = runtimes.ensureNode();
-            node = bin.resolve("node").toString();
+            node = bin.resolve(Runtimes.nodeExecutable()).toString();
             if ("auto".equals(opts.npm())) {
-                npm = bin.resolve("npm").toString();
+                npm = bin.resolve(Runtimes.npmExecutable()).toString();
             }
             extraPath.add(bin);
             if (!nodeOk(node, true)) {

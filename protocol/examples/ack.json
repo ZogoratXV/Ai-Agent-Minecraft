@@ -1,0 +1,9 @@
+{
+  "v": 1,
+  "type": "ack",
+  "re": "c1",
+  "ok": true,
+  "result": {
+    "goalId": "g1"
+  }
+}

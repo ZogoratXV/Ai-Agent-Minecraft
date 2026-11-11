@@ -1,0 +1,780 @@
+{
+  "title": "PluginToForeman",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "hello"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "token": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 256,
+          "description": "shared secret; also sent as `Authorization: Bearer`"
+        },
+        "pluginVersion": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "server": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "configured server id, e.g. \"survival\" or \"staging\""
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "production",
+                "staging"
+              ],
+              "description": "decided only by the plugin config; staging-only tools are refused on production"
+            },
+            "mcVersion": {
+              "type": "string",
+              "maxLength": 32
+            },
+            "software": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "e.g. \"Purpur 26.2 build 2633\""
+            }
+          },
+          "required": [
+            "id",
+            "role",
+            "mcVersion",
+            "software"
+          ],
+          "additionalProperties": false
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "citizens": {
+              "type": "boolean"
+            },
+            "worldguard": {
+              "type": "boolean"
+            },
+            "worldedit": {
+              "type": "boolean"
+            },
+            "luckperms": {
+              "type": "boolean"
+            },
+            "spark": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "citizens",
+            "worldguard",
+            "worldedit",
+            "luckperms",
+            "spark"
+          ],
+          "additionalProperties": false
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "blocksPerTick": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "maxJobVolume": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "max blocks in one world.place job"
+            },
+            "maxInspectVolume": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "toolCallsPerMinute": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "per agent"
+            }
+          },
+          "required": [
+            "blocksPerTick",
+            "maxJobVolume",
+            "maxInspectVolume",
+            "toolCallsPerMinute"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "token",
+        "pluginVersion",
+        "server",
+        "capabilities",
+        "limits"
+      ],
+      "additionalProperties": false,
+      "description": "First message after connecting. The foreman answers with `snapshot`."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "goal.submit"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "New goal for the lead (`/agent goal <text>`)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "user.message"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "agent id or \"all\""
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor",
+        "to",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "Message to one agent or to everyone (`/agent @<name> ...`)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "decision.answer"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "decisionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "option": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor",
+        "decisionId"
+      ],
+      "additionalProperties": false,
+      "description": "Answer to an open decision (`/agent answer`, approve, reject)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "task.action"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "cancel",
+            "retry",
+            "reassign",
+            "prioritize"
+          ]
+        },
+        "agentId": {
+          "description": "reassign target",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor",
+        "taskId",
+        "action"
+      ],
+      "additionalProperties": false,
+      "description": "Steer a task (`/agent task <id> cancel|retry|reassign <name>`)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "agent.action"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "agentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "agent id, or \"all\" for pause/resume/stop"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "pause",
+            "resume",
+            "stop",
+            "spawn"
+          ]
+        },
+        "role": {
+          "description": "spawn: role of a new agent",
+          "type": "string",
+          "enum": [
+            "lead",
+            "developer",
+            "qa",
+            "architect",
+            "builder",
+            "analyst"
+          ]
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor",
+        "agentId",
+        "action"
+      ],
+      "additionalProperties": false,
+      "description": "Steer an agent (`/agent pause|resume|stop|spawn`)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "diff.request"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor",
+        "taskId"
+      ],
+      "additionalProperties": false,
+      "description": "Ask for the diff of a task (`/agent diff <task>`)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "repo.add"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor",
+        "path"
+      ],
+      "additionalProperties": false,
+      "description": "Register a plugin repository (`/agent repo add <path>`)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "tool.result"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "re": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "id of the tool.call"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "result": {
+          "description": "tool-specific result when ok"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": [
+                "forbidden",
+                "out_of_region",
+                "blacklisted_block",
+                "too_large",
+                "rate_limited",
+                "not_staging",
+                "needs_approval",
+                "invalid_args",
+                "timeout",
+                "busy",
+                "not_found",
+                "internal"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 1000
+            }
+          },
+          "required": [
+            "code",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "re",
+        "ok"
+      ],
+      "additionalProperties": false,
+      "description": "Answer to `tool.call`."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "job.progress"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "jobId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "paused",
+            "done",
+            "failed",
+            "cancelled",
+            "undone"
+          ]
+        },
+        "done": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "jobId",
+        "state",
+        "done",
+        "total"
+      ],
+      "additionalProperties": false,
+      "description": "Progress of a long world job (world.place, world.undo)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "world.event"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "console_error",
+            "plugin_error",
+            "player_join",
+            "player_quit",
+            "region_enter",
+            "tps_low"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "ts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "epoch milliseconds"
+        },
+        "player": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          "description": "Minecraft player UUID"
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "kind",
+        "text",
+        "ts"
+      ],
+      "additionalProperties": false,
+      "description": "Something agents may care about (already filtered by the plugin)."
+    }
+  ]
+}

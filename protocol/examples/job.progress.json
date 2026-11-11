@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "type": "job.progress",
+  "jobId": "j7",
+  "state": "running",
+  "done": 1400,
+  "total": 5200
+}

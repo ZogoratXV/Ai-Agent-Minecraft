@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "type": "agent.action",
+  "id": "c5",
+  "actor": {
+    "uuid": "2f8a3c1e-4b5d-4e6f-8a9b-0c1d2e3f4a5b",
+    "name": "Zogorat"
+  },
+  "agentId": "mattone",
+  "action": "pause"
+}

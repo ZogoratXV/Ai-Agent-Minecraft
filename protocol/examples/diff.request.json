@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "type": "diff.request",
+  "id": "c6",
+  "actor": {
+    "uuid": "2f8a3c1e-4b5d-4e6f-8a9b-0c1d2e3f4a5b",
+    "name": "Zogorat"
+  },
+  "taskId": "t2"
+}

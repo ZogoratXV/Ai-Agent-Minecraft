@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "type": "feed.add",
+  "item": {
+    "ts": 1762862400000,
+    "kind": "ci",
+    "text": "Test di t2: 18 passati",
+    "agentId": "lucciola"
+  }
+}

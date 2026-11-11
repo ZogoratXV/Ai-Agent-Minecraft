@@ -1,0 +1,22 @@
+{
+  "v": 1,
+  "type": "task.upsert",
+  "task": {
+    "id": "t4",
+    "title": "Test del comando /shop sell",
+    "kind": "qa",
+    "status": "doing",
+    "assignee": "briciola",
+    "deps": [
+      "t2"
+    ],
+    "repoId": "castigo-plugins",
+    "goalId": "g1",
+    "priority": 0,
+    "branch": "agentcraft/briciola/t4-shop-sell-tests",
+    "ci": "running",
+    "createdBy": "bussola",
+    "createdAt": 1762862400000,
+    "updatedAt": 1762862460000
+  }
+}

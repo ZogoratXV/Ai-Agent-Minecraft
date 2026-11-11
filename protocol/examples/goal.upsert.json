@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "type": "goal.upsert",
+  "goal": {
+    "id": "g1",
+    "text": "Trova e correggi i bug di EconomyPlus",
+    "status": "active",
+    "progress": 0.5,
+    "createdBy": "user:Zogorat",
+    "createdAt": 1762862400000,
+    "updatedAt": 1762862700000
+  }
+}

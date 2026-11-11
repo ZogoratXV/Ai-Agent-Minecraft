@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "type": "decision.upsert",
+  "decision": {
+    "id": "d3",
+    "agentId": "bussola",
+    "kind": "merge",
+    "question": "Unire la correzione di /shop sell in main?",
+    "options": [
+      "Merge",
+      "Request changes",
+      "Reject"
+    ],
+    "context": "2 file, +41 -7. Test: 18 passati.",
+    "status": "open",
+    "taskId": "t2",
+    "createdAt": 1762862520000
+  }
+}

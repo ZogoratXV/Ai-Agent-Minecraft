@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "type": "agent.upsert",
+  "agent": {
+    "id": "briciola",
+    "name": "Briciola",
+    "role": "qa",
+    "title": "Cacciatrice di bug",
+    "color": "#8fa98b",
+    "state": "testing",
+    "activity": "testing EconomyPlus",
+    "station": "testbench",
+    "taskId": "t4",
+    "paused": false,
+    "active": true,
+    "model": "Sonnet 5.5",
+    "costUsd": 0.42
+  }
+}

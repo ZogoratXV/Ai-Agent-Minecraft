@@ -1,0 +1,6 @@
+{
+  "v": 1,
+  "type": "job.control",
+  "jobId": "j7",
+  "action": "pause"
+}

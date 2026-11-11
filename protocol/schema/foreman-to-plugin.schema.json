@@ -1,0 +1,2582 @@
+{
+  "title": "ForemanToPlugin",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "snapshot"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "foreman": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string",
+              "maxLength": 32
+            },
+            "backend": {
+              "type": "string",
+              "enum": [
+                "sim",
+                "claude"
+              ]
+            },
+            "auth": {
+              "type": "string",
+              "enum": [
+                "ok",
+                "failed",
+                "unknown",
+                "checking"
+              ]
+            },
+            "paused": {
+              "type": "boolean",
+              "description": "every agent paused by an admin"
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "budget": {
+              "type": "object",
+              "properties": {
+                "spentTodayUsd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "dailyUsd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "spentMonthUsd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "monthlyUsd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "spentTodayUsd",
+                "spentMonthUsd"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "version",
+            "backend",
+            "auth",
+            "paused"
+          ],
+          "additionalProperties": false
+        },
+        "agents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "lead",
+                  "developer",
+                  "qa",
+                  "architect",
+                  "builder",
+                  "analyst"
+                ],
+                "description": "what the agent is for; decides its tools and limits"
+              },
+              "title": {
+                "description": "short descriptive title, e.g. \"Cacciatrice di bug\"",
+                "type": "string",
+                "maxLength": 48
+              },
+              "color": {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$",
+                "description": "\"#RRGGBB\""
+              },
+              "skin": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "player name whose skin is used",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 16
+                  },
+                  "texture": {
+                    "description": "base64 textures property value",
+                    "type": "string",
+                    "maxLength": 4096
+                  },
+                  "signature": {
+                    "description": "signature of the textures property",
+                    "type": "string",
+                    "maxLength": 4096
+                  }
+                },
+                "additionalProperties": false,
+                "description": "NPC skin; empty = the default Mannequin skin"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "idle",
+                  "thinking",
+                  "reading",
+                  "editing",
+                  "running",
+                  "testing",
+                  "building",
+                  "inspecting",
+                  "walking",
+                  "waiting_user",
+                  "blocked",
+                  "done",
+                  "error"
+                ],
+                "description": "what the agent is doing right now; drives the status line and animation"
+              },
+              "activity": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "one short line for the status above the head"
+              },
+              "station": {
+                "type": "string",
+                "enum": [
+                  "base",
+                  "desk",
+                  "library",
+                  "terminal",
+                  "testbench",
+                  "podium",
+                  "worksite",
+                  "lounge",
+                  "user"
+                ],
+                "description": "where the NPC should be. `podium` = waiting for a decision; `worksite` = at a build job"
+              },
+              "taskId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "paused": {
+                "type": "boolean"
+              },
+              "active": {
+                "type": "boolean",
+                "description": "false = off shift"
+              },
+              "model": {
+                "description": "model it runs, for display",
+                "type": "string",
+                "maxLength": 48
+              },
+              "costUsd": {
+                "description": "spend of this agent so far",
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "role",
+              "color",
+              "state",
+              "activity",
+              "station",
+              "paused",
+              "active"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "code",
+                  "qa",
+                  "build",
+                  "analysis",
+                  "generic"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "todo",
+                  "doing",
+                  "review",
+                  "done",
+                  "blocked",
+                  "cancelled"
+                ]
+              },
+              "assignee": {
+                "description": "agent id",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$"
+              },
+              "deps": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64,
+                  "pattern": "^[A-Za-z0-9._:-]+$",
+                  "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+                },
+                "description": "task ids that must be done first"
+              },
+              "repoId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "goalId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991,
+                "description": "higher = sooner; default 0"
+              },
+              "branch": {
+                "description": "e.g. \"agentcraft/lucciola/t2-fix-shop\"",
+                "type": "string",
+                "maxLength": 200
+              },
+              "ci": {
+                "type": "string",
+                "enum": [
+                  "unknown",
+                  "running",
+                  "pass",
+                  "fail"
+                ]
+              },
+              "blockedReason": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "summary": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "createdBy": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "agent id or \"user:<name>\""
+              },
+              "createdAt": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "epoch milliseconds"
+              },
+              "updatedAt": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "epoch milliseconds"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "kind",
+              "status",
+              "deps",
+              "priority",
+              "ci",
+              "createdBy",
+              "createdAt",
+              "updatedAt"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "agentId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "question",
+                  "permission",
+                  "merge",
+                  "deploy",
+                  "build",
+                  "config"
+                ],
+                "description": "merge/deploy/build/config always need a human with the matching permission"
+              },
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "options": {
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "description": "labels; the first is the recommended one"
+              },
+              "context": {
+                "type": "string",
+                "maxLength": 4000
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "open",
+                  "answered",
+                  "cancelled"
+                ]
+              },
+              "answer": {
+                "type": "object",
+                "properties": {
+                  "option": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "by": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "description": "player name that answered"
+                  },
+                  "ts": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991,
+                    "description": "epoch milliseconds"
+                  }
+                },
+                "required": [
+                  "by",
+                  "ts"
+                ],
+                "additionalProperties": false
+              },
+              "taskId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "createdAt": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "epoch milliseconds"
+              }
+            },
+            "required": [
+              "id",
+              "agentId",
+              "kind",
+              "question",
+              "options",
+              "status",
+              "createdAt"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "goals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "planning",
+                  "active",
+                  "done",
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "progress": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "createdBy": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "createdAt": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "epoch milliseconds"
+              },
+              "updatedAt": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "epoch milliseconds"
+              }
+            },
+            "required": [
+              "id",
+              "text",
+              "status",
+              "progress",
+              "createdBy",
+              "createdAt",
+              "updatedAt"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "feed": {
+          "maxItems": 200,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ts": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991,
+                "description": "epoch milliseconds"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "goal",
+                  "plan",
+                  "task",
+                  "message",
+                  "decision",
+                  "merge",
+                  "ci",
+                  "build",
+                  "system",
+                  "error"
+                ]
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 1000
+              },
+              "agentId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "to": {
+                "description": "agent id, \"user\" or \"all\"",
+                "type": "string",
+                "maxLength": 64
+              }
+            },
+            "required": [
+              "ts",
+              "kind",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "description": "most recent last"
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "foreman",
+        "agents",
+        "tasks",
+        "decisions",
+        "goals",
+        "feed"
+      ],
+      "additionalProperties": false,
+      "description": "Full state, sent after a valid `hello`. Replaces everything the plugin knows."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "agent.upsert"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "agent": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 32
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "lead",
+                "developer",
+                "qa",
+                "architect",
+                "builder",
+                "analyst"
+              ],
+              "description": "what the agent is for; decides its tools and limits"
+            },
+            "title": {
+              "description": "short descriptive title, e.g. \"Cacciatrice di bug\"",
+              "type": "string",
+              "maxLength": 48
+            },
+            "color": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "\"#RRGGBB\""
+            },
+            "skin": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "player name whose skin is used",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16
+                },
+                "texture": {
+                  "description": "base64 textures property value",
+                  "type": "string",
+                  "maxLength": 4096
+                },
+                "signature": {
+                  "description": "signature of the textures property",
+                  "type": "string",
+                  "maxLength": 4096
+                }
+              },
+              "additionalProperties": false,
+              "description": "NPC skin; empty = the default Mannequin skin"
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "idle",
+                "thinking",
+                "reading",
+                "editing",
+                "running",
+                "testing",
+                "building",
+                "inspecting",
+                "walking",
+                "waiting_user",
+                "blocked",
+                "done",
+                "error"
+              ],
+              "description": "what the agent is doing right now; drives the status line and animation"
+            },
+            "activity": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "one short line for the status above the head"
+            },
+            "station": {
+              "type": "string",
+              "enum": [
+                "base",
+                "desk",
+                "library",
+                "terminal",
+                "testbench",
+                "podium",
+                "worksite",
+                "lounge",
+                "user"
+              ],
+              "description": "where the NPC should be. `podium` = waiting for a decision; `worksite` = at a build job"
+            },
+            "taskId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "paused": {
+              "type": "boolean"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "false = off shift"
+            },
+            "model": {
+              "description": "model it runs, for display",
+              "type": "string",
+              "maxLength": 48
+            },
+            "costUsd": {
+              "description": "spend of this agent so far",
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "role",
+            "color",
+            "state",
+            "activity",
+            "station",
+            "paused",
+            "active"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "agent"
+      ],
+      "additionalProperties": false,
+      "description": "Replace one agent by id."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "task.upsert"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "task": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "code",
+                "qa",
+                "build",
+                "analysis",
+                "generic"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "todo",
+                "doing",
+                "review",
+                "done",
+                "blocked",
+                "cancelled"
+              ]
+            },
+            "assignee": {
+              "description": "agent id",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$"
+            },
+            "deps": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "description": "task ids that must be done first"
+            },
+            "repoId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "goalId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "priority": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991,
+              "description": "higher = sooner; default 0"
+            },
+            "branch": {
+              "description": "e.g. \"agentcraft/lucciola/t2-fix-shop\"",
+              "type": "string",
+              "maxLength": 200
+            },
+            "ci": {
+              "type": "string",
+              "enum": [
+                "unknown",
+                "running",
+                "pass",
+                "fail"
+              ]
+            },
+            "blockedReason": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "summary": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "createdBy": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "agent id or \"user:<name>\""
+            },
+            "createdAt": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "epoch milliseconds"
+            },
+            "updatedAt": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "epoch milliseconds"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "kind",
+            "status",
+            "deps",
+            "priority",
+            "ci",
+            "createdBy",
+            "createdAt",
+            "updatedAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "task"
+      ],
+      "additionalProperties": false,
+      "description": "Replace one task by id."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "decision.upsert"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "decision": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "agentId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "question",
+                "permission",
+                "merge",
+                "deploy",
+                "build",
+                "config"
+              ],
+              "description": "merge/deploy/build/config always need a human with the matching permission"
+            },
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "options": {
+              "maxItems": 8,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "description": "labels; the first is the recommended one"
+            },
+            "context": {
+              "type": "string",
+              "maxLength": 4000
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "open",
+                "answered",
+                "cancelled"
+              ]
+            },
+            "answer": {
+              "type": "object",
+              "properties": {
+                "option": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "by": {
+                  "type": "string",
+                  "maxLength": 64,
+                  "description": "player name that answered"
+                },
+                "ts": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "epoch milliseconds"
+                }
+              },
+              "required": [
+                "by",
+                "ts"
+              ],
+              "additionalProperties": false
+            },
+            "taskId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "createdAt": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "epoch milliseconds"
+            }
+          },
+          "required": [
+            "id",
+            "agentId",
+            "kind",
+            "question",
+            "options",
+            "status",
+            "createdAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "decision"
+      ],
+      "additionalProperties": false,
+      "description": "Replace one decision by id."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "goal.upsert"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "goal": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "planning",
+                "active",
+                "done",
+                "failed",
+                "cancelled"
+              ]
+            },
+            "progress": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "createdBy": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "createdAt": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "epoch milliseconds"
+            },
+            "updatedAt": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "epoch milliseconds"
+            }
+          },
+          "required": [
+            "id",
+            "text",
+            "status",
+            "progress",
+            "createdBy",
+            "createdAt",
+            "updatedAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "goal"
+      ],
+      "additionalProperties": false,
+      "description": "Replace one goal by id."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "feed.add"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "item": {
+          "type": "object",
+          "properties": {
+            "ts": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991,
+              "description": "epoch milliseconds"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "goal",
+                "plan",
+                "task",
+                "message",
+                "decision",
+                "merge",
+                "ci",
+                "build",
+                "system",
+                "error"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "agentId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "to": {
+              "description": "agent id, \"user\" or \"all\"",
+              "type": "string",
+              "maxLength": 64
+            }
+          },
+          "required": [
+            "ts",
+            "kind",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "item"
+      ],
+      "additionalProperties": false,
+      "description": "Append to the activity feed."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "foreman.status"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string",
+              "maxLength": 32
+            },
+            "backend": {
+              "type": "string",
+              "enum": [
+                "sim",
+                "claude"
+              ]
+            },
+            "auth": {
+              "type": "string",
+              "enum": [
+                "ok",
+                "failed",
+                "unknown",
+                "checking"
+              ]
+            },
+            "paused": {
+              "type": "boolean",
+              "description": "every agent paused by an admin"
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "budget": {
+              "type": "object",
+              "properties": {
+                "spentTodayUsd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "dailyUsd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "spentMonthUsd": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "monthlyUsd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "spentTodayUsd",
+                "spentMonthUsd"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "version",
+            "backend",
+            "auth",
+            "paused"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "Backend, auth, pause and budget status."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "notify"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warn",
+            "need_user"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "decisionId": {
+          "description": "makes the chat message clickable",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "level",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "Tell admins something (clickable chat message, optional Discord)."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "diff"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "files": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "additions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "deletions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "path": {
+          "description": "path of the full .diff file on the foreman machine",
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "taskId",
+        "summary",
+        "files",
+        "additions",
+        "deletions"
+      ],
+      "additionalProperties": false,
+      "description": "Answer to `diff.request`: short summary for chat plus where the full diff is."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "tool.call"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "agentId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "taskId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "requestedBy": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "who started the work: \"user:<name>\" or an agent id"
+        },
+        "deadlineMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 600000
+        },
+        "call": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "world.inspect"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "region": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "region": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 64,
+                              "description": "name of an authorized region"
+                            }
+                          },
+                          "required": [
+                            "region"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "world": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 64
+                            },
+                            "min": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                }
+                              ],
+                              "items": false,
+                              "minItems": 3,
+                              "maxItems": 3,
+                              "description": "[x, y, z] block coordinates"
+                            },
+                            "max": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                },
+                                {
+                                  "type": "integer",
+                                  "minimum": -9007199254740991,
+                                  "maximum": 9007199254740991
+                                }
+                              ],
+                              "items": false,
+                              "minItems": 3,
+                              "maxItems": 3,
+                              "description": "[x, y, z] block coordinates"
+                            }
+                          },
+                          "required": [
+                            "world",
+                            "min",
+                            "max"
+                          ],
+                          "additionalProperties": false,
+                          "description": "axis-aligned box, both corners inclusive"
+                        }
+                      ],
+                      "description": "a named authorized region, or an explicit box (still checked against authorized regions)"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "enum": [
+                        "summary",
+                        "blocks"
+                      ],
+                      "description": "summary = counts per block type; blocks = palette + RLE layers"
+                    },
+                    "includeEntities": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "region",
+                    "detail"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "world.preview"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "blueprint": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {},
+                      "description": "a blueprint document (see blueprints/blueprint.schema.json); validated again by the plugin"
+                    },
+                    "anchor": {
+                      "type": "object",
+                      "properties": {
+                        "world": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "x": {
+                          "type": "number"
+                        },
+                        "y": {
+                          "type": "number"
+                        },
+                        "z": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "world",
+                        "x",
+                        "y",
+                        "z"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "rotation": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 0
+                        },
+                        {
+                          "type": "number",
+                          "const": 90
+                        },
+                        {
+                          "type": "number",
+                          "const": 180
+                        },
+                        {
+                          "type": "number",
+                          "const": 270
+                        }
+                      ]
+                    },
+                    "viewers": {
+                      "minItems": 1,
+                      "maxItems": 16,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                        "description": "Minecraft player UUID"
+                      },
+                      "description": "only these players see the preview"
+                    },
+                    "ttlSeconds": {
+                      "type": "integer",
+                      "minimum": 10,
+                      "maximum": 3600
+                    }
+                  },
+                  "required": [
+                    "blueprint",
+                    "anchor",
+                    "rotation",
+                    "viewers",
+                    "ttlSeconds"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "world.place"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "jobId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64,
+                      "pattern": "^[A-Za-z0-9._:-]+$",
+                      "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+                    },
+                    "approvalId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64,
+                      "pattern": "^[A-Za-z0-9._:-]+$",
+                      "description": "id of the answered `build` decision; the plugin verifies it"
+                    },
+                    "region": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64,
+                      "description": "authorized region the whole job must fit in"
+                    },
+                    "anchor": {
+                      "type": "object",
+                      "properties": {
+                        "world": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 64
+                        },
+                        "x": {
+                          "type": "number"
+                        },
+                        "y": {
+                          "type": "number"
+                        },
+                        "z": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "world",
+                        "x",
+                        "y",
+                        "z"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "rotation": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 0
+                        },
+                        {
+                          "type": "number",
+                          "const": 90
+                        },
+                        {
+                          "type": "number",
+                          "const": 180
+                        },
+                        {
+                          "type": "number",
+                          "const": 270
+                        }
+                      ]
+                    },
+                    "blueprint": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {},
+                      "description": "a blueprint document (see blueprints/blueprint.schema.json); validated again by the plugin"
+                    },
+                    "module": {
+                      "description": "build only this blueprint module",
+                      "type": "string",
+                      "maxLength": 64
+                    },
+                    "ops": {
+                      "description": "raw operations, alternative to blueprint",
+                      "maxItems": 10000,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "op": {
+                                "type": "string",
+                                "const": "set"
+                              },
+                              "at": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "description": "[x, y, z] block coordinates"
+                              },
+                              "block": {
+                                "type": "string",
+                                "maxLength": 256
+                              }
+                            },
+                            "required": [
+                              "op",
+                              "at",
+                              "block"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "op": {
+                                "type": "string",
+                                "const": "fill"
+                              },
+                              "from": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "description": "[x, y, z] block coordinates"
+                              },
+                              "to": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "description": "[x, y, z] block coordinates"
+                              },
+                              "block": {
+                                "type": "string",
+                                "maxLength": 256
+                              },
+                              "mode": {
+                                "type": "string",
+                                "enum": [
+                                  "solid",
+                                  "hollow",
+                                  "outline"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "op",
+                              "from",
+                              "to",
+                              "block"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "op": {
+                                "type": "string",
+                                "const": "line"
+                              },
+                              "from": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "description": "[x, y, z] block coordinates"
+                              },
+                              "to": {
+                                "type": "array",
+                                "prefixItems": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  }
+                                ],
+                                "items": false,
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "description": "[x, y, z] block coordinates"
+                              },
+                              "block": {
+                                "type": "string",
+                                "maxLength": 256
+                              }
+                            },
+                            "required": [
+                              "op",
+                              "from",
+                              "to",
+                              "block"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "jobId",
+                    "approvalId",
+                    "region",
+                    "anchor",
+                    "rotation"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "world.undo"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "jobId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64,
+                      "pattern": "^[A-Za-z0-9._:-]+$",
+                      "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+                    }
+                  },
+                  "required": [
+                    "jobId"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "server.command"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256,
+                      "description": "without the leading slash"
+                    },
+                    "as": {
+                      "type": "string",
+                      "enum": [
+                        "console",
+                        "fakeplayer"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "command",
+                    "as"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "server.logs"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "sinceTs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "filter": {
+                      "description": "case-insensitive substring",
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 500
+                    }
+                  },
+                  "required": [
+                    "limit"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "server.metrics"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "player.simulate"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "actions": {
+                      "minItems": 1,
+                      "maxItems": 200,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "command"
+                              },
+                              "command": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 256
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "command"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "chat"
+                              },
+                              "text": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 256
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "text"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "move"
+                              },
+                              "to": {
+                                "type": "object",
+                                "properties": {
+                                  "world": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 64
+                                  },
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  },
+                                  "z": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "world",
+                                  "x",
+                                  "y",
+                                  "z"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "to"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "interact"
+                              },
+                              "at": {
+                                "type": "object",
+                                "properties": {
+                                  "world": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 64
+                                  },
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  },
+                                  "z": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "world",
+                                  "x",
+                                  "y",
+                                  "z"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "hand": {
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "at",
+                              "hand"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "click_slot"
+                              },
+                              "slot": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 89
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "slot"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "wait"
+                              },
+                              "ticks": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 1200
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "ticks"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "actions"
+                  ],
+                  "additionalProperties": false,
+                  "description": "staging only"
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "body.move"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "to": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "station": {
+                              "type": "string",
+                              "enum": [
+                                "base",
+                                "desk",
+                                "library",
+                                "terminal",
+                                "testbench",
+                                "podium",
+                                "worksite",
+                                "lounge",
+                                "user"
+                              ],
+                              "description": "where the NPC should be. `podium` = waiting for a decision; `worksite` = at a build job"
+                            }
+                          },
+                          "required": [
+                            "station"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "pos": {
+                              "type": "object",
+                              "properties": {
+                                "world": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 64
+                                },
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                },
+                                "z": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "world",
+                                "x",
+                                "y",
+                                "z"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "pos"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "followPlayer": {
+                              "type": "string",
+                              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                              "description": "Minecraft player UUID"
+                            }
+                          },
+                          "required": [
+                            "followPlayer"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "to"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "body.say"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    }
+                  },
+                  "required": [
+                    "text"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "id",
+        "agentId",
+        "requestedBy",
+        "deadlineMs",
+        "call"
+      ],
+      "additionalProperties": false,
+      "description": "Ask the plugin to run a world tool. Always answered with `tool.result`."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "job.control"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "jobId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "pause",
+            "resume",
+            "cancel"
+          ]
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "jobId",
+        "action"
+      ],
+      "additionalProperties": false,
+      "description": "Pause, resume or cancel a running world job."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "ack"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "re": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$",
+          "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "result": {}
+      },
+      "required": [
+        "v",
+        "type",
+        "re",
+        "ok"
+      ],
+      "additionalProperties": false,
+      "description": "Answer to any message that carried an `id`."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "error"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "invalid_message",
+            "unauthorized",
+            "version_mismatch",
+            "internal"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "code",
+        "message"
+      ],
+      "additionalProperties": false,
+      "description": "Protocol error (invalid message, bad token, version mismatch)."
+    }
+  ]
+}

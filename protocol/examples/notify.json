@@ -1,0 +1,7 @@
+{
+  "v": 1,
+  "type": "notify",
+  "level": "need_user",
+  "text": "Bussola chiede di unire t2",
+  "decisionId": "d3"
+}

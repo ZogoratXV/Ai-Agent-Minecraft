@@ -1,0 +1,25 @@
+{
+  "v": 1,
+  "type": "hello",
+  "token": "example-token-not-a-secret-0001",
+  "pluginVersion": "0.1.0",
+  "server": {
+    "id": "staging",
+    "role": "staging",
+    "mcVersion": "26.2",
+    "software": "Purpur 26.2 build 2633"
+  },
+  "capabilities": {
+    "citizens": true,
+    "worldguard": true,
+    "worldedit": true,
+    "luckperms": true,
+    "spark": false
+  },
+  "limits": {
+    "blocksPerTick": 200,
+    "maxJobVolume": 200000,
+    "maxInspectVolume": 65536,
+    "toolCallsPerMinute": 60
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "v": 1,
+  "type": "snapshot",
+  "foreman": {
+    "version": "0.1.0",
+    "backend": "sim",
+    "auth": "ok",
+    "paused": false,
+    "budget": {
+      "spentTodayUsd": 1.2,
+      "dailyUsd": 15,
+      "spentMonthUsd": 31.5,
+      "monthlyUsd": 300
+    }
+  },
+  "agents": [
+    {
+      "id": "briciola",
+      "name": "Briciola",
+      "role": "qa",
+      "title": "Cacciatrice di bug",
+      "color": "#8fa98b",
+      "state": "testing",
+      "activity": "testing EconomyPlus",
+      "station": "testbench",
+      "taskId": "t4",
+      "paused": false,
+      "active": true,
+      "model": "Sonnet 5.5",
+      "costUsd": 0.42
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t4",
+      "title": "Test del comando /shop sell",
+      "kind": "qa",
+      "status": "doing",
+      "assignee": "briciola",
+      "deps": [
+        "t2"
+      ],
+      "repoId": "castigo-plugins",
+      "goalId": "g1",
+      "priority": 0,
+      "branch": "agentcraft/briciola/t4-shop-sell-tests",
+      "ci": "running",
+      "createdBy": "bussola",
+      "createdAt": 1762862400000,
+      "updatedAt": 1762862460000
+    }
+  ],
+  "decisions": [
+    {
+      "id": "d3",
+      "agentId": "bussola",
+      "kind": "merge",
+      "question": "Unire la correzione di /shop sell in main?",
+      "options": [
+        "Merge",
+        "Request changes",
+        "Reject"
+      ],
+      "context": "2 file, +41 -7. Test: 18 passati.",
+      "status": "open",
+      "taskId": "t2",
+      "createdAt": 1762862520000
+    }
+  ],
+  "goals": [
+    {
+      "id": "g1",
+      "text": "Trova e correggi i bug di EconomyPlus",
+      "status": "active",
+      "progress": 0.4,
+      "createdBy": "user:Zogorat",
+      "createdAt": 1762862400000,
+      "updatedAt": 1762862400000
+    }
+  ],
+  "feed": [
+    {
+      "ts": 1762862400000,
+      "kind": "goal",
+      "text": "Nuovo obiettivo da Zogorat",
+      "to": "all"
+    }
+  ]
+}

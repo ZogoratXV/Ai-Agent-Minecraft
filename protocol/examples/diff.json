@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "type": "diff",
+  "taskId": "t2",
+  "summary": "Corretto il calcolo del prezzo di vendita",
+  "files": 2,
+  "additions": 41,
+  "deletions": 7,
+  "path": "/srv/agentcraft/diffs/t2.diff"
+}

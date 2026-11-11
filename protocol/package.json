@@ -1,0 +1,19 @@
+{
+  "name": "@agentcraft-server/protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AgentCraft Server bridge protocol: zod schemas (source of truth), generated JSON Schema, examples and docs.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "gen": "tsx scripts/generate.ts",
+    "check": "tsx scripts/generate.ts --check",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}

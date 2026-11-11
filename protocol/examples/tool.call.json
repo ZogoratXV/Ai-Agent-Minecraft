@@ -1,0 +1,40 @@
+{
+  "v": 1,
+  "type": "tool.call",
+  "id": "f12",
+  "agentId": "mattone",
+  "taskId": "t9",
+  "requestedBy": "user:Zogorat",
+  "deadlineMs": 30000,
+  "call": {
+    "tool": "world.place",
+    "args": {
+      "jobId": "j7",
+      "approvalId": "d5",
+      "region": "piazza",
+      "anchor": {
+        "world": "world",
+        "x": 100,
+        "y": 64,
+        "z": -40
+      },
+      "rotation": 0,
+      "ops": [
+        {
+          "op": "fill",
+          "from": [
+            0,
+            0,
+            0
+          ],
+          "to": [
+            8,
+            0,
+            8
+          ],
+          "block": "minecraft:stone_bricks"
+        }
+      ]
+    }
+  }
+}

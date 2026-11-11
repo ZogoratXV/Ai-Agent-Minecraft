@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "pluginToForeman": [
+    "hello",
+    "goal.submit",
+    "user.message",
+    "decision.answer",
+    "task.action",
+    "agent.action",
+    "diff.request",
+    "repo.add",
+    "tool.result",
+    "job.progress",
+    "world.event"
+  ],
+  "foremanToPlugin": [
+    "snapshot",
+    "agent.upsert",
+    "task.upsert",
+    "decision.upsert",
+    "goal.upsert",
+    "feed.add",
+    "foreman.status",
+    "notify",
+    "diff",
+    "tool.call",
+    "job.control",
+    "ack",
+    "error"
+  ],
+  "tools": [
+    "world.inspect",
+    "world.preview",
+    "world.place",
+    "world.undo",
+    "server.command",
+    "server.logs",
+    "server.metrics",
+    "player.simulate",
+    "body.move",
+    "body.say"
+  ],
+  "stagingOnlyTools": [
+    "player.simulate"
+  ]
+}

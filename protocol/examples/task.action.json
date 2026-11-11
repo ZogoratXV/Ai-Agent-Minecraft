@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "type": "task.action",
+  "id": "c4",
+  "actor": {
+    "uuid": "2f8a3c1e-4b5d-4e6f-8a9b-0c1d2e3f4a5b",
+    "name": "Zogorat"
+  },
+  "taskId": "t4",
+  "action": "reassign",
+  "agentId": "lucciola"
+}

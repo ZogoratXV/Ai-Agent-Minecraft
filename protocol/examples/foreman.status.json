@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "type": "foreman.status",
+  "status": {
+    "version": "0.1.0",
+    "backend": "claude",
+    "auth": "ok",
+    "paused": false
+  }
+}

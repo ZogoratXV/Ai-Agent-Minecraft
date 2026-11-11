@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "type": "tool.result",
+  "re": "f12",
+  "ok": false,
+  "error": {
+    "code": "out_of_region",
+    "message": "block 120,64,-30 is outside region \"piazza\""
+  }
+}

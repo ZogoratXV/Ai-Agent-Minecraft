@@ -1,0 +1,7 @@
+{
+  "v": 1,
+  "type": "world.event",
+  "kind": "plugin_error",
+  "text": "[EconomyPlus] NullPointerException in ShopCommand",
+  "ts": 1762862400000
+}

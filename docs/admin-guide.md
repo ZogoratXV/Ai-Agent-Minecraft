@@ -15,26 +15,30 @@ NPC, comandi e decisioni gratis.
 
 ## Comandi
 
-| Comando                                                 | Permesso             | Cosa fa                                                                                                         |
-| ------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `/agent`, `/agent help`                                 | `agentcraft.use`     | elenco comandi                                                                                                  |
-| `/agent status`                                         | `agentcraft.use`     | ruolo del server, foreman, integrazioni, backend, budget, obiettivi attivi                                      |
-| `/agent agents`                                         | `agentcraft.use`     | squadra con ruolo, stato e task                                                                                 |
-| `/agent tasks`                                          | `agentcraft.use`     | task con stato, assegnatario e dipendenze                                                                       |
-| `/agent feed`                                           | `agentcraft.use`     | ultime attività                                                                                                 |
-| `/agent decisions`                                      | `agentcraft.use`     | decisioni in attesa, con pulsanti cliccabili                                                                    |
-| `/agent goal <testo>`                                   | `agentcraft.goal`    | nuovo obiettivo per Bussola, il caposquadra                                                                     |
-| `/agent @<nome> <messaggio>`, `/agent @all <messaggio>` | `agentcraft.goal`    | messaggio a un agente o a tutti                                                                                 |
-| `/agent answer <id> <n\|opzione> [testo]`               | `agentcraft.approve` | risponde a una decisione (`-` al posto del numero per rispondere solo con testo)                                |
-| `/agent approve <id>`, `/agent reject <id>`             | `agentcraft.approve` | prima opzione / Reject                                                                                          |
-| `/agent pause [nome\|all]`, `/agent resume [nome\|all]` | `agentcraft.manage`  | mette in pausa / riprende (senza nome: tutti)                                                                   |
-| `/agent stop <nome>`, `/agent spawn <nome>`             | `agentcraft.manage`  | toglie dal turno / rimette in turno                                                                             |
-| `/agent task <id> cancel\|retry\|reassign <nome>`       | `agentcraft.manage`  | gestione task                                                                                                   |
-| `/agent diff <task>`                                    | `agentcraft.approve` | file cambiati, righe aggiunte/tolte e percorso del diff completo                                                |
-| `/agent repos`                                          | `agentcraft.use`     | repository registrati, branch base, modifiche locali                                                            |
-| `/agent repo add <percorso>`                            | `agentcraft.manage`  | registra una copia locale di una repo (backend claude)                                                          |
-| `/agent push [repo]`                                    | `agentcraft.approve` | pubblica su GitHub il lavoro unito (solo persone, mai forzato)                                                  |
-| `/agent base set <stazione>`                            | `agentcraft.manage`  | mette una stazione dove sei: `base`, `desk`, `library`, `terminal`, `testbench`, `podium`, `worksite`, `lounge` |
+| Comando                                                                   | Permesso             | Cosa fa                                                                                                         |
+| ------------------------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `/agent`, `/agent help`                                                   | `agentcraft.use`     | elenco comandi                                                                                                  |
+| `/agent status`                                                           | `agentcraft.use`     | ruolo del server, foreman, integrazioni, backend, budget, obiettivi attivi                                      |
+| `/agent agents`                                                           | `agentcraft.use`     | squadra con ruolo, stato e task                                                                                 |
+| `/agent tasks`                                                            | `agentcraft.use`     | task con stato, assegnatario e dipendenze                                                                       |
+| `/agent feed`                                                             | `agentcraft.use`     | ultime attività                                                                                                 |
+| `/agent decisions`                                                        | `agentcraft.use`     | decisioni in attesa, con pulsanti cliccabili                                                                    |
+| `/agent goal <testo>`                                                     | `agentcraft.goal`    | nuovo obiettivo per Bussola, il caposquadra                                                                     |
+| `/agent @<nome> <messaggio>`, `/agent @all <messaggio>`                   | `agentcraft.goal`    | messaggio a un agente o a tutti                                                                                 |
+| `/agent answer <id> <n\|opzione> [testo]`                                 | `agentcraft.approve` | risponde a una decisione (`-` al posto del numero per rispondere solo con testo)                                |
+| `/agent approve <id>`, `/agent reject <id>`                               | `agentcraft.approve` | prima opzione / Reject                                                                                          |
+| `/agent pause [nome\|all]`, `/agent resume [nome\|all]`                   | `agentcraft.manage`  | mette in pausa / riprende (senza nome: tutti)                                                                   |
+| `/agent stop <nome>`, `/agent spawn <nome>`                               | `agentcraft.manage`  | toglie dal turno / rimette in turno                                                                             |
+| `/agent task <id> cancel\|retry\|reassign <nome>`                         | `agentcraft.manage`  | gestione task                                                                                                   |
+| `/agent diff <task>`                                                      | `agentcraft.approve` | file cambiati, righe aggiunte/tolte e percorso del diff completo                                                |
+| `/agent repos`                                                            | `agentcraft.use`     | repository registrati, branch base, modifiche locali                                                            |
+| `/agent repo add <percorso>`                                              | `agentcraft.manage`  | registra una copia locale di una repo (backend claude)                                                          |
+| `/agent push [repo]`                                                      | `agentcraft.approve` | pubblica su GitHub il lavoro unito (solo persone, mai forzato)                                                  |
+| `/agent region pos1`, `/agent region pos2`, `/agent region create <nome>` | `agentcraft.region`  | crea una zona dove gli agenti possono costruire (dalla console: `create <nome> <mondo> x1 y1 z1 x2 y2 z2`)      |
+| `/agent region list`, `/agent region remove <nome>`                       | `agentcraft.region`  | elenca / rimuove le zone                                                                                        |
+| `/agent jobs`                                                             | `agentcraft.use`     | lavori di costruzione e annullamento                                                                            |
+| `/agent undo <task o lavoro>`                                             | `agentcraft.region`  | rimette com'era ciò che è stato costruito                                                                       |
+| `/agent base set <stazione>`                                              | `agentcraft.manage`  | mette una stazione dove sei: `base`, `desk`, `library`, `terminal`, `testbench`, `podium`, `worksite`, `lounge` |
 
 Tutti i comandi hanno il completamento con Tab (agenti, task, decisioni aperte, opzioni, stazioni).
 

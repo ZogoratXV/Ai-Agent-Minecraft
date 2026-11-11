@@ -219,3 +219,42 @@ rete o comandi sconosciuti senza il vostro permesso (vi arriva una decisione con
 
 Nota tecnica: le copie sparse fanno impostare a git `extensions.worktreeConfig=true` nella config
 della copia locale. È normale e innocuo.
+
+## 12. Costruzioni (Fase 6)
+
+Gli agenti costruiscono edifici nel mondo, ma **solo dentro una regione autorizzata** e solo dopo
+che un admin ha visto l'anteprima e ha detto "Costruisci".
+
+**1. Crea una regione** (permesso `agentcraft.region`). Vai su un angolo della zona, all'altezza del
+terreno, e scrivi `/agent region pos1`; vai sull'angolo opposto, più in alto di quanto servirà
+l'edificio, e scrivi `/agent region pos2`; poi `/agent region create piazza`. Dalla console:
+`/agent region create piazza world x1 y1 z1 x2 y2 z2`. Elenco e rimozione: `/agent region list`,
+`/agent region remove piazza`.
+
+**2. Chiedi l'edificio**: `/agent goal costruisci una casa medievale nella piazza`.
+Bussola affida il lavoro a **Matita** (architetta), che guarda la regione e disegna il progetto.
+
+- Con la **squadra simulata** Matita usa sempre la stessa casa medievale d'esempio (gratis).
+- Con gli **agenti veri** Matita disegna davvero quello che chiedete.
+
+**3. Guarda l'anteprima.** Il progetto appare come **blocchi fantasma**, visibili solo a chi ha
+`agentcraft.approve` ed è online: niente cambia davvero nel mondo. In chat arriva
+"Costruire …?" con quanti blocchi, che misure e quali materiali:
+
+- **Costruisci** → si parte;
+- **Modifica** → scrivi cosa cambiare: `/agent answer <id> 2 il tetto più alto e in pietra`;
+- **Rifiuta** → non si costruisce niente.
+
+**4. La costruzione.** Mattone (e Cazzuola, se in turno con `/agent spawn cazzuola`) vanno al
+cantiere e costruiscono **un modulo alla volta** (fondamenta, muri, tetto, interni), a
+`world.build-blocks-per-second` blocchi al secondo (10 di default), con una barra di avanzamento
+in alto. Se il server rallenta (MSPT oltre `world.pause-when-mspt-above`) il lavoro aspetta.
+Il piazzamento non usa l'AI: costa solo il progetto.
+
+**5. Annullare**: `/agent undo t3` rimette com'era tutto ciò che ha costruito il task t3 (anche a
+metà). `/agent jobs` elenca i lavori.
+
+**Cosa non possono fare mai**: costruire fuori dalla regione, usare blocchi vietati
+(`world.block-blacklist`: TNT, lava, fuoco, command block, spawner, portali, bedrock, barriere…),
+toccare contenitori con oggetti, piazzare senza la vostra approvazione. Anche se il foreman
+sbagliasse, il plugin rifiuta da solo.

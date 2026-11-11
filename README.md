@@ -6,7 +6,10 @@ dalla chat (`/agent ...`) o da una GUI, e approvano ogni merge, deploy e costruz
 
 Ispirato ad [AgentCraft](https://github.com/blendi-remade/agentcraft) (MIT), vedi [NOTICE](NOTICE).
 
-> **Stato: Fase 4.** Con `foreman.backend: claude` gli agenti Claude lavorano davvero sul codice
+> **Stato: Fase 6 (costruzioni) e Fase 4 (codice).** Gli agenti costruiscono edifici nelle regioni
+> autorizzate dopo la vostra approvazione dell'anteprima, con annulla.
+>
+> **Fase 4.** Con `foreman.backend: claude` gli agenti Claude lavorano davvero sul codice
 > dei plugin: piano, copie git separate, build e test, revisione del caposquadra, approvazione in
 > gioco e merge locale (il push resta vostro). Con `backend: sim` resta la squadra simulata gratuita.
 > Piano completo: [docs/phase1-analysis.md](docs/phase1-analysis.md).

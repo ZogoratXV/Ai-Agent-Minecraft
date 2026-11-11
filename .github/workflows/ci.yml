@@ -105,3 +105,24 @@ jobs:
         env:
           ACCEPT_EULA: 'true'
           NO_NODE: '1'
+
+  e2e-build:
+    name: end-to-end (building on Purpur 26.2, sim backend)
+    needs: [node, plugin]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v5
+      - run: npm ci
+      # The repository owner accepted the Minecraft EULA (https://aka.ms/MinecraftEULA) for these test runs.
+      - run: staging/e2e-build.sh
+        env:
+          ACCEPT_EULA: 'true'

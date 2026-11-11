@@ -29,6 +29,12 @@ Quando nella finestra compare "Done", e poco dopo "connected to the foreman":
    /agent tasks           i task devono finire "done"
    /agent help            tutti i comandi
 
+   COSTRUZIONI: segna una zona con /agent region pos1 (un angolo, a terra) e pos2 (l'angolo
+   opposto, almeno 10 blocchi piu' in alto), poi /agent region create piazza.
+   Poi: /agent goal costruisci una casa medievale
+   Vedrai l'anteprima (blocchi fantasma), clicca [1 Costruisci] e guarda Mattone costruire.
+   /agent undo t1 la toglie.
+
 Per fermare il server scrivi  stop  nella finestra.
 
 NOTE

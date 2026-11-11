@@ -1,0 +1,48 @@
+name: AgentCraftServer
+version: '${version}'
+main: dev.agentcraft.server.AgentCraftPlugin
+api-version: '26.2'
+description: AI agents as NPCs that test, improve and build, driven by the AgentCraft foreman.
+website: https://github.com/ZogoratXV/Ai-Agent-Minecraft
+dependencies:
+  server:
+    Citizens:
+      load: BEFORE
+      required: false
+    WorldGuard:
+      load: BEFORE
+      required: false
+    WorldEdit:
+      load: BEFORE
+      required: false
+    LuckPerms:
+      load: BEFORE
+      required: false
+    spark:
+      load: BEFORE
+      required: false
+permissions:
+  agentcraft.use:
+    description: See agents, tasks, status and the feed.
+    default: op
+  agentcraft.goal:
+    description: Give goals and send messages to agents.
+    default: op
+  agentcraft.approve:
+    description: Answer decisions, approve or reject merges, deploys and builds.
+    default: op
+  agentcraft.manage:
+    description: Pause, resume, stop and spawn agents; manage tasks and repositories.
+    default: op
+  agentcraft.region:
+    description: Create and remove regions where agents may build; undo build jobs.
+    default: op
+  agentcraft.admin:
+    description: Everything above.
+    default: op
+    children:
+      agentcraft.use: true
+      agentcraft.goal: true
+      agentcraft.approve: true
+      agentcraft.manage: true
+      agentcraft.region: true

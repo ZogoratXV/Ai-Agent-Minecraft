@@ -1,6 +1,7 @@
 {
   "name": "agentcraft-server",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "workspaces": [
     "protocol",

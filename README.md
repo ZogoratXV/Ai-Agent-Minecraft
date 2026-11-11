@@ -63,5 +63,4 @@ Nomi, colori, personalità e skin si cambiano in `foreman/config.json` (vedi `co
 
 ## Licenza
 
-Il codice di AgentCraft da cui prendiamo spunto è MIT ([NOTICE](NOTICE)). La licenza di questo
-repository va ancora scelta.
+[MIT](LICENSE). AgentCraft, da cui prendiamo spunto, è anch'esso MIT: vedi [NOTICE](NOTICE).

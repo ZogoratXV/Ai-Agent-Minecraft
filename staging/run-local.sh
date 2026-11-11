@@ -35,9 +35,17 @@ if [ "${1:-}" != "--smoke" ]; then
 fi
 
 LOG="$DIR/smoke.log"
-: > "$LOG"
-( sleep 1; while ! grep -qE 'Done \(|Failed to start|Exception in server tick' "$LOG"; do sleep 2; done; echo stop ) \
-  | timeout 600 java -Xms"$MEMORY" -Xmx"$MEMORY" -jar purpur.jar --nogui > "$LOG" 2>&1 || true
+FIFO="$(mktemp -u)"
+mkfifo "$FIFO"
+trap 'rm -f "$FIFO"' EXIT
+timeout 600 java -Xms"$MEMORY" -Xmx"$MEMORY" -jar purpur.jar --nogui < "$FIFO" > "$LOG" 2>&1 &
+JAVA_PID=$!
+exec 3> "$FIFO"
+# wait until the server is up (or java died), then ask it to stop
+while kill -0 "$JAVA_PID" 2>/dev/null && ! grep -qE 'Done \(' "$LOG"; do sleep 2; done
+if kill -0 "$JAVA_PID" 2>/dev/null; then echo stop >&3; fi
+exec 3>&-
+wait "$JAVA_PID" || true
 
 if grep -q "AgentCraft ready" "$LOG" && grep -q 'Done (' "$LOG"; then
   echo "smoke test passed: plugin enabled on $(grep -oE 'Purpur [^ ]+' "$LOG" | head -1 || echo Purpur)"

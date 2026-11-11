@@ -140,3 +140,63 @@ Tutti hanno il completamento con Tab.
 | "No bridge token" in console          | manca `AGENTCRAFT_TOKEN` o `token-file` nell'ambiente del server                                                   |
 | Il plugin si disattiva all'avvio      | `config.yml` non valido: la console elenca ogni errore                                                             |
 | NPC "di legno" senza skin di Citizens | Citizens assente o in errore: in console "using Mannequin bodies"                                                  |
+
+## 11. Agenti veri sui plugin (Fase 4)
+
+Con `foreman.backend: claude` gli agenti lavorano davvero sul codice dei vostri plugin.
+
+**Cosa serve sulla macchina del server**
+
+- Node 22+ e **npm**: al primo avvio il plugin installa da solo il Claude Agent SDK in
+  `plugins/AgentCraftServer/foreman/` (serve accesso a registry.npmjs.org).
+- **git** e **Maven** (per build e test dei plugin Castigo).
+- Una **chiave API** di Claude (console.anthropic.com), meglio dedicata ad AgentCraft. Mettila in un
+  file nella cartella del plugin, leggibile solo dall'utente del server (`chmod 600`), e scrivi
+  `api-key-file: anthropic.key` sotto `foreman:`. La chiave va solo al foreman, non a tutto il server.
+  Il login Claude personale dell'utente del server **non viene mai usato**: senza chiave gli agenti
+  restano fermi e `/agent status` lo dice.
+- Una **copia locale** della repo dei plugin (es. `git clone … /srv/agentcraft/repos/castigo-ecosistema`),
+  sul branch base (`main`) e senza modifiche non salvate.
+
+**Configurazione della repo**
+
+In `plugins/AgentCraftServer/foreman/config.json` (vedi `foreman/config.example.json`):
+
+```json
+{
+  "serverName": "Castamir",
+  "repos": [
+    {
+      "path": "/srv/agentcraft/repos/castigo-ecosistema",
+      "forbidden": ["CastigoClassi", "CastigoMagia", "CastigoMagic", "CastigoCombat"],
+      "sparseAlways": ["scripts", "docs/plugins", "docs/collaborazione", "skills"]
+    }
+  ]
+}
+```
+
+Oppure in gioco: `/agent repo add /srv/agentcraft/repos/castigo-ecosistema` (le esclusioni però si
+impostano solo nel file).
+
+**Come lavorano**
+
+1. `/agent goal Correggi il bug del prelievo in CastigoBanca`: Bussola legge la repo (sola lettura,
+   segue `AGENTS.md`) e crea i task.
+2. Ogni worker lavora in una **copia sparse** tutta sua (`worktrees/`), su un branch
+   `agentcraft/<agente>/<task>`. Per castigo-ecosistema crea una **nuova cartella di versione**
+   (es. `CastigoBanca-2.7.0-alpha.2`): le cartelle esistenti si possono solo leggere e copiare.
+3. Il foreman registra le modifiche e lancia `mvn -B -q test` nella cartella toccata. Se i test
+   falliscono, il task torna al worker una volta.
+4. Bussola rivede il diff e vi chiede l'approvazione in chat: `[1 Merge] [2 Request changes] [3 Reject]`.
+   `/agent diff <task>` mostra il riepilogo e dove si trova il diff completo.
+5. Con **Merge** il foreman unisce il branch nella copia locale, come vostro commit di merge.
+   **Il push e le PR li fate sempre voi.** Se nella copia ci sono modifiche non salvate, il merge
+   viene rifiutato e la decisione si ripresenta.
+
+**Cosa non possono fare**: push o qualsiasi accesso di rete con git, firmare commit, modificare
+fuori dalla propria copia, toccare i plugin esclusi o le cartelle di versione esistenti, usare la
+rete o comandi sconosciuti senza il vostro permesso (vi arriva una decisione con
+`Allow once / Always allow for this agent / Deny`), superare i tetti di spesa.
+
+Nota tecnica: le copie sparse fanno impostare a git `extensions.worktreeConfig=true` nella config
+della copia locale. È normale e innocuo.

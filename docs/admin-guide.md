@@ -64,8 +64,15 @@ Tutti i comandi hanno il completamento con Tab (agenti, task, decisioni aperte, 
 3 worker contemporanei, tetto di **15 $ al giorno**, **300 $ al mese**, **5 $ per task**. Raggiunto un
 tetto, gli agenti si mettono in pausa e gli admin vengono avvisati (Fase 4). Tutto modificabile in `config.json`.
 
+## Agenti veri
+
+Vedi la sezione 11 di [guida-rapida.md](guida-rapida.md): chiave API, copia locale della repo,
+configurazione di castigo-ecosistema, ciclo piano → lavoro → test → revisione → approvazione → merge.
+
 ## Prove automatiche
 
 `ACCEPT_EULA=true staging/e2e-sim.sh` avvia foreman (sim) e un server Purpur 26.2 con il plugin,
 gioca un obiettivo intero dalla console e controlla task, decisioni, movimenti e audit.
 Con `MODE=managed` il foreman lo avvia il plugin, con il token generato.
+`ACCEPT_EULA=true staging/e2e-claude-setup.sh` prova il setup degli agenti veri senza chiave e senza
+spesa: installazione dell'SDK, avviso in `/agent status`, `/agent repo add`.

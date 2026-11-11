@@ -54,7 +54,7 @@ Dopo aver cambiato `protocol/src`, rigenera schema, fixture e doc con `npm run g
 4. `/agent status` deve dire `Foreman: connesso`. Poi `/agent base set base` dove vuoi la base,
    e `/agent goal prova` per vedere la squadra simulata al lavoro.
 
-Tutti i comandi: [docs/admin-guide.md](docs/admin-guide.md).
+Guida rapida di configurazione: [docs/guida-rapida.md](docs/guida-rapida.md). Tutti i comandi: [docs/admin-guide.md](docs/admin-guide.md).
 
 ## Squadra predefinita
 

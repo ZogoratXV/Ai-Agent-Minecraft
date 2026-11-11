@@ -33,6 +33,7 @@ NPC, comandi e decisioni gratis.
 | `/agent diff <task>`                                    | `agentcraft.approve` | file cambiati, righe aggiunte/tolte e percorso del diff completo                                                |
 | `/agent repos`                                          | `agentcraft.use`     | repository registrati, branch base, modifiche locali                                                            |
 | `/agent repo add <percorso>`                            | `agentcraft.manage`  | registra una copia locale di una repo (backend claude)                                                          |
+| `/agent push [repo]`                                    | `agentcraft.approve` | pubblica su GitHub il lavoro unito (solo persone, mai forzato)                                                  |
 | `/agent base set <stazione>`                            | `agentcraft.manage`  | mette una stazione dove sei: `base`, `desk`, `library`, `terminal`, `testbench`, `podium`, `worksite`, `lounge` |
 
 Tutti i comandi hanno il completamento con Tab (agenti, task, decisioni aperte, opzioni, stazioni).

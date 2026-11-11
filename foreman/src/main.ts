@@ -28,6 +28,7 @@ const { values } = parseArgs({
     'step-ms': { type: 'string' },
     'use-claude-login': { type: 'boolean', default: false },
     'print-config': { type: 'boolean', default: false },
+    'parent-pid': { type: 'string' },
     help: { type: 'boolean', default: false },
   },
 });
@@ -139,3 +140,19 @@ const shutdown = async () => {
 };
 process.on('SIGINT', () => void shutdown());
 process.on('SIGTERM', () => void shutdown());
+
+// Started by the plugin: stop when the Minecraft server is gone, even if it was killed without
+// shutting us down (closing its window on Windows, a crash), so no orphan keeps the port.
+const parentPid = Number(values['parent-pid']);
+if (Number.isInteger(parentPid) && parentPid > 0) {
+  setInterval(() => {
+    try {
+      process.kill(parentPid, 0);
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code === 'ESRCH') {
+        log(`the server (pid ${parentPid}) is gone`);
+        void shutdown();
+      }
+    }
+  }, 3000).unref();
+}

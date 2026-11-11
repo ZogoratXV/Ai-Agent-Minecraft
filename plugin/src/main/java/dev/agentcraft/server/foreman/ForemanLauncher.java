@@ -232,6 +232,7 @@ public final class ForemanLauncher {
             Thread.currentThread().interrupt();
             return;
         }
+        stopLeftover();
         int fastFailures = 0;
         long backoffMs = 2_000;
         while (!stopped) {
@@ -243,7 +244,10 @@ public final class ForemanLauncher {
             long started = System.currentTimeMillis();
             try {
                 rotateLog();
-                ProcessBuilder pb = new ProcessBuilder(command(node, opts, script))
+                List<String> cmd = new ArrayList<>(command(node, opts, script));
+                cmd.addAll(List.of(
+                        "--parent-pid", String.valueOf(ProcessHandle.current().pid())));
+                ProcessBuilder pb = new ProcessBuilder(cmd)
                         .directory(opts.workDir().toFile())
                         .redirectErrorStream(true)
                         .redirectOutput(
@@ -260,6 +264,7 @@ public final class ForemanLauncher {
                     apiKey().ifPresent(k -> env.put("ANTHROPIC_API_KEY", k));
                 }
                 process = pb.start();
+                Files.writeString(pidFile(), String.valueOf(process.pid()));
                 log.info("foreman started (pid " + process.pid() + ", backend " + opts.backend() + "), log: "
                         + logFile());
                 int code = process.waitFor();
@@ -440,6 +445,46 @@ public final class ForemanLauncher {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    private Path pidFile() {
+        return opts.workDir().resolve("foreman.pid");
+    }
+
+    /**
+     * A foreman this plugin started on a previous run may still be alive (the server was killed
+     * or its window closed): it would keep the port with an old token. Stop it, but only if the
+     * saved pid is still a Node process.
+     */
+    private void stopLeftover() {
+        try {
+            if (!Files.exists(pidFile())) {
+                return;
+            }
+            long pid = Long.parseLong(Files.readString(pidFile()).strip());
+            Optional<ProcessHandle> h = ProcessHandle.of(pid);
+            if (h.isPresent() && h.get().isAlive() && isNode(h.get())) {
+                log.warning("stopping a foreman left running by a previous start (pid " + pid + ")");
+                h.get().destroy();
+                if (!h.get()
+                        .onExit()
+                        .completeOnTimeout(null, 5, TimeUnit.SECONDS)
+                        .join()
+                        .isAlive()) {
+                    return;
+                }
+                h.get().destroyForcibly();
+            }
+            Files.deleteIfExists(pidFile());
+        } catch (IOException | NumberFormatException e) {
+            log.fine("no leftover foreman: " + e.getMessage());
+        }
+    }
+
+    static boolean isNode(ProcessHandle h) {
+        String command = h.info().command().orElse("").toLowerCase(java.util.Locale.ROOT);
+        String name = Path.of(command.isEmpty() ? "x" : command).getFileName().toString();
+        return name.equals("node") || name.equals("node.exe");
     }
 
     private Path logFile() {

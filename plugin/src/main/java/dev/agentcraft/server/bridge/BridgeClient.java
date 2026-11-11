@@ -45,6 +45,7 @@ public final class BridgeClient implements WebSocket.Listener {
     private volatile WebSocket ws;
     private volatile boolean stopped;
     private volatile boolean connected;
+    private volatile boolean warnedUnauthorized;
     private long backoffMs;
     private CompletableFuture<?> sendChain = CompletableFuture.completedFuture(null);
 
@@ -106,10 +107,18 @@ public final class BridgeClient implements WebSocket.Listener {
                 .buildAsync(uri, this)
                 .whenComplete((socket, err) -> {
                     if (err != null) {
-                        log.fine("foreman not reachable: " + err.getMessage());
+                        String why = String.valueOf(err.getMessage());
+                        if (why.contains("401") && !warnedUnauthorized) {
+                            warnedUnauthorized = true;
+                            log.severe("the process on " + uri + " refuses our token: an old foreman still"
+                                    + " running? Stop the server, close it (Node.js in the task manager) and restart.");
+                        } else {
+                            log.fine("foreman not reachable: " + why);
+                        }
                         scheduleReconnect();
                         return;
                     }
+                    warnedUnauthorized = false;
                     ws = socket;
                     backoffMs = minBackoffMs;
                     send(hello.get());

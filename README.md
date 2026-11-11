@@ -6,8 +6,9 @@ dalla chat (`/agent ...`) o da una GUI, e approvano ogni merge, deploy e costruz
 
 Ispirato ad [AgentCraft](https://github.com/blendi-remade/agentcraft) (MIT), vedi [NOTICE](NOTICE).
 
-> **Stato: Fase 2 (scheletro).** Protocollo, configurazione, sicurezza di base e build sono pronti;
-> bridge, NPC e agenti arrivano nelle fasi successive. Piano completo: [docs/phase1-analysis.md](docs/phase1-analysis.md).
+> **Stato: Fase 3.** Plugin e foreman sono collegati; con il backend simulato gli NPC compaiono,
+> camminano tra le stazioni, parlano e chiedono decisioni agli admin con messaggi cliccabili.
+> Gli agenti Claude veri arrivano nella Fase 4. Piano completo: [docs/phase1-analysis.md](docs/phase1-analysis.md).
 
 ## Come è fatto
 
@@ -37,6 +38,7 @@ NPC, world tools, /agent, audit                                worktree git, dec
 npm ci && npm run check              # protocol + foreman: typecheck, lint, format, test
 cd plugin && ./gradlew build         # plugin: compilazione, Spotless, JUnit 6 + MockBukkit
 # jar: plugin/build/libs/agentcraft-server-<versione>.jar
+ACCEPT_EULA=true staging/e2e-sim.sh  # prova completa su un vero Purpur 26.2 (accetta l'EULA di Minecraft)
 ```
 
 Dopo aver cambiato `protocol/src`, rigenera schema, fixture e doc con `npm run gen:protocol`
@@ -44,11 +46,15 @@ Dopo aver cambiato `protocol/src`, rigenera schema, fixture e doc con `npm run g
 
 ## Installazione rapida (oggi)
 
-1. Copia il jar in `plugins/` e avvia il server: viene creato `plugins/AgentCraftServer/config.yml`.
-2. Imposta `server.role` (`production` o `staging`) e l'indirizzo del foreman.
-3. Esporta il token condiviso (almeno 16 caratteri) **sia** per il server **sia** per il foreman:
-   `export AGENTCRAFT_TOKEN=...`. Non va mai scritto nei file di config versionati.
-4. `/agent status` mostra ruolo del server, stato del foreman e integrazioni trovate.
+1. Esporta il token condiviso (almeno 16 caratteri) **sia** per il server **sia** per il foreman:
+   `export AGENTCRAFT_TOKEN=$(openssl rand -hex 24)`. Non va mai scritto nei file versionati.
+2. Avvia il foreman: `npm ci && cd foreman && npm start -- --backend sim`.
+3. Copia il jar in `plugins/` e avvia il server: viene creato `plugins/AgentCraftServer/config.yml`.
+   Imposta `server.role` (`production` o `staging`) e, se serve, l'indirizzo del foreman.
+4. `/agent status` deve dire `Foreman: connesso`. Poi `/agent base set base` dove vuoi la base,
+   e `/agent goal prova` per vedere la squadra simulata al lavoro.
+
+Tutti i comandi: [docs/admin-guide.md](docs/admin-guide.md).
 
 ## Squadra predefinita
 

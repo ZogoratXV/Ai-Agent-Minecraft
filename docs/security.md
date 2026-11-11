@@ -3,7 +3,7 @@
 Principio: **il plugin non si fida mai del foreman né dell'output dell'LLM.** Ogni richiesta viene
 validata nel plugin, che ha l'ultima parola.
 
-## Già in vigore (Fase 2)
+## Già in vigore (Fasi 2-3)
 
 | Regola                                                                                                                                                                                      | Dove                                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
@@ -19,8 +19,7 @@ validata nel plugin, che ha l'ultima parola.
 
 ## In arrivo
 
-- Rifiuto delle connessioni con header `Origin` (browser) e confronto del token in tempo costante (Fase 3).
-- Regioni autorizzate, limite di volume, protezione dei container, rate limit per agente (Fase 3/6).
+- Regioni autorizzate, limite di volume, protezione dei container (Fase 6).
 - Git safety (niente push, niente rete git, niente firma) e policy dei comandi shell (Fase 4).
 - Merge, deploy e costruzioni solo con approvazione umana con permesso `agentcraft.approve` (Fase 4-6).
 - In produzione solo strumenti di lettura e costruzione in regione; test e modifiche dei plugin solo su staging (Fase 5).

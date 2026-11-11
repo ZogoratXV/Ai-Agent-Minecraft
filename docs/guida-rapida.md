@@ -159,6 +159,9 @@ Con `foreman.backend: claude` gli agenti lavorano davvero sul codice dei vostri 
   `api-key-file: anthropic.key` sotto `foreman:`. La chiave va solo al foreman, non a tutto il server.
   Il login Claude personale dell'utente del server **non viene mai usato**: senza chiave gli agenti
   restano fermi e `/agent status` lo dice.
+- In alternativa alla chiave, **solo per uso personale sul proprio PC**: `claude-token-file` con un
+  token del proprio abbonamento Claude creato con `claude setup-token`. Gli agenti consumano i limiti
+  del piano. Da non usare su un server dove altre persone danno lavoro agli agenti.
 - Una **copia locale** della repo dei plugin (es. `git clone … /srv/agentcraft/repos/castigo-ecosistema`),
   sul branch base (`main`) e senza modifiche non salvate.
 

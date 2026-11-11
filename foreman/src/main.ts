@@ -26,6 +26,7 @@ const { values } = parseArgs({
     'max-budget': { type: 'string' },
     'max-turns': { type: 'string' },
     'step-ms': { type: 'string' },
+    'use-claude-login': { type: 'boolean', default: false },
     'print-config': { type: 'boolean', default: false },
     help: { type: 'boolean', default: false },
   },
@@ -41,6 +42,8 @@ if (values.help) {
   --max-budget <usd>      daily spend cap (default 15)
   --max-turns <n>         turn cap per agent run
   --step-ms <ms>          sim: pause between scripted steps (default 2500)
+  --use-claude-login      personal use only: a Claude subscription (CLAUDE_CODE_OAUTH_TOKEN from
+                          \`claude setup-token\`) instead of an API key
   --print-config          print the effective configuration and exit
 
   Secrets: AGENTCRAFT_TOKEN (bridge token), ANTHROPIC_API_KEY (claude backend).`);
@@ -117,6 +120,9 @@ if (cfg.backend === 'sim') {
 }
 foreman.setBackend(backend);
 backend.start();
+if (cfg.backend === 'claude' && cfg.useClaudeLogin) {
+  log('Agents use a Claude subscription (personal use only): its usage limits are shared with your own Claude use.');
+}
 if (cfg.backend === 'claude' && state.status.auth === 'failed') {
   log('WARNING: no ANTHROPIC_API_KEY (or Bedrock/Vertex) in the environment: the agents will not work');
 }

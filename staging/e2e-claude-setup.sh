@@ -20,6 +20,12 @@ rm -f "$DIR"/plugins/agentcraft-server-*.jar
 cp "$(ls -t "$ROOT"/plugin/build/libs/agentcraft-server-*.jar | head -1)" "$DIR/plugins/"
 rm -rf "$PDIR/foreman/home" "$PDIR/token.txt"
 sed "s/^  backend: sim$/  backend: claude/" "$ROOT/plugin/src/main/resources/config.yml" > "$PDIR/config.yml"
+# LOGIN=1: subscription mode with a fake token (no goal is submitted, so nothing is called)
+if [ "${LOGIN:-}" = "1" ]; then
+  echo "fake-subscription-token-for-tests" > "$PDIR/claude.token"
+  sed -i "s/^  claude-token-file: ''$/  claude-token-file: claude.token/" "$PDIR/config.yml"
+  grep -q "^  claude-token-file: claude.token" "$PDIR/config.yml"
+fi
 grep -q "^  backend: claude" "$PDIR/config.yml"
 grep -qs "eula=true" "$DIR/eula.txt" || { [ "${ACCEPT_EULA:-}" = "true" ] && echo "eula=true" > "$DIR/eula.txt"; } || { echo "Set ACCEPT_EULA=true" >&2; exit 1; }
 [ -f "$DIR/server.properties" ] || printf 'online-mode=false\nserver-ip=127.0.0.1\nserver-port=25566\nlevel-type=minecraft\\:flat\ngenerate-structures=false\nspawn-protection=0\n' > "$DIR/server.properties"
@@ -56,6 +62,14 @@ if [ "${NO_NODE:-}" = "1" ]; then
   plain "$LOG" | grep -q "Maven 3.9.16 ready" || fail "Maven was not downloaded"
 fi
 echo "agent status" >&3; sleep 2
+if [ "${LOGIN:-}" = "1" ]; then
+  plain "$LOG" | grep -q "personal use" || fail "no personal-use warning"
+  plain "$LOG" | grep -q "Agenti fermi" && fail "subscription mode refused a token"
+  grep -q -- "--use-claude-login" <(ps -ef) || fail "foreman not in subscription mode"
+  echo "stop" >&3; wait "$JAVA_PID" || true
+  echo "E2E PASSED: subscription mode, warning shown, agents ready, no call made"
+  exit 0
+fi
 plain "$LOG" | grep -q "Agenti fermi: manca ANTHROPIC_API_KEY.*imposta la chiave" || fail "/agent status does not say that the key is missing"
 echo "agent repo add $REPO" >&3; sleep 3
 plain "$LOG" | grep -q "Repository registrato" || fail "repo add failed"

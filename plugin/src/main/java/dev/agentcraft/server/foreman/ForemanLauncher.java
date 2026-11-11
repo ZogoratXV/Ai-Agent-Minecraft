@@ -44,7 +44,20 @@ public final class ForemanLauncher {
             List<String> extraArgs,
             Path workDir,
             String token,
-            Path apiKeyFile) {}
+            Path apiKeyFile,
+            Path claudeTokenFile) {
+        public Options(
+                String node,
+                String npm,
+                String backend,
+                URI bridge,
+                List<String> extraArgs,
+                Path workDir,
+                String token,
+                Path apiKeyFile) {
+            this(node, npm, backend, bridge, extraArgs, workDir, token, apiKeyFile, null);
+        }
+    }
 
     private final Options opts;
     private final Supplier<InputStream> bundle;
@@ -63,7 +76,8 @@ public final class ForemanLauncher {
                 opts.extraArgs(),
                 opts.workDir().toAbsolutePath(),
                 opts.token(),
-                opts.apiKeyFile());
+                opts.apiKeyFile(),
+                opts.claudeTokenFile());
         this.bundle = bundle;
         this.log = log;
     }
@@ -93,6 +107,9 @@ public final class ForemanLauncher {
                 String.valueOf(o.bridge().getPort() > 0 ? o.bridge().getPort() : 7878),
                 "--home",
                 o.workDir().resolve("home").toString()));
+        if (o.claudeTokenFile() != null) {
+            cmd.add("--use-claude-login");
+        }
         cmd.addAll(o.extraArgs());
         return cmd;
     }
@@ -233,7 +250,15 @@ public final class ForemanLauncher {
                                 ProcessBuilder.Redirect.appendTo(logFile().toFile()));
                 Map<String, String> env = withPath(pb.environment());
                 env.put("AGENTCRAFT_TOKEN", opts.token());
-                apiKey().ifPresent(k -> env.put("ANTHROPIC_API_KEY", k));
+                if (opts.claudeTokenFile() != null) {
+                    // subscription mode: a key left in the server environment must not bill instead
+                    env.remove("ANTHROPIC_API_KEY");
+                    env.remove("ANTHROPIC_AUTH_TOKEN");
+                    readSecret(opts.claudeTokenFile(), "foreman.claude-token-file")
+                            .ifPresent(k -> env.put("CLAUDE_CODE_OAUTH_TOKEN", k));
+                } else {
+                    apiKey().ifPresent(k -> env.put("ANTHROPIC_API_KEY", k));
+                }
                 process = pb.start();
                 log.info("foreman started (pid " + process.pid() + ", backend " + opts.backend() + "), log: "
                         + logFile());
@@ -292,14 +317,15 @@ public final class ForemanLauncher {
 
     /** The key from foreman.api-key-file, if set. Only the foreman process gets it. */
     private Optional<String> apiKey() {
-        if (opts.apiKeyFile() == null) {
-            return Optional.empty();
-        }
+        return opts.apiKeyFile() == null ? Optional.empty() : readSecret(opts.apiKeyFile(), "foreman.api-key-file");
+    }
+
+    private Optional<String> readSecret(Path file, String setting) {
         try {
-            String k = Files.readString(opts.apiKeyFile()).strip();
+            String k = Files.readString(file).strip();
             return k.isEmpty() ? Optional.empty() : Optional.of(k);
         } catch (IOException e) {
-            log.warning("cannot read foreman.api-key-file: " + e.getMessage());
+            log.warning("cannot read " + setting + ": " + e.getMessage());
             return Optional.empty();
         }
     }

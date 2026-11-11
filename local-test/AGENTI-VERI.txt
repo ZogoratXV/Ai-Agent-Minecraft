@@ -5,13 +5,19 @@ Gli agenti Claude lavorano davvero sul codice di una repo sul tuo PC: la leggono
 modificano in copie separate, fanno build e test, e ti chiedono in gioco di approvare.
 L'approvazione unisce il lavoro nella tua copia locale. Non pubblicano mai niente su GitHub.
 
-COSTA DENARO (API di Claude): una prova piccola costa pochi dollari. Sotto trovi come
-abbassare i limiti.
+DUE MODI PER PAGARE GLI AGENTI (scegline uno):
+ A) Il tuo ABBONAMENTO Claude (Pro/Max), solo per uso personale sul tuo PC: nessun costo in
+    piu', ma gli agenti consumano i limiti del tuo piano (gli stessi che usi tu con Claude).
+    NON usarlo sul server condiviso col socio: li' serve una chiave API.
+ B) Una CHIAVE API (a consumo): una prova piccola costa pochi dollari.
 
 1) COSA SERVE IN PIU'
    - git: su Windows installa "Git for Windows" (https://git-scm.com/download/win),
      serve anche agli agenti per i comandi.
-   - Una chiave API Claude: https://console.anthropic.com (meglio crearne una solo per questo).
+   - Per il modo A: Claude Code installato (https://claude.com/claude-code). Poi nel terminale:
+       claude setup-token
+     accedi con il tuo account e copia il token che ti mostra.
+   - Per il modo B: una chiave API Claude da https://console.anthropic.com.
    - Una copia della repo dei plugin sul PC, per esempio:
        git clone https://github.com/Knefas90/castigo-ecosistema C:\agentcraft\castigo-ecosistema
      (la repo e' privata: serve il tuo accesso GitHub). Lasciala sul branch main, senza
@@ -19,10 +25,13 @@ abbassare i limiti.
    Maven e l'Agent SDK li scarica il plugin da solo al primo avvio (circa 20 secondi).
 
 2) CONFIGURAZIONE (con il server FERMO)
-   a. Crea il file  plugins\AgentCraftServer\anthropic.key  con dentro solo la chiave.
+   a. Modo A (abbonamento): crea il file  plugins\AgentCraftServer\claude.token  con dentro solo
+      il token. Modo B (API): crea  plugins\AgentCraftServer\anthropic.key  con dentro la chiave.
    b. Apri  plugins\AgentCraftServer\config.yml  e nella sezione "foreman:" cambia:
         backend: claude
-        api-key-file: anthropic.key
+      e poi SOLO UNA di queste due righe:
+        claude-token-file: claude.token       (modo A)
+        api-key-file: anthropic.key           (modo B)
    c. Copia  foreman-config.esempio.json  in  plugins\AgentCraftServer\foreman\config.json
       e correggi "path" con la cartella della tua copia della repo.
       Su Windows usa le barre normali:  "C:/agentcraft/castigo-ecosistema"
@@ -41,9 +50,10 @@ abbassare i limiti.
      che la sicurezza non conosce: leggi cosa chiedono prima di accettare.
    - Alla fine: "Unire t1?". Prima guarda  /agent diff t1  (ti dice anche dove sta il file
      .diff completo da aprire). Merge = il lavoro entra nella tua copia locale.
-   - /agent status mostra quanto hai speso oggi.
+   - /agent status mostra la spesa di oggi (con l'abbonamento e' solo una stima: conta il
+     limite del tuo piano).
 
-5) LIMITI DI SPESA (consigliati per la prova)
+5) LIMITI (consigliati per la prova)
    In config.json la parte "budget": 5 $ al giorno, 2 $ per task. Raggiunto il limite gli
    agenti si fermano e te lo dicono.
 

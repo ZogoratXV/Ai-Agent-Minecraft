@@ -99,6 +99,13 @@ public final class SettingsLoader {
         if (apiKeyFile != null && (apiKeyFile.contains("..") || apiKeyFile.startsWith("/"))) {
             errors.add("foreman.api-key-file must be a file name inside the plugin folder");
         }
+        String claudeTokenFile = cfg.getString("foreman.claude-token-file", "");
+        if (claudeTokenFile != null && (claudeTokenFile.contains("..") || claudeTokenFile.startsWith("/"))) {
+            errors.add("foreman.claude-token-file must be a file name inside the plugin folder");
+        }
+        if (apiKeyFile != null && !apiKeyFile.isBlank() && claudeTokenFile != null && !claudeTokenFile.isBlank()) {
+            errors.add("set only one of foreman.api-key-file and foreman.claude-token-file");
+        }
         List<String> extraArgs = cfg.getStringList("foreman.extra-args");
         for (String a : extraArgs) {
             if (a.length() > 200 || a.chars().anyMatch(c -> c < 0x20)) {
@@ -146,7 +153,8 @@ public final class SettingsLoader {
                         cfg.getString("foreman.npm", "auto"),
                         backend,
                         extraArgs,
-                        apiKeyFile == null ? "" : apiKeyFile));
+                        apiKeyFile == null ? "" : apiKeyFile,
+                        claudeTokenFile == null ? "" : claudeTokenFile));
     }
 
     /** Loopback or private ranges only, without any DNS lookup. */

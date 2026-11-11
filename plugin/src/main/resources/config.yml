@@ -31,6 +31,11 @@ foreman:
   # Anthropic API key. It is given only to the foreman process, never to the whole server.
   # Alternative: ANTHROPIC_API_KEY in the server's environment.
   api-key-file: ''
+  # PERSONAL USE ONLY, instead of api-key-file: the agents work with your Claude subscription
+  # (Pro/Max). Make a token with `claude setup-token` (Claude Code), put it in this file (in the
+  # plugin folder) and restart. The agents share your plan's usage limits. Do not use it on a
+  # server where other people give the agents work: use an API key there.
+  claude-token-file: ''
   # Extra command line options for the foreman, e.g. ['--step-ms', '1000'].
   extra-args: []
 

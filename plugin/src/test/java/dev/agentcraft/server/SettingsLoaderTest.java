@@ -90,6 +90,15 @@ class SettingsLoaderTest {
     }
 
     @Test
+    void apiKeyAndSubscriptionTokenAreExclusive() {
+        YamlConfiguration c = defaults();
+        c.set("foreman.claude-token-file", "claude.token");
+        assertEquals("claude.token", SettingsLoader.load(c).foreman().claudeTokenFile());
+        c.set("foreman.api-key-file", "anthropic.key");
+        assertThrows(SettingsException.class, () -> SettingsLoader.load(c));
+    }
+
+    @Test
     void roleIsRequired() {
         YamlConfiguration c = defaults();
         c.set("server.role", null);

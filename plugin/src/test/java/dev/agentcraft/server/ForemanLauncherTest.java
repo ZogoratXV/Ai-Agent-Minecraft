@@ -50,6 +50,18 @@ class ForemanLauncherTest {
                         "400"),
                 cmd);
         assertFalse(String.join(" ", cmd).contains("secret"));
+        assertFalse(cmd.contains("--use-claude-login"));
+        var login = new ForemanLauncher.Options(
+                "node",
+                "npm",
+                "claude",
+                URI.create("ws://127.0.0.1:7999"),
+                List.of(),
+                dir,
+                "t".repeat(20),
+                null,
+                dir.resolve("claude.token"));
+        assertTrue(ForemanLauncher.command(login, dir.resolve("foreman.mjs")).contains("--use-claude-login"));
     }
 
     @Test

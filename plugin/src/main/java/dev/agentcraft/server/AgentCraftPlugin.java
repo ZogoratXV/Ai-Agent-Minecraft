@@ -124,9 +124,15 @@ public class AgentCraftPlugin extends JavaPlugin {
                             f.extraArgs(),
                             getDataPath().resolve("foreman"),
                             token,
-                            f.apiKeyFile().isBlank() ? null : getDataPath().resolve(f.apiKeyFile())),
+                            f.apiKeyFile().isBlank() ? null : getDataPath().resolve(f.apiKeyFile()),
+                            f.claudeTokenFile().isBlank() ? null : getDataPath().resolve(f.claudeTokenFile())),
                     () -> getResource("foreman/foreman.mjs"),
                     getLogger());
+            if (!f.claudeTokenFile().isBlank()) {
+                getLogger()
+                        .warning("Agents use the Claude subscription of whoever made the token (personal use"
+                                + " only): do not use it on a server where other people give the agents work.");
+            }
             launcher.start();
         }
         bridge = new BridgeClient(

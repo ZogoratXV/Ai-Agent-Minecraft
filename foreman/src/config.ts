@@ -93,6 +93,11 @@ export const ConfigSchema = z.object({
   cast: z.array(CastOverride).default([]),
   /** plugin repositories the agents work on (more can be added in game with /agent repo add) */
   repos: z.array(RepoEntry).default([]),
+  /**
+   * Personal use only: the agents use a Claude subscription through CLAUDE_CODE_OAUTH_TOKEN
+   * (made with `claude setup-token`) instead of an API key.
+   */
+  useClaudeLogin: z.boolean().default(false),
   /** server name the agents are told about */
   serverName: z.string().max(64).default('Minecraft'),
   sim: z.object({ stepMs: z.number().int().min(0).max(60_000).default(2500) }).default({ stepMs: 2500 }),
@@ -130,6 +135,8 @@ export function buildConfig({ file = {}, env = {}, cli = {} }: ConfigSources): C
   set('port', num(env.AGENTCRAFT_PORT));
   set('home', env.AGENTCRAFT_HOME);
   set('backend', env.AGENTCRAFT_BACKEND);
+  if (env.AGENTCRAFT_USE_CLAUDE_LOGIN === '1') merged.useClaudeLogin = true;
+  if (cli['use-claude-login'] === true) merged.useClaudeLogin = true;
 
   set('host', cli.host);
   set('port', num(cli.port));

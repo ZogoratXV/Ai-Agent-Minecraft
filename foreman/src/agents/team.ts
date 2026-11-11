@@ -13,7 +13,7 @@ import { type RepoRecord, type RepoSettings } from '../repos.js';
 import { ROLES } from '../roles.js';
 import type { AgentT, DecisionT, GoalT, TaskT, TeamState } from '../state.js';
 import type { Store } from '../store.js';
-import { detectApiAuth, NO_API_AUTH_MESSAGE, withApiAuthOnly } from './auth.js';
+import { detectApiAuth, NO_API_AUTH_MESSAGE, NO_LOGIN_MESSAGE, withAuthMode } from './auth.js';
 import { basePrompt, planPrompt, qaPrompt, repoPrompt, reviewPrompt, workPrompt } from './prompts.js';
 import type { Permission, Runner, TurnResult } from './runner.js';
 import { buildTools, type TeamApi } from './tools.js';
@@ -120,15 +120,19 @@ export class TeamBackend implements Backend, TeamApi {
   }
 
   private apiAuth(): boolean {
-    return detectApiAuth(this.o.baseEnv ?? process.env).ok;
+    return detectApiAuth(this.o.baseEnv ?? process.env, this.o.cfg.useClaudeLogin).ok;
   }
 
   start(): void {
-    const auth = detectApiAuth(this.o.baseEnv ?? process.env);
+    const auth = detectApiAuth(this.o.baseEnv ?? process.env, this.o.cfg.useClaudeLogin);
     this.o.state.setStatus(
       auth.ok
         ? { backend: 'claude', auth: 'unknown', message: `agenti Claude (${auth.source})` }
-        : { backend: 'claude', auth: 'failed', message: NO_API_AUTH_MESSAGE },
+        : {
+            backend: 'claude',
+            auth: 'failed',
+            message: this.o.cfg.useClaudeLogin ? NO_LOGIN_MESSAGE : NO_API_AUTH_MESSAGE,
+          },
     );
     this.updateBudgetStatus();
     this.pump();
@@ -639,9 +643,10 @@ export class TeamBackend implements Backend, TeamApi {
       maxTurns: agent.role === 'lead' ? this.o.cfg.maxTurns.lead : this.o.cfg.maxTurns.worker,
       maxBudgetUsd: Number(cap.toFixed(2)),
       ...(t.resume ? { resume: t.resume } : {}),
-      env: withApiAuthOnly(
+      env: withAuthMode(
         agentEnv(this.o.baseEnv ?? process.env, t.cwd, this.identity(t.agentId)),
         join(this.o.home, 'claude-config'),
+        this.o.cfg.useClaudeLogin,
       ),
       tools: buildTools(t.agentId, agent.role === 'lead', this),
       canUseTool: (tool, input) =>

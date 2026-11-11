@@ -70,10 +70,10 @@ afterEach(() => {
   cleanup = [];
 });
 
-function setup(scripts: Record<string, Script>, noAuth = false) {
+function setup(scripts: Record<string, Script>, noAuth = false, login = false) {
   const repoPath = fixtureRepo();
   const home = mkdtempSync(join(tmpdir(), 'ac-home-'));
-  const cfg = ConfigSchema.parse({ backend: 'claude' });
+  const cfg = ConfigSchema.parse({ backend: 'claude', useClaudeLogin: login });
   const state = newState();
   for (const a of buildTeam(cfg)) state.agents.set(a.id, a);
   const repos = new RepoManager(join(home, 'worktrees'));
@@ -335,6 +335,27 @@ describe('team backend (scripted agents, real git)', () => {
     expect(ctx.state.feed.at(-1)?.text).toContain('ha pubblicato');
     // agents have no tool for it, and their git cannot push
     expect([...ctx.runner.turns]).toHaveLength(0);
+  });
+
+  it('subscription mode (opt-in): agents get the subscription token and never an API key', async () => {
+    let seen: NodeJS.ProcessEnv | undefined;
+    const ctx = setup(
+      {
+        bussola: async (spec) => {
+          seen = spec.env;
+        },
+      },
+      false,
+      true,
+    );
+    await ctx.team.init([{ path: ctx.repoPath }]);
+    ctx.team.start();
+    expect(ctx.state.status.message).toContain('abbonamento');
+    ctx.foreman.handle({ v: 1, type: 'goal.submit', actor, text: 'prova' });
+    await expect.poll(() => seen, { timeout: 10_000, interval: 20 }).toBeTruthy();
+    expect(seen!.CLAUDE_CODE_OAUTH_TOKEN).toBe('personal-login');
+    expect(seen!.ANTHROPIC_API_KEY).toBeUndefined();
+    expect(seen!.CLAUDE_CONFIG_DIR).toContain('claude-config');
   });
 
   it('never runs an agent without API authentication (no fallback to a personal login)', async () => {

@@ -1,36 +1,55 @@
 {
   "//": "Copy to foreman/config.json (ignored by git). Keys starting with // are comments. Secrets do NOT go here: use AGENTCRAFT_TOKEN and ANTHROPIC_API_KEY in the environment.",
-
   "// host": "Bridge address. Only loopback or private network addresses are accepted.",
   "host": "127.0.0.1",
   "port": 7878,
-
   "// home": "State directory: tasks, decisions, memory, worktrees, logs.",
   "home": ".agentcraft",
-
   "// backend": "sim = scripted team, no API usage (for development). claude = real agents.",
   "backend": "sim",
-
   "// tokenFile": "Optional: read the bridge token from a file outside git instead of AGENTCRAFT_TOKEN.",
-
   "// models": "lead/architect use 'lead', workers use 'worker', summaries use 'light'.",
   "models": {
     "lead": "claude-opus-5-5",
     "worker": "claude-sonnet-5-5",
     "light": "claude-haiku-5-5"
   },
-  "effort": { "lead": "high", "worker": "medium", "light": "low" },
-
+  "effort": {
+    "lead": "high",
+    "worker": "medium",
+    "light": "low"
+  },
   "// maxConcurrent": "Workers running at the same time.",
   "maxConcurrent": 3,
-  "maxTurns": { "lead": 40, "worker": 80 },
-
+  "maxTurns": {
+    "lead": 40,
+    "worker": 80
+  },
   "// budget": "Hard caps in USD. When reached, agents pause and the admins are told in game.",
-  "budget": { "dailyUsd": 15, "monthlyUsd": 300, "perTaskUsd": 5 },
-
+  "budget": {
+    "dailyUsd": 15,
+    "monthlyUsd": 300,
+    "perTaskUsd": 5
+  },
   "// cast": "Change names, colors, personalities, skins (skin.name = a player name) or who is on shift at start.",
   "cast": [
-    { "id": "bussola", "title": "Caposquadra" },
-    { "id": "civetta", "onShift": false }
+    {
+      "id": "bussola",
+      "title": "Caposquadra"
+    },
+    {
+      "id": "civetta",
+      "onShift": false
+    }
+  ],
+  "// serverName": "Server name the agents are told about.",
+  "serverName": "Castamir",
+  "// repos": "Plugin repositories the agents work on (also: /agent repo add <path> in game). path = a local clone on this machine; the merge after your approval happens there, the push is always yours. forbidden = path fragments agents may never change. sparseAlways = folders always checked out (sparse worktrees are automatic for big repositories). ci = optional test command ({module} = the task's folder); by default Maven/Gradle/npm is detected.",
+  "repos": [
+    {
+      "path": "/srv/agentcraft/repos/castigo-ecosistema",
+      "forbidden": ["CastigoClassi", "CastigoMagia", "CastigoMagic", "CastigoCombat"],
+      "sparseAlways": ["scripts", "docs/plugins", "docs/collaborazione", "skills"]
+    }
   ]
 }

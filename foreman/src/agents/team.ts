@@ -13,6 +13,7 @@ import { type RepoRecord, type RepoSettings } from '../repos.js';
 import { ROLES } from '../roles.js';
 import type { AgentT, DecisionT, GoalT, TaskT, TeamState } from '../state.js';
 import type { Store } from '../store.js';
+import { detectApiAuth, NO_API_AUTH_MESSAGE, withApiAuthOnly } from './auth.js';
 import { basePrompt, planPrompt, qaPrompt, repoPrompt, reviewPrompt, workPrompt } from './prompts.js';
 import type { Permission, Runner, TurnResult } from './runner.js';
 import { buildTools, type TeamApi } from './tools.js';
@@ -118,8 +119,17 @@ export class TeamBackend implements Backend, TeamApi {
     this.reconcile();
   }
 
+  private apiAuth(): boolean {
+    return detectApiAuth(this.o.baseEnv ?? process.env).ok;
+  }
+
   start(): void {
-    this.o.state.setStatus({ backend: 'claude', auth: 'unknown', message: 'agenti Claude' });
+    const auth = detectApiAuth(this.o.baseEnv ?? process.env);
+    this.o.state.setStatus(
+      auth.ok
+        ? { backend: 'claude', auth: 'unknown', message: `agenti Claude (${auth.source})` }
+        : { backend: 'claude', auth: 'failed', message: NO_API_AUTH_MESSAGE },
+    );
     this.updateBudgetStatus();
     this.pump();
   }
@@ -128,6 +138,7 @@ export class TeamBackend implements Backend, TeamApi {
     this.stopped = true;
     for (const r of this.running.values()) r.abort.abort();
     this.save();
+    this.o.store.flush();
   }
 
   private save(): void {
@@ -278,6 +289,8 @@ export class TeamBackend implements Backend, TeamApi {
 
   private pump(): void {
     if (this.stopped || this.o.state.status.paused) return;
+    // never fall back to someone's claude.ai login: without API auth nobody works
+    if (!this.apiAuth()) return;
     if (this.budgetLeft() <= 0.05) {
       this.o.state.setStatus({ paused: true, message: 'budget raggiunto: agenti in pausa' });
       this.o.state.notify(
@@ -402,6 +415,7 @@ export class TeamBackend implements Backend, TeamApi {
     const t = this.task(taskId);
     if (t.status === 'cancelled' || t.status === 'done') return;
     const rt = this.rt(taskId);
+    if (!rt.repoId && t.repoId && this.o.repos.repos.has(t.repoId)) rt.repoId = t.repoId;
     const agent = this.o.state.agents.get(agentId)!;
     const repo = rt.repoId ? this.o.repos.get(rt.repoId) : undefined;
     if (repo && !rt.worktree) {
@@ -608,7 +622,10 @@ export class TeamBackend implements Backend, TeamApi {
       maxTurns: agent.role === 'lead' ? this.o.cfg.maxTurns.lead : this.o.cfg.maxTurns.worker,
       maxBudgetUsd: Number(cap.toFixed(2)),
       ...(t.resume ? { resume: t.resume } : {}),
-      env: agentEnv(this.o.baseEnv ?? process.env, t.cwd, this.identity(t.agentId)),
+      env: withApiAuthOnly(
+        agentEnv(this.o.baseEnv ?? process.env, t.cwd, this.identity(t.agentId)),
+        join(this.o.home, 'claude-config'),
+      ),
       tools: buildTools(t.agentId, agent.role === 'lead', this),
       canUseTool: (tool, input) =>
         this.permission(

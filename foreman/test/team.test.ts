@@ -70,7 +70,7 @@ afterEach(() => {
   cleanup = [];
 });
 
-function setup(scripts: Record<string, Script>) {
+function setup(scripts: Record<string, Script>, noAuth = false) {
   const repoPath = fixtureRepo();
   const home = mkdtempSync(join(tmpdir(), 'ac-home-'));
   const cfg = ConfigSchema.parse({ backend: 'claude' });
@@ -89,6 +89,7 @@ function setup(scripts: Record<string, Script>) {
     clock: realClock,
     cast: DEFAULT_CAST,
     home,
+    baseEnv: { ...process.env, ANTHROPIC_API_KEY: noAuth ? '' : 'test-key', CLAUDE_CODE_OAUTH_TOKEN: 'personal-login' },
   });
   const foreman = new Foreman(state, realClock, team);
   cleanup.push(() => team.stop());
@@ -134,6 +135,9 @@ describe('team backend (scripted agents, real git)', () => {
       },
       lucciola: async (spec, call, n) => {
         expect(spec.cwd).toContain('worktrees');
+        expect(spec.env.CLAUDE_CODE_OAUTH_TOKEN).toBeUndefined();
+        expect(spec.env.CLAUDE_CONFIG_DIR).toContain('claude-config');
+        expect(spec.env.GIT_ALLOW_PROTOCOL).toBe('agentcraft-none');
         expect(spec.systemPrompt).toContain('Never edit an existing version folder');
         const next = join(spec.cwd, 'modules/DemoPlugin-1.0.0-alpha.2');
         // forbidden and dangerous things are refused by the policy
@@ -255,6 +259,79 @@ describe('team backend (scripted agents, real git)', () => {
     expect(existsSync(join(ctx.repoPath, 'modules/DemoPlugin-1.0.0-alpha.2'))).toBe(false);
     expect(sh(ctx.repoPath, 'branch', '--list', 'agentcraft/*')).toContain('agentcraft/lucciola/t1-prova'); // branch kept
   }, 60_000);
+
+  it('resumes unfinished work after a restart of the foreman', async () => {
+    const first = setup({
+      bussola: async (spec, call) => {
+        if (spec.prompt.includes('New goal'))
+          await call('create_task', {
+            title: 'Dopo il riavvio',
+            kind: 'code',
+            assignee: 'lucciola',
+            deps: [],
+            paths: [],
+          });
+      },
+    });
+    await first.team.init([{ path: first.repoPath, ci: 'node -e 0' }]);
+    first.team.start();
+    // Lucciola is paused: the task is planned and waiting when the foreman "crashes"
+    first.foreman.handle({ v: 1, type: 'agent.action', actor, agentId: 'lucciola', action: 'pause' });
+    first.foreman.handle({ v: 1, type: 'goal.submit', actor, text: 'riavvio' });
+    await expect.poll(() => first.state.tasks.get('t1')?.status, { timeout: 15_000, interval: 20 }).toBe('doing');
+    first.team.stop();
+    const saved = first.state.exportData();
+
+    // a new foreman process on the same home folder
+    const state = newState();
+    const cfg = ConfigSchema.parse({ backend: 'claude' });
+    for (const a of buildTeam(cfg)) state.agents.set(a.id, a);
+    state.importData(saved);
+    const runner = new ScriptedRunner({
+      lucciola: async (spec, call) => {
+        writeFileSync(join(spec.cwd, 'ripreso.txt'), 'ok\n');
+        await call('update_task', { status: 'review', summary: 'ripreso dopo il riavvio' });
+      },
+      bussola: async (_spec, call) => {
+        await call('request_merge', { taskId: 't1', notes: 'ok' });
+      },
+    });
+    const team = new TeamBackend({
+      cfg,
+      state,
+      repos: new RepoManager(join(first.home, 'worktrees')),
+      memory: new Memory(join(first.home, 'memory')),
+      runner,
+      store: new Store(first.home),
+      clock: realClock,
+      cast: DEFAULT_CAST,
+      home: first.home,
+      baseEnv: { ...process.env, ANTHROPIC_API_KEY: 'test-key' },
+    });
+    cleanup.push(() => team.stop());
+    const foreman = new Foreman(state, realClock, team);
+    await team.init([{ path: first.repoPath, ci: 'node -e 0' }]);
+    team.start();
+    foreman.handle({ v: 1, type: 'agent.action', actor, agentId: 'lucciola', action: 'resume' });
+    await expect
+      .poll(() => [...state.decisions.values()].find((d) => d.kind === 'merge' && d.status === 'open')?.taskId, {
+        timeout: 15_000,
+        interval: 20,
+      })
+      .toBe('t1');
+    expect(runner.turns.map((t) => t.agentId)).toEqual(['lucciola', 'bussola']);
+  }, 60_000);
+
+  it('never runs an agent without API authentication (no fallback to a personal login)', async () => {
+    const ctx = setup({ bussola: async () => {} }, true);
+    await ctx.team.init([{ path: ctx.repoPath }]);
+    ctx.team.start();
+    ctx.foreman.handle({ v: 1, type: 'goal.submit', actor, text: 'prova' });
+    await new Promise((r) => setTimeout(r, 300));
+    expect(ctx.runner.turns).toHaveLength(0);
+    expect(ctx.state.status).toMatchObject({ auth: 'failed' });
+    expect(ctx.state.status.message).toContain('ANTHROPIC_API_KEY');
+  });
 
   it('refuses the merge while the admins have uncommitted changes in the checkout', async () => {
     const ctx = setup({

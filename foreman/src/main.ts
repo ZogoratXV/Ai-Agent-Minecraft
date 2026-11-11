@@ -117,16 +117,8 @@ if (cfg.backend === 'sim') {
 }
 foreman.setBackend(backend);
 backend.start();
-if (cfg.backend === 'claude') {
-  const hasKey =
-    !!process.env.ANTHROPIC_API_KEY || !!process.env.CLAUDE_CODE_USE_BEDROCK || !!process.env.CLAUDE_CODE_USE_VERTEX;
-  if (!hasKey) {
-    state.setStatus({
-      auth: 'failed',
-      message: 'manca ANTHROPIC_API_KEY (o Bedrock/Vertex): gli agenti non possono lavorare',
-    });
-    log('WARNING: no ANTHROPIC_API_KEY in the environment');
-  }
+if (cfg.backend === 'claude' && state.status.auth === 'failed') {
+  log('WARNING: no ANTHROPIC_API_KEY (or Bedrock/Vertex) in the environment: the agents will not work');
 }
 
 await bridge.start();

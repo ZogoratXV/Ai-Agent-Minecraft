@@ -56,9 +56,12 @@ export function run(cmd: string, args: string[], opts: RunOptions): Promise<RunR
   });
 }
 
-/** git with the foreman's own environment (not the agents' restricted one). Throws on failure. */
+/**
+ * git with the foreman's own environment (not the agents' restricted one). Throws on failure.
+ * Output up to 64 MB is kept whole: file lists and diffs of big repositories must not be cut.
+ */
 export async function git(cwd: string, args: string[], timeoutMs = 120_000): Promise<string> {
-  const r = await run('git', args, { cwd, timeoutMs });
+  const r = await run('git', args, { cwd, timeoutMs, maxOutput: 64 * 1024 * 1024 });
   if (r.code !== 0) throw new Error(`git ${args.join(' ')}: ${(r.stderr || r.stdout).trim().slice(-500)}`);
   return r.stdout;
 }

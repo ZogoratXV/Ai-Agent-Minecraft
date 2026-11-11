@@ -6,8 +6,13 @@ import { Bridge } from './bridge.js';
 import { realClock } from './clock.js';
 import { buildConfig, readConfigFile, resolveToken } from './config.js';
 import { buildTeam, Foreman } from './foreman.js';
+import { join, resolve } from 'node:path';
 import { SimBackend } from './sim/scenario.js';
-import { TeamState } from './state.js';
+import { DEFAULT_CAST } from './cast.js';
+import { Memory } from './memory.js';
+import { RepoManager, type RepoSettings } from './repos.js';
+import { Store } from './store.js';
+import { dropUndefined, TeamState, type TeamData } from './state.js';
 import { FOREMAN_VERSION } from './version.js';
 
 const { values } = parseArgs({
@@ -80,14 +85,49 @@ const bridge = new Bridge({
 state.on('message', (m) => bridge.broadcast(m));
 
 let backend: Backend;
+let store: Store | undefined;
 if (cfg.backend === 'sim') {
   backend = new SimBackend(state, bridge, realClock, { stepMs: cfg.sim.stepMs });
 } else {
-  console.error('The claude backend arrives in phase 4. Use --backend sim for now.');
-  process.exit(2);
+  const home = resolve(cfg.home);
+  store = new Store(home);
+  const saved = store.readJson<TeamData>('state.json');
+  if (saved) state.importData(saved);
+  const persist = store;
+  state.on('message', () => persist.scheduleWrite('state.json', () => state.exportData()));
+  const repos = new RepoManager(join(home, 'worktrees'), (r) => state.putRepo(r));
+  state.reposView = () => [...repos.repos.values()].map((r) => RepoManager.view(r));
+  const { ClaudeRunner } = await import('./agents/claude.js');
+  const { TeamBackend } = await import('./agents/team.js');
+  const team = new TeamBackend({
+    cfg,
+    state,
+    repos,
+    memory: new Memory(join(home, 'memory')),
+    runner: new ClaudeRunner(),
+    store,
+    clock: realClock,
+    cast: DEFAULT_CAST,
+    home,
+    serverName: cfg.serverName,
+    log,
+  });
+  await team.init(cfg.repos.map((r) => dropUndefined({ ...r, path: resolve(r.path) }) as RepoSettings));
+  backend = team;
 }
 foreman.setBackend(backend);
 backend.start();
+if (cfg.backend === 'claude') {
+  const hasKey =
+    !!process.env.ANTHROPIC_API_KEY || !!process.env.CLAUDE_CODE_USE_BEDROCK || !!process.env.CLAUDE_CODE_USE_VERTEX;
+  if (!hasKey) {
+    state.setStatus({
+      auth: 'failed',
+      message: 'manca ANTHROPIC_API_KEY (o Bedrock/Vertex): gli agenti non possono lavorare',
+    });
+    log('WARNING: no ANTHROPIC_API_KEY in the environment');
+  }
+}
 
 await bridge.start();
 log(`agentcraft foreman ${FOREMAN_VERSION}, backend ${cfg.backend}, listening on ws://${cfg.host}:${bridge.port}`);
@@ -95,6 +135,7 @@ log(`agentcraft foreman ${FOREMAN_VERSION}, backend ${cfg.backend}, listening on
 const shutdown = async () => {
   log('stopping');
   backend.stop();
+  store?.flush();
   await bridge.stop();
   process.exit(0);
 };

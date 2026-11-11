@@ -131,6 +131,7 @@ export class Foreman {
             break;
         }
         this.state.addFeed({ kind: 'task', text: `${intent.actor.name}: ${intent.action} ${t.id}` });
+        this.backend?.onTaskAction?.(t.id, intent.action);
         return undefined;
       }
       case 'agent.action': {
@@ -166,6 +167,7 @@ export class Foreman {
               break;
           }
         }
+        for (const a of targets as AgentT[]) this.backend?.onAgentAction?.(a.id, intent.action);
         if (intent.agentId === 'all' && (intent.action === 'pause' || intent.action === 'resume')) {
           this.state.setStatus({ paused: intent.action === 'pause' });
         }
@@ -173,9 +175,12 @@ export class Foreman {
         return undefined;
       }
       case 'diff.request':
-        throw new Error('diffs are available with the real agents (phase 4)');
+        if (!this.backend?.onDiff) throw new Error('diffs are available with the real agents (backend claude)');
+        return this.backend.onDiff(intent.taskId);
       case 'repo.add':
-        throw new Error('repositories are managed from phase 4');
+        if (!this.backend?.onRepoAdd) throw new Error('repositories are used by the real agents (backend claude)');
+        this.state.addFeed({ kind: 'system', text: `${intent.actor.name}: aggiunge il repository ${intent.path}` });
+        return this.backend.onRepoAdd(intent.path);
       case 'job.progress':
         return undefined;
       case 'world.event':

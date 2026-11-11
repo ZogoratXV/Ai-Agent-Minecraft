@@ -26,6 +26,21 @@ export function isPrivateHost(host: string): boolean {
 
 const Effort = z.enum(['low', 'medium', 'high', 'xhigh', 'max']);
 
+const RepoEntry = z.object({
+  path: z.string().min(1),
+  id: z
+    .string()
+    .regex(/^[a-z0-9._-]{1,64}$/)
+    .optional(),
+  branch: z.string().max(200).optional(),
+  versioning: z.enum(['in-place', 'new-folder']).optional(),
+  sparse: z.boolean().optional(),
+  sparseAlways: z.array(z.string().max(300)).optional(),
+  ci: z.string().max(500).optional(),
+  forbidden: z.array(z.string().min(2).max(100)).optional(),
+  instructions: z.array(z.string().max(200)).optional(),
+});
+
 const CastOverride = z.object({
   id: z.string().regex(/^[a-z0-9_-]{1,32}$/),
   name: z.string().min(1).max(32).optional(),
@@ -68,6 +83,10 @@ export const ConfigSchema = z.object({
     })
     .default({ dailyUsd: 15, monthlyUsd: 300, perTaskUsd: 5 }),
   cast: z.array(CastOverride).default([]),
+  /** plugin repositories the agents work on (more can be added in game with /agent repo add) */
+  repos: z.array(RepoEntry).default([]),
+  /** server name the agents are told about */
+  serverName: z.string().max(64).default('Minecraft'),
   sim: z.object({ stepMs: z.number().int().min(0).max(60_000).default(2500) }).default({ stepMs: 2500 }),
 });
 export type Config = z.infer<typeof ConfigSchema>;

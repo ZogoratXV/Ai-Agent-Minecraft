@@ -12,7 +12,8 @@ await build({
   minify: false,
   legalComments: 'eof',
   // optional native speed-ups of ws, never required
-  external: ['bufferutil', 'utf-8-validate'],
+  // the Agent SDK ships a native binary per platform: installed next to the bundle at run time
+  external: ['bufferutil', 'utf-8-validate', '@anthropic-ai/claude-agent-sdk'],
   // CommonJS dependencies (ws) call require() for Node built-ins
   banner: {
     js: "import { createRequire as __acCreateRequire } from 'node:module'; const require = __acCreateRequire(import.meta.url);",

@@ -18,4 +18,10 @@ export interface Backend {
   onGoal(goal: GoalT): void;
   onUserMessage(to: string, text: string, from: string): void;
   onDecisionAnswered(decision: DecisionT): void;
+  /** after the Foreman applied an agent action (pause, resume, stop, spawn) */
+  onAgentAction?(agentId: string, action: 'pause' | 'resume' | 'stop' | 'spawn'): void;
+  /** after the Foreman applied a task action */
+  onTaskAction?(taskId: string, action: 'cancel' | 'retry' | 'reassign' | 'prioritize'): void;
+  onRepoAdd?(path: string): Promise<unknown>;
+  onDiff?(taskId: string): Promise<unknown>;
 }

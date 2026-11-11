@@ -26,7 +26,8 @@ public record PluginSettings(
         Foreman foreman) {
 
     /** The foreman the plugin starts itself ({@code managed}), or an external one. */
-    public record Foreman(boolean managed, String node, String backend, List<String> extraArgs) {
+    public record Foreman(
+            boolean managed, String node, String npm, String backend, List<String> extraArgs, String apiKeyFile) {
         public Foreman {
             extraArgs = List.copyOf(extraArgs);
         }

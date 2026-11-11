@@ -37,6 +37,7 @@ public final class Views {
             String goalId,
             int priority,
             String branch,
+            String module,
             String ci,
             String blockedReason,
             String summary) {}
@@ -57,6 +58,9 @@ public final class Views {
             return "open".equals(status);
         }
     }
+
+    public record Repo(
+            String id, String name, String path, String branch, String head, boolean dirty, String versioning) {}
 
     public record Goal(String id, String text, String status, double progress) {}
 

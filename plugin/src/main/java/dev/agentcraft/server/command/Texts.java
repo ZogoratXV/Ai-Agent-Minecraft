@@ -111,6 +111,26 @@ public final class Texts {
         return out;
     }
 
+    public static List<Component> repos(TeamView v) {
+        List<Component> out = new ArrayList<>();
+        out.add(header("Repository"));
+        for (Views.Repo r : v.repos()) {
+            out.add(Component.text()
+                    .append(Component.text(r.id() + " ", NamedTextColor.WHITE))
+                    .append(Component.text(
+                            r.branch() + (r.head() == null ? "" : "@" + r.head()) + " · " + r.versioning(),
+                            NamedTextColor.GRAY))
+                    .append(Component.text(
+                            r.dirty() ? "  modifiche locali: merge bloccati" : "", NamedTextColor.YELLOW))
+                    .build());
+        }
+        if (v.repos().isEmpty()) {
+            out.add(Component.text(
+                    "nessun repository: /agent repo add <percorso> (backend claude)", NamedTextColor.DARK_GRAY));
+        }
+        return out;
+    }
+
     public static List<Component> goals(TeamView v) {
         List<Component> out = new ArrayList<>();
         for (Views.Goal g : v.goals()) {

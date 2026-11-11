@@ -30,6 +30,7 @@ public final class ProtocolInfo {
             "task.upsert",
             "decision.upsert",
             "goal.upsert",
+            "repo.upsert",
             "feed.add",
             "foreman.status",
             "notify",

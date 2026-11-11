@@ -118,11 +118,13 @@ public class AgentCraftPlugin extends JavaPlugin {
             launcher = new ForemanLauncher(
                     new ForemanLauncher.Options(
                             f.node(),
+                            f.npm(),
                             f.backend(),
                             settings.bridgeUri(),
                             f.extraArgs(),
                             getDataPath().resolve("foreman"),
-                            token),
+                            token,
+                            f.apiKeyFile().isBlank() ? null : getDataPath().resolve(f.apiKeyFile())),
                     () -> getResource("foreman/foreman.mjs"),
                     getLogger());
             launcher.start();

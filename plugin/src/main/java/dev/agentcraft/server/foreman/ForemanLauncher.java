@@ -32,8 +32,18 @@ public final class ForemanLauncher {
     private static final long LOG_ROTATE_BYTES = 10L * 1024 * 1024;
     private static final int MAX_FAST_FAILURES = 5;
 
+    /** Version of the Claude Agent SDK installed next to the bundle for the claude backend. */
+    public static final String AGENT_SDK_VERSION = "0.3.322";
+
     public record Options(
-            String node, String backend, URI bridge, List<String> extraArgs, Path workDir, String token) {}
+            String node,
+            String npm,
+            String backend,
+            URI bridge,
+            List<String> extraArgs,
+            Path workDir,
+            String token,
+            Path apiKeyFile) {}
 
     private final Options opts;
     private final Supplier<InputStream> bundle;
@@ -46,11 +56,13 @@ public final class ForemanLauncher {
         // absolute: the process runs inside workDir, a relative script path would resolve twice
         this.opts = new Options(
                 opts.node(),
+                opts.npm(),
                 opts.backend(),
                 opts.bridge(),
                 opts.extraArgs(),
                 opts.workDir().toAbsolutePath(),
-                opts.token());
+                opts.token(),
+                opts.apiKeyFile());
         this.bundle = bundle;
         this.log = log;
     }
@@ -129,8 +141,14 @@ public final class ForemanLauncher {
                 return;
             }
             script = extract();
+            if ("claude".equals(opts.backend()) && !ensureAgentSdk()) {
+                return;
+            }
         } catch (IOException e) {
             log.warning("cannot prepare the foreman: " + e.getMessage());
+            return;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return;
         }
         int fastFailures = 0;
@@ -151,6 +169,7 @@ public final class ForemanLauncher {
                                 ProcessBuilder.Redirect.appendTo(logFile().toFile()));
                 Map<String, String> env = pb.environment();
                 env.put("AGENTCRAFT_TOKEN", opts.token());
+                apiKey().ifPresent(k -> env.put("ANTHROPIC_API_KEY", k));
                 process = pb.start();
                 log.info("foreman started (pid " + process.pid() + ", backend " + opts.backend() + "), log: "
                         + logFile());
@@ -201,6 +220,53 @@ public final class ForemanLauncher {
             Thread.currentThread().interrupt();
             return false;
         }
+    }
+
+    /** The key from foreman.api-key-file, if set. Only the foreman process gets it. */
+    private Optional<String> apiKey() {
+        if (opts.apiKeyFile() == null) {
+            return Optional.empty();
+        }
+        try {
+            String k = Files.readString(opts.apiKeyFile()).strip();
+            return k.isEmpty() ? Optional.empty() : Optional.of(k);
+        } catch (IOException e) {
+            log.warning("cannot read foreman.api-key-file: " + e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * The claude backend needs the Claude Agent SDK (it ships a native binary per platform, so it
+     * cannot live in the jar). Installed once with npm next to the bundle.
+     */
+    private boolean ensureAgentSdk() throws IOException, InterruptedException {
+        Path pkg = opts.workDir().resolve("node_modules/@anthropic-ai/claude-agent-sdk/package.json");
+        if (Files.exists(pkg) && Files.readString(pkg).contains("\"version\": \"" + AGENT_SDK_VERSION + "\"")) {
+            return true;
+        }
+        Files.writeString(
+                opts.workDir().resolve("package.json"),
+                "{\n  \"private\": true,\n  \"type\": \"module\",\n  \"dependencies\": {\n"
+                        + "    \"@anthropic-ai/claude-agent-sdk\": \"" + AGENT_SDK_VERSION + "\"\n  }\n}\n");
+        log.info("installing the Claude Agent SDK " + AGENT_SDK_VERSION + " with npm (first start only)...");
+        Process p = new ProcessBuilder(opts.npm(), "install", "--omit=dev", "--no-audit", "--no-fund")
+                .directory(opts.workDir().toFile())
+                .redirectErrorStream(true)
+                .redirectOutput(ProcessBuilder.Redirect.appendTo(logFile().toFile()))
+                .start();
+        if (!p.waitFor(10, TimeUnit.MINUTES)) {
+            p.destroyForcibly();
+            log.severe("npm install timed out; see " + logFile());
+            return false;
+        }
+        if (p.exitValue() != 0) {
+            log.severe("npm install failed (exit " + p.exitValue() + "); see " + logFile()
+                    + ". Check that npm can reach registry.npmjs.org.");
+            return false;
+        }
+        log.info("Claude Agent SDK installed");
+        return true;
     }
 
     /** Copies the bundled script out of the jar when it changed. */

@@ -95,6 +95,10 @@ public final class SettingsLoader {
         if (node == null || node.isBlank()) {
             errors.add("foreman.node must name the Node executable");
         }
+        String apiKeyFile = cfg.getString("foreman.api-key-file", "");
+        if (apiKeyFile != null && (apiKeyFile.contains("..") || apiKeyFile.startsWith("/"))) {
+            errors.add("foreman.api-key-file must be a file name inside the plugin folder");
+        }
         List<String> extraArgs = cfg.getStringList("foreman.extra-args");
         for (String a : extraArgs) {
             if (a.length() > 200 || a.chars().anyMatch(c -> c < 0x20)) {
@@ -136,7 +140,13 @@ public final class SettingsLoader {
                 positive(cfg, "limits.tool-calls-per-minute", 60, errors),
                 auditFile,
                 npc,
-                new PluginSettings.Foreman(managed, node, backend, extraArgs));
+                new PluginSettings.Foreman(
+                        managed,
+                        node,
+                        cfg.getString("foreman.npm", "npm"),
+                        backend,
+                        extraArgs,
+                        apiKeyFile == null ? "" : apiKeyFile));
     }
 
     /** Loopback or private ranges only, without any DNS lookup. */

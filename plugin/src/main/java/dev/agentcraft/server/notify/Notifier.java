@@ -60,6 +60,11 @@ public final class Notifier implements TeamView.Listener, Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        view.status()
+                .filter(st -> "failed".equals(st.auth()) && p.hasPermission(PERM_APPROVE))
+                .ifPresent(st -> p.sendMessage(PREFIX.append(Component.text(
+                        "⚠ Agenti fermi: " + (st.message() == null ? "autenticazione non riuscita" : st.message()),
+                        NamedTextColor.RED))));
         int open = view.openDecisions().size();
         if (open > 0 && p.hasPermission(PERM_APPROVE)) {
             p.sendMessage(PREFIX.append(Component.text(

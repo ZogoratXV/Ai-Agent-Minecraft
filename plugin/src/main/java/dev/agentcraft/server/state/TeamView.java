@@ -38,6 +38,7 @@ public final class TeamView {
     private final Map<String, Views.Task> tasks = new LinkedHashMap<>();
     private final Map<String, Views.Decision> decisions = new LinkedHashMap<>();
     private final Map<String, Views.Goal> goals = new LinkedHashMap<>();
+    private final Map<String, Views.Repo> repos = new LinkedHashMap<>();
     private final Deque<Views.FeedItem> feed = new ArrayDeque<>();
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
     private Views.ForemanStatus status;
@@ -54,12 +55,14 @@ public final class TeamView {
                 tasks.clear();
                 decisions.clear();
                 goals.clear();
+                repos.clear();
                 feed.clear();
                 status = GSON.fromJson(msg.get("foreman"), Views.ForemanStatus.class);
                 each(msg, "agents", Views.Agent.class).forEach(a -> agents.put(a.id(), a));
                 each(msg, "tasks", Views.Task.class).forEach(t -> tasks.put(t.id(), t));
                 each(msg, "decisions", Views.Decision.class).forEach(d -> decisions.put(d.id(), d));
                 each(msg, "goals", Views.Goal.class).forEach(g -> goals.put(g.id(), g));
+                each(msg, "repos", Views.Repo.class).forEach(r -> repos.put(r.id(), r));
                 each(msg, "feed", Views.FeedItem.class).forEach(this::pushFeed);
                 listeners.forEach(l -> l.onSnapshot(this));
             }
@@ -80,6 +83,10 @@ public final class TeamView {
             case "goal.upsert" -> {
                 Views.Goal g = GSON.fromJson(msg.get("goal"), Views.Goal.class);
                 goals.put(g.id(), g);
+            }
+            case "repo.upsert" -> {
+                Views.Repo r = GSON.fromJson(msg.get("repo"), Views.Repo.class);
+                repos.put(r.id(), r);
             }
             case "feed.add" -> {
                 Views.FeedItem f = GSON.fromJson(msg.get("item"), Views.FeedItem.class);
@@ -148,6 +155,10 @@ public final class TeamView {
                 .filter(Views.Decision::isOpen)
                 .sorted(Comparator.comparing(Views.Decision::id))
                 .toList();
+    }
+
+    public Collection<Views.Repo> repos() {
+        return repos.values();
     }
 
     public Collection<Views.Goal> goals() {

@@ -106,6 +106,19 @@ public final class AgentCommand {
                                                 .suggests(suggest(
                                                         v -> v.agents().stream().map(Views.Agent::id)))
                                                 .executes(ctx -> taskAction(ctx, "reassign", str(ctx, "agent")))))))
+                .then(Commands.literal("diff")
+                        .requires(perm(PERM_APPROVE))
+                        .then(Commands.argument("task", StringArgumentType.word())
+                                .suggests(suggest(v -> v.tasks().stream()
+                                        .filter(t -> t.branch() != null)
+                                        .map(Views.Task::id)))
+                                .executes(ctx -> diff(ctx.getSource().getSender(), str(ctx, "task")))))
+                .then(Commands.literal("repos").executes(ctx -> show(ctx, Texts.repos(view()))))
+                .then(Commands.literal("repo")
+                        .requires(perm(PERM_MANAGE))
+                        .then(Commands.literal("add")
+                                .then(Commands.argument("path", StringArgumentType.greedyString())
+                                        .executes(ctx -> repoAdd(ctx.getSource().getSender(), str(ctx, "path"))))))
                 .then(Commands.literal("base")
                         .requires(perm(PERM_MANAGE))
                         .then(Commands.literal("set")
@@ -163,6 +176,8 @@ public final class AgentCommand {
             {"answer <id> <n> [testo] | approve | reject <id>", "rispondi a una decisione"},
             {"pause|resume [nome|all] | stop|spawn <nome>", "gestisci gli agenti"},
             {"task <id> cancel|retry|reassign <nome>", "gestisci i task"},
+            {"diff <task>", "riepilogo delle modifiche di un task"},
+            {"repos | repo add <percorso>", "repository su cui lavorano gli agenti"},
             {"base set <stazione>", "posiziona le stazioni della base dove sei"},
         };
         s.sendMessage(Texts.header("AgentCraft"));
@@ -195,7 +210,22 @@ public final class AgentCommand {
                                             st.budget().dailyUsd()));
             s.sendMessage(Component.text(
                     "Backend: " + st.backend() + (st.paused() ? " · IN PAUSA" : "") + budget, NamedTextColor.GRAY));
+            if ("failed".equals(st.auth())) {
+                s.sendMessage(Component.text(
+                        "⚠ Agenti fermi: " + (st.message() == null ? "autenticazione non riuscita" : st.message()),
+                        NamedTextColor.RED));
+            } else if (st.message() != null && st.paused()) {
+                s.sendMessage(Component.text(st.message(), NamedTextColor.YELLOW));
+            }
         });
+        if (!view().repos().isEmpty()) {
+            s.sendMessage(Component.text(
+                    "Repository: "
+                            + view().repos().stream()
+                                    .map(r -> r.name() + (r.dirty() ? " (modifiche locali)" : ""))
+                                    .collect(java.util.stream.Collectors.joining(", ")),
+                    NamedTextColor.GRAY));
+        }
         Texts.goals(view()).forEach(s::sendMessage);
         return Command.SINGLE_SUCCESS;
     }
@@ -282,6 +312,34 @@ public final class AgentCommand {
                     "agentId", view().findAgent(agent).map(Views.Agent::id).orElse(agent));
         }
         send(s, m, ack -> "Fatto: " + action + " " + str(ctx, "id") + ".");
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int diff(CommandSender s, String taskId) {
+        JsonObject m = intent("diff.request", s);
+        m.addProperty("taskId", taskId);
+        send(s, m, ack -> {
+            JsonObject r = ack.has("result") && ack.get("result").isJsonObject()
+                    ? ack.getAsJsonObject("result")
+                    : new JsonObject();
+            String files = r.has("files") ? r.get("files").getAsString() : "?";
+            String add = r.has("additions") ? r.get("additions").getAsString() : "?";
+            String del = r.has("deletions") ? r.get("deletions").getAsString() : "?";
+            String path = r.has("path") ? r.get("path").getAsString() : "";
+            return "Diff di " + taskId + ": " + files + " file, +" + add + " -" + del
+                    + (path.isEmpty() ? "" : "\nDiff completo sulla macchina del foreman: " + path);
+        });
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int repoAdd(CommandSender s, String path) {
+        JsonObject m = intent("repo.add", s);
+        m.addProperty("path", path.strip());
+        send(
+                s,
+                m,
+                ack -> "Repository registrato" + resultField(ack, "repoId", " (", ")")
+                        + resultField(ack, "versioning", ", ", "") + ".");
         return Command.SINGLE_SUCCESS;
     }
 

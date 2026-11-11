@@ -26,11 +26,13 @@ class ForemanLauncherTest {
     void buildsTheCommandLineWithoutTheToken(@TempDir Path dir) {
         var o = new ForemanLauncher.Options(
                 "node",
+                "npm",
                 "sim",
                 URI.create("ws://127.0.0.1:7999"),
                 List.of("--step-ms", "400"),
                 dir,
-                "secret-token-1234567");
+                "secret-token-1234567",
+                null);
         List<String> cmd = ForemanLauncher.command(o, dir.resolve("foreman.mjs"));
         assertEquals(
                 List.of(

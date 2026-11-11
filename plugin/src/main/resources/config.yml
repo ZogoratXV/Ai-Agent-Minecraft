@@ -21,6 +21,12 @@ foreman:
   # sim = scripted team, no API usage. claude = real agents (from phase 4; needs ANTHROPIC_API_KEY
   # in the server's environment).
   backend: sim
+  # npm executable, used once to install the Claude Agent SDK for the claude backend.
+  npm: npm
+  # claude backend: file (in the plugin folder, readable only by the server user) holding the
+  # Anthropic API key. It is given only to the foreman process, never to the whole server.
+  # Alternative: ANTHROPIC_API_KEY in the server's environment.
+  api-key-file: ''
   # Extra command line options for the foreman, e.g. ['--step-ms', '1000'].
   extra-args: []
 

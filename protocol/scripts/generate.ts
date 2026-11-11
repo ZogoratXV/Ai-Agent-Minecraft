@@ -12,6 +12,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import {
+  Blueprint,
   EXAMPLES,
   ForemanToPlugin,
   PluginToForeman,
@@ -49,6 +50,11 @@ files.set(
     tools: TOOL_NAMES,
     stagingOnlyTools: STAGING_ONLY_TOOLS,
   }),
+);
+
+files.set(
+  join(root, 'blueprints', 'blueprint.schema.json'),
+  json({ title: 'AgentCraft blueprint v1', ...schemaOf(Blueprint) }),
 );
 
 const directions = [

@@ -6,3 +6,4 @@ docs/protocol.md
 package-lock.json
 foreman/dist/
 staging/server/
+blueprints/blueprint.schema.json

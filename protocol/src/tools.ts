@@ -13,18 +13,6 @@ export const BlueprintRef = z
   .record(z.string(), z.unknown())
   .describe('a blueprint document (see blueprints/blueprint.schema.json); validated again by the plugin');
 
-export const BlockOp = z.discriminatedUnion('op', [
-  z.object({ op: z.literal('set'), at: Vec3, block: z.string().max(256) }),
-  z.object({
-    op: z.literal('fill'),
-    from: Vec3,
-    to: Vec3,
-    block: z.string().max(256),
-    mode: z.enum(['solid', 'hollow', 'outline']).optional(),
-  }),
-  z.object({ op: z.literal('line'), from: Vec3, to: Vec3, block: z.string().max(256) }),
-]);
-
 const WorldInspect = z.object({
   tool: z.literal('world.inspect'),
   args: z.object({
@@ -34,14 +22,21 @@ const WorldInspect = z.object({
   }),
 });
 
+const WorldRegions = z.object({
+  tool: z.literal('world.regions'),
+  args: z.object({}).describe('authorized build regions: name, world, min, max'),
+});
+
 const WorldPreview = z.object({
   tool: z.literal('world.preview'),
   args: z.object({
+    key: z.string().max(64).describe('preview id (the task id); a new preview with the same key replaces it'),
     blueprint: BlueprintRef,
-    anchor: WorldPos,
+    region: z.string().min(1).max(64),
+    anchor: Vec3.optional().describe('where blueprint (0,0,0) goes; default: the region minimum corner'),
     rotation: Rotation,
-    viewers: z.array(Uuid).min(1).max(16).describe('only these players see the preview'),
-    ttlSeconds: z.number().int().min(10).max(3600),
+    viewers: z.array(Uuid).max(16).default([]).describe('empty = online players with agentcraft.approve'),
+    ttlSeconds: z.number().int().min(0).max(3600).describe('0 removes the preview'),
   }),
 });
 
@@ -49,13 +44,12 @@ const WorldPlace = z.object({
   tool: z.literal('world.place'),
   args: z.object({
     jobId: Id,
-    approvalId: Id.describe('id of the answered `build` decision; the plugin verifies it'),
+    approvalId: Id.describe('id of the answered `build` decision; the plugin checks it was answered'),
     region: z.string().min(1).max(64).describe('authorized region the whole job must fit in'),
-    anchor: WorldPos,
+    anchor: Vec3.optional().describe('where blueprint (0,0,0) goes; default: the region minimum corner'),
     rotation: Rotation,
-    blueprint: BlueprintRef.optional(),
+    blueprint: BlueprintRef,
     module: z.string().max(64).optional().describe('build only this blueprint module'),
-    ops: z.array(BlockOp).max(10000).optional().describe('raw operations, alternative to blueprint'),
   }),
 });
 
@@ -107,6 +101,7 @@ const BodySay = z.object({
 });
 
 export const ToolInvocation = z.discriminatedUnion('tool', [
+  WorldRegions,
   WorldInspect,
   WorldPreview,
   WorldPlace,

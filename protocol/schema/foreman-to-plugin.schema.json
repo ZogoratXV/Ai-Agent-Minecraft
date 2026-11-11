@@ -1617,6 +1617,26 @@
               "properties": {
                 "tool": {
                   "type": "string",
+                  "const": "world.regions"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false,
+                  "description": "authorized build regions: name, world, min, max"
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
                   "const": "world.inspect"
                 },
                 "args": {
@@ -1742,6 +1762,11 @@
                 "args": {
                   "type": "object",
                   "properties": {
+                    "key": {
+                      "type": "string",
+                      "maxLength": 64,
+                      "description": "preview id (the task id); a new preview with the same key replaces it"
+                    },
                     "blueprint": {
                       "type": "object",
                       "propertyNames": {
@@ -1750,31 +1775,34 @@
                       "additionalProperties": {},
                       "description": "a blueprint document (see blueprints/blueprint.schema.json); validated again by the plugin"
                     },
+                    "region": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64
+                    },
                     "anchor": {
-                      "type": "object",
-                      "properties": {
-                        "world": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 64
+                      "description": "where blueprint (0,0,0) goes; default: the region minimum corner",
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         },
-                        "x": {
-                          "type": "number"
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         },
-                        "y": {
-                          "type": "number"
-                        },
-                        "z": {
-                          "type": "number"
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         }
-                      },
-                      "required": [
-                        "world",
-                        "x",
-                        "y",
-                        "z"
                       ],
-                      "additionalProperties": false
+                      "items": false,
+                      "minItems": 3,
+                      "maxItems": 3
                     },
                     "rotation": {
                       "anyOf": [
@@ -1797,25 +1825,27 @@
                       ]
                     },
                     "viewers": {
-                      "minItems": 1,
+                      "default": [],
+                      "description": "empty = online players with agentcraft.approve",
                       "maxItems": 16,
                       "type": "array",
                       "items": {
                         "type": "string",
                         "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
                         "description": "Minecraft player UUID"
-                      },
-                      "description": "only these players see the preview"
+                      }
                     },
                     "ttlSeconds": {
                       "type": "integer",
-                      "minimum": 10,
-                      "maximum": 3600
+                      "minimum": 0,
+                      "maximum": 3600,
+                      "description": "0 removes the preview"
                     }
                   },
                   "required": [
+                    "key",
                     "blueprint",
-                    "anchor",
+                    "region",
                     "rotation",
                     "viewers",
                     "ttlSeconds"
@@ -1851,7 +1881,7 @@
                       "minLength": 1,
                       "maxLength": 64,
                       "pattern": "^[A-Za-z0-9._:-]+$",
-                      "description": "id of the answered `build` decision; the plugin verifies it"
+                      "description": "id of the answered `build` decision; the plugin checks it was answered"
                     },
                     "region": {
                       "type": "string",
@@ -1860,30 +1890,28 @@
                       "description": "authorized region the whole job must fit in"
                     },
                     "anchor": {
-                      "type": "object",
-                      "properties": {
-                        "world": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 64
+                      "description": "where blueprint (0,0,0) goes; default: the region minimum corner",
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         },
-                        "x": {
-                          "type": "number"
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         },
-                        "y": {
-                          "type": "number"
-                        },
-                        "z": {
-                          "type": "number"
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
                         }
-                      },
-                      "required": [
-                        "world",
-                        "x",
-                        "y",
-                        "z"
                       ],
-                      "additionalProperties": false
+                      "items": false,
+                      "minItems": 3,
+                      "maxItems": 3
                     },
                     "rotation": {
                       "anyOf": [
@@ -1917,210 +1945,14 @@
                       "description": "build only this blueprint module",
                       "type": "string",
                       "maxLength": 64
-                    },
-                    "ops": {
-                      "description": "raw operations, alternative to blueprint",
-                      "maxItems": 10000,
-                      "type": "array",
-                      "items": {
-                        "oneOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "op": {
-                                "type": "string",
-                                "const": "set"
-                              },
-                              "at": {
-                                "type": "array",
-                                "prefixItems": [
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  }
-                                ],
-                                "items": false,
-                                "minItems": 3,
-                                "maxItems": 3,
-                                "description": "[x, y, z] block coordinates"
-                              },
-                              "block": {
-                                "type": "string",
-                                "maxLength": 256
-                              }
-                            },
-                            "required": [
-                              "op",
-                              "at",
-                              "block"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "op": {
-                                "type": "string",
-                                "const": "fill"
-                              },
-                              "from": {
-                                "type": "array",
-                                "prefixItems": [
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  }
-                                ],
-                                "items": false,
-                                "minItems": 3,
-                                "maxItems": 3,
-                                "description": "[x, y, z] block coordinates"
-                              },
-                              "to": {
-                                "type": "array",
-                                "prefixItems": [
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  }
-                                ],
-                                "items": false,
-                                "minItems": 3,
-                                "maxItems": 3,
-                                "description": "[x, y, z] block coordinates"
-                              },
-                              "block": {
-                                "type": "string",
-                                "maxLength": 256
-                              },
-                              "mode": {
-                                "type": "string",
-                                "enum": [
-                                  "solid",
-                                  "hollow",
-                                  "outline"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "op",
-                              "from",
-                              "to",
-                              "block"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "op": {
-                                "type": "string",
-                                "const": "line"
-                              },
-                              "from": {
-                                "type": "array",
-                                "prefixItems": [
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  }
-                                ],
-                                "items": false,
-                                "minItems": 3,
-                                "maxItems": 3,
-                                "description": "[x, y, z] block coordinates"
-                              },
-                              "to": {
-                                "type": "array",
-                                "prefixItems": [
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  },
-                                  {
-                                    "type": "integer",
-                                    "minimum": -9007199254740991,
-                                    "maximum": 9007199254740991
-                                  }
-                                ],
-                                "items": false,
-                                "minItems": 3,
-                                "maxItems": 3,
-                                "description": "[x, y, z] block coordinates"
-                              },
-                              "block": {
-                                "type": "string",
-                                "maxLength": 256
-                              }
-                            },
-                            "required": [
-                              "op",
-                              "from",
-                              "to",
-                              "block"
-                            ],
-                            "additionalProperties": false
-                          }
-                        ]
-                      }
                     }
                   },
                   "required": [
                     "jobId",
                     "approvalId",
                     "region",
-                    "anchor",
-                    "rotation"
+                    "rotation",
+                    "blueprint"
                   ],
                   "additionalProperties": false
                 }

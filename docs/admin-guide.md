@@ -30,6 +30,9 @@ NPC, comandi e decisioni gratis.
 | `/agent pause [nome\|all]`, `/agent resume [nome\|all]` | `agentcraft.manage`  | mette in pausa / riprende (senza nome: tutti)                                                                   |
 | `/agent stop <nome>`, `/agent spawn <nome>`             | `agentcraft.manage`  | toglie dal turno / rimette in turno                                                                             |
 | `/agent task <id> cancel\|retry\|reassign <nome>`       | `agentcraft.manage`  | gestione task                                                                                                   |
+| `/agent diff <task>`                                    | `agentcraft.approve` | file cambiati, righe aggiunte/tolte e percorso del diff completo                                                |
+| `/agent repos`                                          | `agentcraft.use`     | repository registrati, branch base, modifiche locali                                                            |
+| `/agent repo add <percorso>`                            | `agentcraft.manage`  | registra una copia locale di una repo (backend claude)                                                          |
 | `/agent base set <stazione>`                            | `agentcraft.manage`  | mette una stazione dove sei: `base`, `desk`, `library`, `terminal`, `testbench`, `podium`, `worksite`, `lounge` |
 
 Tutti i comandi hanno il completamento con Tab (agenti, task, decisioni aperte, opzioni, stazioni).

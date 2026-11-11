@@ -181,6 +181,9 @@ export class Foreman {
         if (!this.backend?.onRepoAdd) throw new Error('repositories are used by the real agents (backend claude)');
         this.state.addFeed({ kind: 'system', text: `${intent.actor.name}: aggiunge il repository ${intent.path}` });
         return this.backend.onRepoAdd(intent.path);
+      case 'repo.push':
+        if (!this.backend?.onRepoPush) throw new Error('push is available with the real agents (backend claude)');
+        return this.backend.onRepoPush(intent.repoId, intent.actor.name);
       case 'job.progress':
         return undefined;
       case 'world.event':

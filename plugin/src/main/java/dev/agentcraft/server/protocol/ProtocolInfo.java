@@ -20,6 +20,7 @@ public final class ProtocolInfo {
             "agent.action",
             "diff.request",
             "repo.add",
+            "repo.push",
             "tool.result",
             "job.progress",
             "world.event");

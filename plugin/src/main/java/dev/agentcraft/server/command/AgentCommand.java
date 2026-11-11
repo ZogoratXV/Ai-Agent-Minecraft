@@ -114,6 +114,12 @@ public final class AgentCommand {
                                         .map(Views.Task::id)))
                                 .executes(ctx -> diff(ctx.getSource().getSender(), str(ctx, "task")))))
                 .then(Commands.literal("repos").executes(ctx -> show(ctx, Texts.repos(view()))))
+                .then(Commands.literal("push")
+                        .requires(perm(PERM_APPROVE))
+                        .executes(ctx -> push(ctx.getSource().getSender(), null))
+                        .then(Commands.argument("repo", StringArgumentType.word())
+                                .suggests(suggest(v -> v.repos().stream().map(Views.Repo::id)))
+                                .executes(ctx -> push(ctx.getSource().getSender(), str(ctx, "repo")))))
                 .then(Commands.literal("repo")
                         .requires(perm(PERM_MANAGE))
                         .then(Commands.literal("add")
@@ -178,6 +184,7 @@ public final class AgentCommand {
             {"task <id> cancel|retry|reassign <nome>", "gestisci i task"},
             {"diff <task>", "riepilogo delle modifiche di un task"},
             {"repos | repo add <percorso>", "repository su cui lavorano gli agenti"},
+            {"push [repo]", "pubblica su GitHub il lavoro unito (solo persone)"},
             {"base set <stazione>", "posiziona le stazioni della base dove sei"},
         };
         s.sendMessage(Texts.header("AgentCraft"));
@@ -329,6 +336,22 @@ public final class AgentCommand {
             return "Diff di " + taskId + ": " + files + " file, +" + add + " -" + del
                     + (path.isEmpty() ? "" : "\nDiff completo sulla macchina del foreman: " + path);
         });
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int push(CommandSender s, String repoId) {
+        JsonObject m = intent("repo.push", s);
+        if (repoId != null) {
+            m.addProperty("repoId", repoId);
+        }
+        plugin.audit()
+                .record(new dev.agentcraft.server.audit.AuditLog.Entry(
+                        "-", Actor.of(s).name(), "repo.push", repoId == null ? "(default)" : repoId, "requested"));
+        send(
+                s,
+                m,
+                ack -> "Pubblicato" + resultField(ack, "remote", " su ", "") + resultField(ack, "branch", "/", "")
+                        + resultField(ack, "sha", " (", ")") + ".");
         return Command.SINGLE_SUCCESS;
     }
 

@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import type { Repo } from '@agentcraft-server/protocol';
 import type { z } from 'zod';
@@ -22,11 +22,30 @@ export interface RepoSettings {
   forbidden?: string[];
   /** files the agents read first (e.g. AGENTS.md) */
   instructions?: string[];
+  /** `/agent push` (people only): where and how the base branch is published */
+  push?: PushSettings;
+}
+
+export interface PushSettings {
+  /** git remote name (default "origin") */
+  remote?: string;
+  /** branch on the remote (default: the base branch). With PR workflows use e.g. "agentcraft/lavori" */
+  branch?: string;
+  /** private SSH deploy key (file readable only by the server user) */
+  sshKeyFile?: string;
+  /** HTTPS token in a file (e.g. a fine-grained GitHub token with contents: write) */
+  tokenFile?: string;
+}
+
+export interface PushResult {
+  remote: string;
+  branch: string;
+  sha: string;
 }
 
 export interface RepoRecord extends RepoT {
   settings: Required<Pick<RepoSettings, 'sparse' | 'sparseAlways' | 'forbidden' | 'instructions'>> &
-    Pick<RepoSettings, 'ci'>;
+    Pick<RepoSettings, 'ci' | 'push'>;
 }
 
 export interface Worktree {
@@ -96,6 +115,7 @@ export class RepoManager {
         forbidden: settings.forbidden ?? [],
         instructions,
         ...(settings.ci ? { ci: settings.ci } : {}),
+        ...(settings.push ? { push: settings.push } : {}),
       },
     };
     this.repos.set(id, record);
@@ -220,6 +240,46 @@ export class RepoManager {
     const stat = (await git(r.path, ['diff', '--stat', range])).trim();
     const patch = await git(r.path, ['diff', range]);
     return { files: changed.length, additions, deletions, stat, patch, changed };
+  }
+
+  /**
+   * Publishes the base branch (`/agent push`, asked by a person). Never forced. Credentials come
+   * from files and reach git through environment variables only (never the command line).
+   */
+  async push(repoId: string): Promise<PushResult> {
+    const r = await this.refresh(repoId);
+    const p = r.settings.push ?? {};
+    const remote = p.remote ?? 'origin';
+    const branch = p.branch ?? r.branch;
+    const url = (await run('git', ['remote', 'get-url', remote], { cwd: r.path })).stdout.trim();
+    if (!url) throw new Error(`the repository has no remote '${remote}'`);
+    const env: NodeJS.ProcessEnv = { ...process.env, GIT_TERMINAL_PROMPT: '0' };
+    if (p.tokenFile) {
+      const token = readFileSync(p.tokenFile, 'utf8').trim();
+      if (!token) throw new Error('the push token file is empty');
+      const basic = Buffer.from(`x-access-token:${token}`).toString('base64');
+      env.GIT_CONFIG_COUNT = '2';
+      env.GIT_CONFIG_KEY_0 = 'credential.helper';
+      env.GIT_CONFIG_VALUE_0 = '';
+      env.GIT_CONFIG_KEY_1 = 'http.extraHeader';
+      env.GIT_CONFIG_VALUE_1 = `Authorization: Basic ${basic}`;
+    }
+    if (p.sshKeyFile) {
+      env.GIT_SSH_COMMAND = `ssh -i '${p.sshKeyFile.replace(/'/g, '')}' -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new`;
+    }
+    const res = await run('git', ['push', '--porcelain', remote, `refs/heads/${r.branch}:refs/heads/${branch}`], {
+      cwd: r.path,
+      env,
+      timeoutMs: 180_000,
+    });
+    if (res.code !== 0) {
+      // never echo credentials: git prints the URL, not the header
+      throw new Error(
+        `push failed: ${(res.stderr || res.stdout).trim().split('\n').slice(-3).join(' ').slice(0, 400)}`,
+      );
+    }
+    const sha = (await git(r.path, ['rev-parse', '--short', r.branch])).trim();
+    return { remote, branch, sha };
   }
 
   /**

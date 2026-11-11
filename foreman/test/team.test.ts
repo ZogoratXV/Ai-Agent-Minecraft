@@ -322,6 +322,21 @@ describe('team backend (scripted agents, real git)', () => {
     expect(runner.turns.map((t) => t.agentId)).toEqual(['lucciola', 'bussola']);
   }, 60_000);
 
+  it('publishes the base branch only when a person asks (/agent push), never forced', async () => {
+    const ctx = setup({});
+    const bare = mkdtempSync(join(tmpdir(), 'ac-remote-'));
+    sh(bare, 'init', '-q', '--bare', '-b', 'main');
+    sh(ctx.repoPath, 'remote', 'add', 'origin', bare);
+    await ctx.team.init([{ path: ctx.repoPath, push: { branch: 'agentcraft/lavori' } }]);
+    ctx.team.start();
+    const r = (await ctx.foreman.handle({ v: 1, type: 'repo.push', actor })) as { branch: string; sha: string };
+    expect(r.branch).toBe('agentcraft/lavori');
+    expect(sh(bare, 'rev-parse', '--short', 'agentcraft/lavori').trim()).toBe(r.sha);
+    expect(ctx.state.feed.at(-1)?.text).toContain('ha pubblicato');
+    // agents have no tool for it, and their git cannot push
+    expect([...ctx.runner.turns]).toHaveLength(0);
+  });
+
   it('never runs an agent without API authentication (no fallback to a personal login)', async () => {
     const ctx = setup({ bussola: async () => {} }, true);
     await ctx.team.init([{ path: ctx.repoPath }]);

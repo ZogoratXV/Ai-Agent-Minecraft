@@ -83,6 +83,7 @@ export const EXAMPLES: Record<string, PluginToForeman | ForemanToPlugin> = {
   'agent.action': { v: 1, type: 'agent.action', id: 'c5', actor, agentId: 'mattone', action: 'pause' },
   'diff.request': { v: 1, type: 'diff.request', id: 'c6', actor, taskId: 't2' },
   'repo.add': { v: 1, type: 'repo.add', id: 'c7', actor, path: '/srv/agentcraft/repos/castigo-ecosistema' },
+  'repo.push': { v: 1, type: 'repo.push', id: 'c8', actor, repoId: 'castigo-ecosistema' },
   'tool.result': {
     v: 1,
     type: 'tool.result',

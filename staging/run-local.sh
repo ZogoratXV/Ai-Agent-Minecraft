@@ -14,7 +14,7 @@ MEMORY="${STAGING_MEMORY:-2G}"
 
 mkdir -p "$DIR/plugins"
 rm -f "$DIR"/plugins/agentcraft-server-*.jar
-cp "$ROOT"/plugin/build/libs/agentcraft-server-*.jar "$DIR/plugins/"
+cp "$(ls -t "$ROOT"/plugin/build/libs/agentcraft-server-*.jar | head -1)" "$DIR/plugins/"
 
 # Accepting the Minecraft EULA is the operator's decision: https://aka.ms/MinecraftEULA
 if [ ! -f "$DIR/eula.txt" ] || ! grep -q "eula=true" "$DIR/eula.txt"; then

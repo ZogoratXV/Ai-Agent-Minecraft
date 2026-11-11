@@ -39,6 +39,14 @@ const RepoEntry = z.object({
   ci: z.string().max(500).optional(),
   forbidden: z.array(z.string().min(2).max(100)).optional(),
   instructions: z.array(z.string().max(200)).optional(),
+  push: z
+    .object({
+      remote: z.string().max(64).optional(),
+      branch: z.string().max(200).optional(),
+      sshKeyFile: z.string().max(500).optional(),
+      tokenFile: z.string().max(500).optional(),
+    })
+    .optional(),
 });
 
 const CastOverride = z.object({

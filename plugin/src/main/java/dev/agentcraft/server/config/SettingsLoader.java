@@ -87,7 +87,7 @@ public final class SettingsLoader {
         }
 
         boolean managed = cfg.getBoolean("foreman.managed", true);
-        String node = cfg.getString("foreman.node", "node");
+        String node = cfg.getString("foreman.node", "auto");
         String backend = cfg.getString("foreman.backend", "sim");
         if (!"sim".equals(backend) && !"claude".equals(backend)) {
             errors.add("foreman.backend must be 'sim' or 'claude'");
@@ -143,7 +143,7 @@ public final class SettingsLoader {
                 new PluginSettings.Foreman(
                         managed,
                         node,
-                        cfg.getString("foreman.npm", "npm"),
+                        cfg.getString("foreman.npm", "auto"),
                         backend,
                         extraArgs,
                         apiKeyFile == null ? "" : apiKeyFile));

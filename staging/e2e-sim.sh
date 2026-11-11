@@ -24,7 +24,7 @@ fi
 (cd "$ROOT/plugin" && ./gradlew --quiet build -x test)
 mkdir -p "$DIR/plugins"
 rm -f "$DIR"/plugins/agentcraft-server-*.jar "$AUDIT"
-cp "$ROOT"/plugin/build/libs/agentcraft-server-*.jar "$DIR/plugins/"
+cp "$(ls -t "$ROOT"/plugin/build/libs/agentcraft-server-*.jar | head -1)" "$DIR/plugins/"
 PDIR="$DIR/plugins/AgentCraftServer"
 mkdir -p "$PDIR"
 rm -rf "$PDIR/token.txt" "$PDIR/foreman"
@@ -46,8 +46,18 @@ else
   FLOG="$PDIR/foreman/foreman.log"
 fi
 
+# NO_NODE=1: like the Java container of Pelican/Pterodactyl, the server sees no Node at all
+SERVER_PATH="$PATH"
+if [ "${NO_NODE:-}" = "1" ]; then
+  NB="$(mktemp -d)"
+  for t in java timeout tar gzip git sh bash env ls cat mkdir rm cp mv sed grep head tail dirname basename uname id; do
+    p="$(command -v "$t" || true)"; [ -n "$p" ] && ln -s "$p" "$NB/$t"
+  done
+  SERVER_PATH="$NB"
+  rm -rf "$PDIR/runtime"
+fi
 FIFO="$(mktemp -u)"; mkfifo "$FIFO"
-(cd "$DIR" && exec timeout 900 java -Xms1G -Xmx2G -jar purpur.jar --nogui) < "$FIFO" > "$LOG" 2>&1 &
+(cd "$DIR" && PATH="$SERVER_PATH" exec timeout 900 java -Xms1G -Xmx2G -jar purpur.jar --nogui) < "$FIFO" > "$LOG" 2>&1 &
 JAVA_PID=$!
 exec 3> "$FIFO"
 
@@ -68,6 +78,9 @@ wait_for 'Done \(' "$LOG" 600 || fail "server did not start"
 wait_for 'connected to the foreman' "$LOG" 90 || fail "plugin did not connect"
 if [ "$MODE" = "managed" ]; then
   plain "$LOG" | grep -q "foreman started (pid" || fail "plugin did not start the bundled foreman"
+  if [ "${NO_NODE:-}" = "1" ]; then
+    plain "$LOG" | grep -q "Node 22.23.4 ready" || fail "Node was not downloaded"
+  fi
   [ -s "$PDIR/token.txt" ] || fail "no generated token"
 else
   plain "$LOG" | grep -q "already running" || fail "plugin did not reuse the running foreman"
@@ -98,4 +111,4 @@ SAYS=$(grep -c '"action":"body.say".*"outcome":"ok"' "$AUDIT" || true)
 [ "$SAYS" -ge 3 ] || fail "only $SAYS successful body.say calls"
 # the sandbox has no Mojang auth services: ignore that one, fail on anything else
 plain "$LOG" | grep -v -E "minecraftservices|authlib" | grep -qE "^[^ ]*Exception|Exception in|\[AgentCraftServer\].*(ERROR|SEVERE)" && fail "exceptions in the server log"
-echo "E2E PASSED ($MODE foreman): goal g1 done, $MOVES body.move and $SAYS body.say calls executed and audited"
+echo "E2E PASSED ($MODE foreman${NO_NODE:+, no Node on the machine}): goal g1 done, $MOVES body.move and $SAYS body.say calls executed and audited"

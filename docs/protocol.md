@@ -145,6 +145,20 @@ Register a plugin repository (`/agent repo add <path>`).
 {"v":1,"type":"repo.add","id":"c7","actor":{"uuid":"2f8a3c1e-4b5d-4e6f-8a9b-0c1d2e3f4a5b","name":"Zogorat"},"path":"/srv/agentcraft/repos/castigo-ecosistema"}
 ```
 
+### `repo.push`
+
+Publish the base branch of a repository to its remote (`/agent push`). Only people can push: agents have no git network access.
+
+| field | type | required | notes |
+| --- | --- | --- | --- |
+| `id` | string | no | correlation id; messages that carry one are answered with `ack` |
+| `actor` | object | yes | the player who asked; the plugin has already checked their permission, the foreman logs it |
+| `repoId` | string | no | default: the first registered repository |
+
+```json
+{"v":1,"type":"repo.push","id":"c8","actor":{"uuid":"2f8a3c1e-4b5d-4e6f-8a9b-0c1d2e3f4a5b","name":"Zogorat"},"repoId":"castigo-ecosistema"}
+```
+
 ### `tool.result`
 
 Answer to `tool.call`.

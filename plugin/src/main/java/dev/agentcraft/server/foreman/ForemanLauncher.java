@@ -2,6 +2,7 @@ package dev.agentcraft.server.foreman;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -77,8 +78,12 @@ public final class ForemanLauncher {
 
     /** Command line of the foreman process. The token goes in the environment, never here. */
     public static List<String> command(Options o, Path script) {
+        return command(o.node(), o, script);
+    }
+
+    static List<String> command(String nodeExecutable, Options o, Path script) {
         List<String> cmd = new ArrayList<>(List.of(
-                o.node(),
+                nodeExecutable,
                 script.toString(),
                 "--backend",
                 o.backend(),
@@ -134,10 +139,69 @@ public final class ForemanLauncher {
         }
     }
 
+    /** Node, npm and the PATH additions actually used (resolved at start-up, possibly downloaded). */
+    private String node;
+
+    private String npm;
+    private final List<Path> extraPath = new ArrayList<>();
+
+    /**
+     * Finds Node (and Maven for the claude backend): the configured ones, the machine's own, or
+     * pinned downloads into the plugin folder when the machine has none (Pelican/Pterodactyl Java
+     * containers). Returns false when the foreman cannot run.
+     */
+    private boolean resolveTools() throws IOException, InterruptedException {
+        Runtimes runtimes = new Runtimes(opts.workDir().getParent().resolve("runtime"), log);
+        boolean auto = "auto".equals(opts.node());
+        node = auto ? "node" : opts.node();
+        npm = "auto".equals(opts.npm()) ? "npm" : opts.npm();
+        if (!nodeOk(node, !auto)) {
+            if (!auto) {
+                return false;
+            }
+            Path bin = runtimes.ensureNode();
+            node = bin.resolve("node").toString();
+            if ("auto".equals(opts.npm())) {
+                npm = bin.resolve("npm").toString();
+            }
+            extraPath.add(bin);
+            if (!nodeOk(node, true)) {
+                return false;
+            }
+        }
+        if ("claude".equals(opts.backend()) && !works("mvn", "-v")) {
+            extraPath.add(runtimes.ensureMaven());
+        }
+        return true;
+    }
+
+    private Map<String, String> withPath(Map<String, String> env) {
+        if (!extraPath.isEmpty()) {
+            String path = String.join(
+                    java.io.File.pathSeparator,
+                    extraPath.stream().map(Path::toString).toList());
+            env.put("PATH", path + java.io.File.pathSeparator + env.getOrDefault("PATH", ""));
+        }
+        return env;
+    }
+
+    private static boolean works(String... cmd) {
+        try {
+            Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
+            p.getInputStream().transferTo(OutputStream.nullOutputStream());
+            return p.waitFor(30, TimeUnit.SECONDS) && p.exitValue() == 0;
+        } catch (IOException e) {
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
     private void supervise() {
         Path script;
         try {
-            if (!checkNode()) {
+            if (!resolveTools()) {
                 return;
             }
             script = extract();
@@ -162,12 +226,12 @@ public final class ForemanLauncher {
             long started = System.currentTimeMillis();
             try {
                 rotateLog();
-                ProcessBuilder pb = new ProcessBuilder(command(opts, script))
+                ProcessBuilder pb = new ProcessBuilder(command(node, opts, script))
                         .directory(opts.workDir().toFile())
                         .redirectErrorStream(true)
                         .redirectOutput(
                                 ProcessBuilder.Redirect.appendTo(logFile().toFile()));
-                Map<String, String> env = pb.environment();
+                Map<String, String> env = withPath(pb.environment());
                 env.put("AGENTCRAFT_TOKEN", opts.token());
                 apiKey().ifPresent(k -> env.put("ANTHROPIC_API_KEY", k));
                 process = pb.start();
@@ -195,9 +259,10 @@ public final class ForemanLauncher {
         }
     }
 
-    private boolean checkNode() {
+    /** Whether {@code executable} is Node 22+. With {@code report} a failure is logged. */
+    private boolean nodeOk(String executable, boolean report) {
         try {
-            Process p = new ProcessBuilder(opts.node(), "--version")
+            Process p = new ProcessBuilder(executable, "--version")
                     .redirectErrorStream(true)
                     .start();
             String out;
@@ -207,14 +272,17 @@ public final class ForemanLauncher {
             p.waitFor(10, TimeUnit.SECONDS);
             Optional<Integer> major = nodeMajor(out);
             if (major.isEmpty() || major.get() < MIN_NODE_MAJOR) {
-                log.warning("foreman.managed needs Node " + MIN_NODE_MAJOR + "+, found '" + out.strip()
-                        + "'. Install Node or start the foreman yourself.");
+                if (report) {
+                    log.warning("the foreman needs Node " + MIN_NODE_MAJOR + "+, found '" + out.strip()
+                            + "'. Set foreman.node: auto to download it, or install it.");
+                }
                 return false;
             }
             return true;
         } catch (IOException e) {
-            log.warning("Node not found ('" + opts.node() + "'): install Node " + MIN_NODE_MAJOR
-                    + "+ or set foreman.node, or start the foreman yourself.");
+            if (report) {
+                log.warning("Node not found ('" + executable + "'). Set foreman.node: auto to download it.");
+            }
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -250,11 +318,12 @@ public final class ForemanLauncher {
                 "{\n  \"private\": true,\n  \"type\": \"module\",\n  \"dependencies\": {\n"
                         + "    \"@anthropic-ai/claude-agent-sdk\": \"" + AGENT_SDK_VERSION + "\"\n  }\n}\n");
         log.info("installing the Claude Agent SDK " + AGENT_SDK_VERSION + " with npm (first start only)...");
-        Process p = new ProcessBuilder(opts.npm(), "install", "--omit=dev", "--no-audit", "--no-fund")
+        ProcessBuilder npmInstall = new ProcessBuilder(npm, "install", "--omit=dev", "--no-audit", "--no-fund")
                 .directory(opts.workDir().toFile())
                 .redirectErrorStream(true)
-                .redirectOutput(ProcessBuilder.Redirect.appendTo(logFile().toFile()))
-                .start();
+                .redirectOutput(ProcessBuilder.Redirect.appendTo(logFile().toFile()));
+        withPath(npmInstall.environment());
+        Process p = npmInstall.start();
         if (!p.waitFor(10, TimeUnit.MINUTES)) {
             p.destroyForcibly();
             log.severe("npm install timed out; see " + logFile());

@@ -147,9 +147,13 @@ Con `foreman.backend: claude` gli agenti lavorano davvero sul codice dei vostri 
 
 **Cosa serve sulla macchina del server**
 
-- Node 22+ e **npm**: al primo avvio il plugin installa da solo il Claude Agent SDK in
-  `plugins/AgentCraftServer/foreman/` (serve accesso a registry.npmjs.org).
-- **git** e **Maven** (per build e test dei plugin Castigo).
+- Niente da installare a mano, anche nel container Java di **Pelican/Pterodactyl**: se mancano,
+  il plugin scarica **Node 22.23.4** e **Maven 3.9.16** in `plugins/AgentCraftServer/runtime/`,
+  controllandone l'impronta ufficiale, e installa il Claude Agent SDK con npm. Serve che il
+  container possa raggiungere nodejs.org, repo1.maven.org e registry.npmjs.org (solo al primo avvio).
+- **git** (c'è già nelle immagini Java di Pelican/Pterodactyl).
+- **Memoria**: build Maven e agenti girano nello stesso container del server. Date al server di
+  test almeno 2-3 GB in più del solito, o tenete `maxConcurrent` basso.
 - Una **chiave API** di Claude (console.anthropic.com), meglio dedicata ad AgentCraft. Mettila in un
   file nella cartella del plugin, leggibile solo dall'utente del server (`chmod 600`), e scrivi
   `api-key-file: anthropic.key` sotto `foreman:`. La chiave va solo al foreman, non a tutto il server.
@@ -190,8 +194,20 @@ impostano solo nel file).
 4. Bussola rivede il diff e vi chiede l'approvazione in chat: `[1 Merge] [2 Request changes] [3 Reject]`.
    `/agent diff <task>` mostra il riepilogo e dove si trova il diff completo.
 5. Con **Merge** il foreman unisce il branch nella copia locale, come vostro commit di merge.
-   **Il push e le PR li fate sempre voi.** Se nella copia ci sono modifiche non salvate, il merge
-   viene rifiutato e la decisione si ripresenta.
+   Se nella copia ci sono modifiche non salvate, il merge viene rifiutato e la decisione si ripresenta.
+6. **`/agent push`** (permesso `agentcraft.approve`) pubblica il lavoro unito su GitHub. Lo può
+   fare solo una persona: gli agenti non hanno alcun accesso alla rete git. Il push non è mai forzato.
+
+**Configurare il push** (in `repos[]` di `foreman/config.json`):
+
+```json
+"push": { "remote": "origin", "branch": "agentcraft/lavori", "tokenFile": "/home/container/plugins/AgentCraftServer/github.token" }
+```
+
+- `tokenFile`: token GitHub _fine-grained_ limitato alla sola repo, permesso _Contents: Read and write_;
+  oppure `sshKeyFile`: una _deploy key_ con scrittura. File leggibili solo dall'utente del server.
+- `branch`: dove pubblicare. Le regole di castigo-ecosistema chiedono rami dedicati e PR: conviene
+  un ramo come `agentcraft/lavori` da cui aprire la PR su GitHub, invece di `main`.
 
 **Cosa non possono fare**: push o qualsiasi accesso di rete con git, firmare commit, modificare
 fuori dalla propria copia, toccare i plugin esclusi o le cartelle di versione esistenti, usare la

@@ -73,6 +73,15 @@ export const RepoAdd = message('repo.add', 'Register a plugin repository (`/agen
   path: z.string().min(1).max(500),
 });
 
+export const RepoPush = message(
+  'repo.push',
+  'Publish the base branch of a repository to its remote (`/agent push`). Only people can push: agents have no git network access.',
+  {
+    actor: Actor,
+    repoId: Id.optional().describe('default: the first registered repository'),
+  },
+);
+
 export const ToolResult = message('tool.result', 'Answer to `tool.call`.', {
   re: Id.describe('id of the tool.call'),
   ok: z.boolean(),
@@ -104,6 +113,7 @@ export const PluginToForeman = z.discriminatedUnion('type', [
   AgentAction,
   DiffRequest,
   RepoAdd,
+  RepoPush,
   ToolResult,
   JobProgress,
   WorldEvent,

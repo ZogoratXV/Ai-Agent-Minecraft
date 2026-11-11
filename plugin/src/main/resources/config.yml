@@ -16,13 +16,17 @@ foreman:
   # plugins/AgentCraftServer/foreman/. If a foreman is already running at bridge.url
   # (started by hand), that one is used instead.
   managed: true
-  # Node executable (full path if it is not on the PATH).
-  node: node
+  # Node executable: auto = the machine's Node 22+ if there is one, otherwise Node 22.23.4 is
+  # downloaded once into plugins/AgentCraftServer/runtime/ and checked against its official SHA-256
+  # (needed in the Java containers of Pelican/Pterodactyl, which have no Node). Or a full path.
+  node: auto
   # sim = scripted team, no API usage. claude = real agents (from phase 4; needs ANTHROPIC_API_KEY
   # in the server's environment).
   backend: sim
-  # npm executable, used once to install the Claude Agent SDK for the claude backend.
-  npm: npm
+  # npm executable, used once to install the Claude Agent SDK for the claude backend (auto = the
+  # one next to Node). The claude backend also needs Maven: if 'mvn' is missing, Maven 3.9.16 is
+  # downloaded the same way (SHA-512 checked).
+  npm: auto
   # claude backend: file (in the plugin folder, readable only by the server user) holding the
   # Anthropic API key. It is given only to the foreman process, never to the whole server.
   # Alternative: ANTHROPIC_API_KEY in the server's environment.

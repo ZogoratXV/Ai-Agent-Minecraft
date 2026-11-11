@@ -595,6 +595,61 @@
         },
         "type": {
           "type": "string",
+          "const": "repo.push"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+              "description": "Minecraft player UUID"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16
+            }
+          },
+          "required": [
+            "uuid",
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "the player who asked; the plugin has already checked their permission, the foreman logs it"
+        },
+        "repoId": {
+          "description": "default: the first registered repository",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "actor"
+      ],
+      "additionalProperties": false,
+      "description": "Publish the base branch of a repository to its remote (`/agent push`). Only people can push: agents have no git network access."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
           "const": "tool.result"
         },
         "id": {

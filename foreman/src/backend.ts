@@ -24,4 +24,5 @@ export interface Backend {
   onTaskAction?(taskId: string, action: 'cancel' | 'retry' | 'reassign' | 'prioritize'): void;
   onRepoAdd?(path: string): Promise<unknown>;
   onDiff?(taskId: string): Promise<unknown>;
+  onRepoPush?(repoId: string | undefined, by: string): Promise<unknown>;
 }

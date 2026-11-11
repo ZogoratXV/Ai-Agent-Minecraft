@@ -46,13 +46,16 @@ jobs:
           path: plugin/build/libs/*.jar
 
   e2e-sim:
-    name: end-to-end (${{ matrix.mode }} foreman, sim backend on Purpur 26.2)
+    name: end-to-end (${{ matrix.mode }} foreman${{ matrix.no_node && ', no Node' || '' }}, sim backend on Purpur 26.2)
     needs: [node, plugin]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         mode: [managed, external]
+        include:
+          - mode: managed
+            no_node: '1'
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -70,10 +73,11 @@ jobs:
         env:
           ACCEPT_EULA: 'true'
           MODE: ${{ matrix.mode }}
+          NO_NODE: ${{ matrix.no_node }}
       - if: failure()
         uses: actions/upload-artifact@v5
         with:
-          name: e2e-logs-${{ matrix.mode }}
+          name: e2e-logs-${{ matrix.mode }}${{ matrix.no_node && '-no-node' || '' }}
           path: |
             staging/server/e2e.log
             staging/server/e2e-foreman.log
@@ -100,3 +104,4 @@ jobs:
       - run: staging/e2e-claude-setup.sh
         env:
           ACCEPT_EULA: 'true'
+          NO_NODE: '1'

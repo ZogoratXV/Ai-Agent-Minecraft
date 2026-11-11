@@ -233,6 +233,23 @@ export class TeamBackend implements Backend, TeamApi {
     return { repoId: r.id, versioning: r.versioning, branch: r.branch };
   }
 
+  async onRepoPush(repoId: string | undefined, by: string): Promise<unknown> {
+    const id = repoId ?? this.defaultRepo()?.id;
+    if (!id) throw new Error('no repository registered');
+    const r = await this.o.repos.push(id);
+    this.o.state.addFeed({ kind: 'merge', text: `${by} ha pubblicato ${id} su ${r.remote}/${r.branch} (${r.sha})` });
+    this.o.store.appendJsonl('audit.jsonl', {
+      ts: this.o.clock.now(),
+      action: 'push',
+      by,
+      repo: id,
+      remote: r.remote,
+      branch: r.branch,
+      sha: r.sha,
+    });
+    return r;
+  }
+
   async onDiff(taskId: string): Promise<unknown> {
     const t = this.task(taskId);
     const rt = this.rt(taskId);

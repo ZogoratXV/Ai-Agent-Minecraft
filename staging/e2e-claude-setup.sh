@@ -17,7 +17,7 @@ unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN CLAUDE_CODE_OAUTH_TOKEN CLAUDE_CODE
 (cd "$ROOT/plugin" && ./gradlew --quiet build -x test)
 mkdir -p "$DIR/plugins" "$PDIR"
 rm -f "$DIR"/plugins/agentcraft-server-*.jar
-cp "$ROOT"/plugin/build/libs/agentcraft-server-*.jar "$DIR/plugins/"
+cp "$(ls -t "$ROOT"/plugin/build/libs/agentcraft-server-*.jar | head -1)" "$DIR/plugins/"
 rm -rf "$PDIR/foreman/home" "$PDIR/token.txt"
 sed "s/^  backend: sim$/  backend: claude/" "$ROOT/plugin/src/main/resources/config.yml" > "$PDIR/config.yml"
 grep -q "^  backend: claude" "$PDIR/config.yml"
@@ -30,8 +30,18 @@ git -C "$REPO" init -q -b main && git -C "$REPO" -c user.name=t -c user.email=t@
 
 cleanup() { kill "${JAVA_PID:-}" 2>/dev/null || true; rm -f "${FIFO:-}"; rm -rf "$REPO"; }
 trap cleanup EXIT
+# NO_NODE=1: like the Java container of Pelican/Pterodactyl (no Node, no npm, no Maven)
+SERVER_PATH="$PATH"
+if [ "${NO_NODE:-}" = "1" ]; then
+  NB="$(mktemp -d)"
+  for t in java timeout tar gzip git sh bash env ls cat mkdir rm cp mv sed grep head tail dirname basename uname id; do
+    p="$(command -v "$t" || true)"; [ -n "$p" ] && ln -s "$p" "$NB/$t"
+  done
+  SERVER_PATH="$NB"
+  rm -rf "$PDIR/runtime" "$PDIR/foreman/node_modules"
+fi
 FIFO="$(mktemp -u)"; mkfifo "$FIFO"
-(cd "$DIR" && exec timeout 900 java -Xms1G -Xmx2G -jar purpur.jar --nogui) < "$FIFO" > "$LOG" 2>&1 &
+(cd "$DIR" && PATH="$SERVER_PATH" exec timeout 900 java -Xms1G -Xmx2G -jar purpur.jar --nogui) < "$FIFO" > "$LOG" 2>&1 &
 JAVA_PID=$!
 exec 3> "$FIFO"
 plain() { sed 's/\x1b\[[0-9;]*m//g' "$1"; }
@@ -41,6 +51,10 @@ fail() { echo "E2E FAILED: $1" >&2; plain "$LOG" | grep -iE "agentcraft|exceptio
 wait_for 'Done \(' 600 || fail "server did not start"
 wait_for 'Claude Agent SDK (installed|already)|connected to the foreman' 300 || fail "SDK not installed"
 wait_for 'connected to the foreman' 120 || fail "plugin did not connect"
+if [ "${NO_NODE:-}" = "1" ]; then
+  plain "$LOG" | grep -q "Node 22.23.4 ready" || fail "Node was not downloaded"
+  plain "$LOG" | grep -q "Maven 3.9.16 ready" || fail "Maven was not downloaded"
+fi
 echo "agent status" >&3; sleep 2
 plain "$LOG" | grep -q "Agenti fermi: manca ANTHROPIC_API_KEY.*imposta la chiave" || fail "/agent status does not say that the key is missing"
 echo "agent repo add $REPO" >&3; sleep 3
@@ -51,4 +65,4 @@ echo "stop" >&3
 wait "$JAVA_PID" || true
 [ -f "$PDIR/foreman/node_modules/@anthropic-ai/claude-agent-sdk/package.json" ] || fail "SDK not in the foreman folder"
 if ls "$PDIR/foreman/home/claude-config/projects" >/dev/null 2>&1; then fail "an agent session was started without an API key"; fi
-echo "E2E PASSED: SDK installed by the plugin, agents stopped for the missing key, repository registered, no agent turn"
+echo "E2E PASSED${NO_NODE:+ (no Node/npm/Maven on the machine)}: SDK installed by the plugin, agents stopped for the missing key, repository registered, no agent turn"

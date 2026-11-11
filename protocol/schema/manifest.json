@@ -19,6 +19,7 @@
     "task.upsert",
     "decision.upsert",
     "goal.upsert",
+    "repo.upsert",
     "feed.add",
     "foreman.status",
     "notify",

@@ -142,7 +142,7 @@ Register a plugin repository (`/agent repo add <path>`).
 | `path` | string | yes |  |
 
 ```json
-{"v":1,"type":"repo.add","id":"c7","actor":{"uuid":"2f8a3c1e-4b5d-4e6f-8a9b-0c1d2e3f4a5b","name":"Zogorat"},"path":"/srv/agentcraft/repos/castigo-plugins"}
+{"v":1,"type":"repo.add","id":"c7","actor":{"uuid":"2f8a3c1e-4b5d-4e6f-8a9b-0c1d2e3f4a5b","name":"Zogorat"},"path":"/srv/agentcraft/repos/castigo-ecosistema"}
 ```
 
 ### `tool.result`
@@ -208,10 +208,11 @@ Full state, sent after a valid `hello`. Replaces everything the plugin knows.
 | `tasks` | object[] | yes |  |
 | `decisions` | object[] | yes |  |
 | `goals` | object[] | yes |  |
+| `repos` | object[] | no |  |
 | `feed` | object[] | yes | most recent last |
 
 ```json
-{"v":1,"type":"snapshot","foreman":{"version":"0.1.0","backend":"sim","auth":"ok","paused":false,"budget":{"spentTodayUsd":1.2,"dailyUsd":15,"spentMonthUsd":31.5,"monthlyUsd":300}},"agents":[{"id":"briciola","name":"Briciola","role":"qa","title":"Cacciatrice di bug","color":"#8fa98b","state":"testing","activity":"testing EconomyPlus","station":"testbench","taskId":"t4","paused":false,"active":true,"model":"Sonnet 5.5","costUsd":0.42}],"tasks":[{"id":"t4","title":"Test del comando /shop sell","kind":"qa","status":"doing","assignee":"briciola","deps":["t2"],"repoId":"castigo-plugins","goalId":"g1","priority":0,"branch":"agentcraft/briciola/t4-shop-sell-tests","ci":"running","createdBy":"bussola","createdAt":1762862400000,"updatedAt":1762862460000}],"decisions":[{"id":"d3","agentId":"bussola","kind":"merge","question":"Unire la correzione di /shop sell in main?","options":["Merge","Request changes","Reject"],"context":"2 file, +41 -7. Test: 18 passati.","status":"open","taskId":"t2","createdAt":1762862520000}],"goals":[{"id":"g1","text":"Trova e correggi i bug di EconomyPlus","status":"active","progress":0.4,"createdBy":"user:Zogorat","createdAt":1762862400000,"updatedAt":1762862400000}],"feed":[{"ts":1762862400000,"kind":"goal","text":"Nuovo obiettivo da Zogorat","to":"all"}]}
+{"v":1,"type":"snapshot","foreman":{"version":"0.1.0","backend":"sim","auth":"ok","paused":false,"budget":{"spentTodayUsd":1.2,"dailyUsd":15,"spentMonthUsd":31.5,"monthlyUsd":300}},"agents":[{"id":"briciola","name":"Briciola","role":"qa","title":"Cacciatrice di bug","color":"#8fa98b","state":"testing","activity":"testing EconomyPlus","station":"testbench","taskId":"t4","paused":false,"active":true,"model":"Sonnet 5.5","costUsd":0.42}],"tasks":[{"id":"t4","title":"Test del comando /shop sell","kind":"qa","status":"doing","assignee":"briciola","deps":["t2"],"repoId":"castigo-ecosistema","goalId":"g1","priority":0,"branch":"agentcraft/briciola/t4-shop-sell-tests","module":"modules/CastigoBanca-2.7.0-alpha.2","ci":"running","createdBy":"bussola","createdAt":1762862400000,"updatedAt":1762862460000}],"decisions":[{"id":"d3","agentId":"bussola","kind":"merge","question":"Unire la correzione di /shop sell in main?","options":["Merge","Request changes","Reject"],"context":"2 file, +41 -7. Test: 18 passati.","status":"open","taskId":"t2","createdAt":1762862520000}],"goals":[{"id":"g1","text":"Trova e correggi i bug di EconomyPlus","status":"active","progress":0.4,"createdBy":"user:Zogorat","createdAt":1762862400000,"updatedAt":1762862400000}],"repos":[{"id":"castigo-ecosistema","name":"castigo-ecosistema","path":"/srv/agentcraft/repos/castigo-ecosistema","branch":"main","head":"12835d8","dirty":false,"versioning":"new-folder"}],"feed":[{"ts":1762862400000,"kind":"goal","text":"Nuovo obiettivo da Zogorat","to":"all"}]}
 ```
 
 ### `agent.upsert`
@@ -237,7 +238,7 @@ Replace one task by id.
 | `task` | object | yes |  |
 
 ```json
-{"v":1,"type":"task.upsert","task":{"id":"t4","title":"Test del comando /shop sell","kind":"qa","status":"doing","assignee":"briciola","deps":["t2"],"repoId":"castigo-plugins","goalId":"g1","priority":0,"branch":"agentcraft/briciola/t4-shop-sell-tests","ci":"running","createdBy":"bussola","createdAt":1762862400000,"updatedAt":1762862460000}}
+{"v":1,"type":"task.upsert","task":{"id":"t4","title":"Test del comando /shop sell","kind":"qa","status":"doing","assignee":"briciola","deps":["t2"],"repoId":"castigo-ecosistema","goalId":"g1","priority":0,"branch":"agentcraft/briciola/t4-shop-sell-tests","module":"modules/CastigoBanca-2.7.0-alpha.2","ci":"running","createdBy":"bussola","createdAt":1762862400000,"updatedAt":1762862460000}}
 ```
 
 ### `decision.upsert`
@@ -264,6 +265,19 @@ Replace one goal by id.
 
 ```json
 {"v":1,"type":"goal.upsert","goal":{"id":"g1","text":"Trova e correggi i bug di EconomyPlus","status":"active","progress":0.5,"createdBy":"user:Zogorat","createdAt":1762862400000,"updatedAt":1762862700000}}
+```
+
+### `repo.upsert`
+
+Replace one repository by id.
+
+| field | type | required | notes |
+| --- | --- | --- | --- |
+| `id` | string | no | correlation id; messages that carry one are answered with `ack` |
+| `repo` | object | yes |  |
+
+```json
+{"v":1,"type":"repo.upsert","repo":{"id":"castigo-ecosistema","name":"castigo-ecosistema","path":"/srv/agentcraft/repos/castigo-ecosistema","branch":"main","head":"12835d8","dirty":true,"versioning":"new-folder"}}
 ```
 
 ### `feed.add`

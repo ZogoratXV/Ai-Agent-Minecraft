@@ -40,10 +40,11 @@
       "deps": [
         "t2"
       ],
-      "repoId": "castigo-plugins",
+      "repoId": "castigo-ecosistema",
       "goalId": "g1",
       "priority": 0,
       "branch": "agentcraft/briciola/t4-shop-sell-tests",
+      "module": "modules/CastigoBanca-2.7.0-alpha.2",
       "ci": "running",
       "createdBy": "bussola",
       "createdAt": 1762862400000,
@@ -76,6 +77,17 @@
       "createdBy": "user:Zogorat",
       "createdAt": 1762862400000,
       "updatedAt": 1762862400000
+    }
+  ],
+  "repos": [
+    {
+      "id": "castigo-ecosistema",
+      "name": "castigo-ecosistema",
+      "path": "/srv/agentcraft/repos/castigo-ecosistema",
+      "branch": "main",
+      "head": "12835d8",
+      "dirty": false,
+      "versioning": "new-folder"
     }
   ],
   "feed": [

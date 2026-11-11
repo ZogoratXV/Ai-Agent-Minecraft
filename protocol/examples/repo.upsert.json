@@ -1,0 +1,13 @@
+{
+  "v": 1,
+  "type": "repo.upsert",
+  "repo": {
+    "id": "castigo-ecosistema",
+    "name": "castigo-ecosistema",
+    "path": "/srv/agentcraft/repos/castigo-ecosistema",
+    "branch": "main",
+    "head": "12835d8",
+    "dirty": true,
+    "versioning": "new-folder"
+  }
+}

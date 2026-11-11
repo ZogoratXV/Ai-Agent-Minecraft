@@ -10,6 +10,7 @@ import {
   ForemanStatus,
   Goal,
   Limits,
+  Repo,
   ServerInfo,
   Task,
 } from './entities.js';
@@ -120,6 +121,7 @@ export const Snapshot = message(
     tasks: z.array(Task),
     decisions: z.array(Decision),
     goals: z.array(Goal),
+    repos: z.array(Repo).optional(),
     feed: z.array(FeedItem).max(200).describe('most recent last'),
   },
 );
@@ -128,6 +130,7 @@ export const AgentUpsert = message('agent.upsert', 'Replace one agent by id.', {
 export const TaskUpsert = message('task.upsert', 'Replace one task by id.', { task: Task });
 export const DecisionUpsert = message('decision.upsert', 'Replace one decision by id.', { decision: Decision });
 export const GoalUpsert = message('goal.upsert', 'Replace one goal by id.', { goal: Goal });
+export const RepoUpsert = message('repo.upsert', 'Replace one repository by id.', { repo: Repo });
 export const FeedAdd = message('feed.add', 'Append to the activity feed.', { item: FeedItem });
 export const ForemanStatusMsg = message('foreman.status', 'Backend, auth, pause and budget status.', {
   status: ForemanStatus,
@@ -184,6 +187,7 @@ export const ForemanToPlugin = z.discriminatedUnion('type', [
   TaskUpsert,
   DecisionUpsert,
   GoalUpsert,
+  RepoUpsert,
   FeedAdd,
   ForemanStatusMsg,
   Notify,

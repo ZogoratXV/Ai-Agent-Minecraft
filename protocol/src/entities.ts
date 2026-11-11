@@ -68,6 +68,11 @@ export const Task = z.object({
   goalId: Id.optional(),
   priority: z.number().int().describe('higher = sooner; default 0'),
   branch: z.string().max(200).optional().describe('e.g. "agentcraft/lucciola/t2-fix-shop"'),
+  module: z
+    .string()
+    .max(300)
+    .optional()
+    .describe('folder inside the repo the task works on, e.g. "modules/CastigoBanca-2.7.0-alpha.2"'),
   ci: CiStatus,
   blockedReason: z.string().max(500).optional(),
   summary: z.string().max(4000).optional(),
@@ -99,6 +104,16 @@ export const Decision = z.object({
   answer: DecisionAnswer.optional(),
   taskId: Id.optional(),
   createdAt: Ts,
+});
+
+export const Repo = z.object({
+  id: Id,
+  name: z.string().max(64),
+  path: z.string().max(500).describe('checkout on the foreman machine'),
+  branch: z.string().max(200).describe('base branch agents start from and merge into'),
+  head: z.string().max(40).optional().describe('short sha of the base branch'),
+  dirty: z.boolean().describe('the checkout has uncommitted changes: merges are refused'),
+  versioning: z.enum(['in-place', 'new-folder']).describe('new-folder: every change goes into a new version folder'),
 });
 
 export const GoalStatus = z.enum(['planning', 'active', 'done', 'failed', 'cancelled']);

@@ -33,10 +33,11 @@ const task: z.infer<typeof Task> = {
   status: 'doing',
   assignee: 'briciola',
   deps: ['t2'],
-  repoId: 'castigo-plugins',
+  repoId: 'castigo-ecosistema',
   goalId: 'g1',
   priority: 0,
   branch: 'agentcraft/briciola/t4-shop-sell-tests',
+  module: 'modules/CastigoBanca-2.7.0-alpha.2',
   ci: 'running',
   createdBy: 'bussola',
   createdAt: T0,
@@ -55,6 +56,16 @@ const decision: z.infer<typeof Decision> = {
   createdAt: T0 + 120_000,
 };
 
+const repo = {
+  id: 'castigo-ecosistema',
+  name: 'castigo-ecosistema',
+  path: '/srv/agentcraft/repos/castigo-ecosistema',
+  branch: 'main',
+  head: '12835d8',
+  dirty: false,
+  versioning: 'new-folder' as const,
+};
+
 export const EXAMPLES: Record<string, PluginToForeman | ForemanToPlugin> = {
   hello: {
     v: 1,
@@ -71,7 +82,7 @@ export const EXAMPLES: Record<string, PluginToForeman | ForemanToPlugin> = {
   'task.action': { v: 1, type: 'task.action', id: 'c4', actor, taskId: 't4', action: 'reassign', agentId: 'lucciola' },
   'agent.action': { v: 1, type: 'agent.action', id: 'c5', actor, agentId: 'mattone', action: 'pause' },
   'diff.request': { v: 1, type: 'diff.request', id: 'c6', actor, taskId: 't2' },
-  'repo.add': { v: 1, type: 'repo.add', id: 'c7', actor, path: '/srv/agentcraft/repos/castigo-plugins' },
+  'repo.add': { v: 1, type: 'repo.add', id: 'c7', actor, path: '/srv/agentcraft/repos/castigo-ecosistema' },
   'tool.result': {
     v: 1,
     type: 'tool.result',
@@ -112,8 +123,10 @@ export const EXAMPLES: Record<string, PluginToForeman | ForemanToPlugin> = {
         updatedAt: T0,
       },
     ],
+    repos: [repo],
     feed: [{ ts: T0, kind: 'goal', text: 'Nuovo obiettivo da Zogorat', to: 'all' }],
   },
+  'repo.upsert': { v: 1, type: 'repo.upsert', repo: { ...repo, dirty: true } },
   'agent.upsert': { v: 1, type: 'agent.upsert', agent },
   'task.upsert': { v: 1, type: 'task.upsert', task },
   'decision.upsert': { v: 1, type: 'decision.upsert', decision },

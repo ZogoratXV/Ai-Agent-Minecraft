@@ -10,10 +10,11 @@
     "deps": [
       "t2"
     ],
-    "repoId": "castigo-plugins",
+    "repoId": "castigo-ecosistema",
     "goalId": "g1",
     "priority": 0,
     "branch": "agentcraft/briciola/t4-shop-sell-tests",
+    "module": "modules/CastigoBanca-2.7.0-alpha.2",
     "ci": "running",
     "createdBy": "bussola",
     "createdAt": 1762862400000,

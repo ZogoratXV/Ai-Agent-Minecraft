@@ -311,6 +311,11 @@
                 "type": "string",
                 "maxLength": 200
               },
+              "module": {
+                "description": "folder inside the repo the task works on, e.g. \"modules/CastigoBanca-2.7.0-alpha.2\"",
+                "type": "string",
+                "maxLength": 300
+              },
               "ci": {
                 "type": "string",
                 "enum": [
@@ -531,6 +536,61 @@
               "createdBy",
               "createdAt",
               "updatedAt"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "repos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "path": {
+                "type": "string",
+                "maxLength": 500,
+                "description": "checkout on the foreman machine"
+              },
+              "branch": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "base branch agents start from and merge into"
+              },
+              "head": {
+                "description": "short sha of the base branch",
+                "type": "string",
+                "maxLength": 40
+              },
+              "dirty": {
+                "type": "boolean",
+                "description": "the checkout has uncommitted changes: merges are refused"
+              },
+              "versioning": {
+                "type": "string",
+                "enum": [
+                  "in-place",
+                  "new-folder"
+                ],
+                "description": "new-folder: every change goes into a new version folder"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "path",
+              "branch",
+              "dirty",
+              "versioning"
             ],
             "additionalProperties": false
           }
@@ -867,6 +927,11 @@
               "type": "string",
               "maxLength": 200
             },
+            "module": {
+              "description": "folder inside the repo the task works on, e.g. \"modules/CastigoBanca-2.7.0-alpha.2\"",
+              "type": "string",
+              "maxLength": 300
+            },
             "ci": {
               "type": "string",
               "enum": [
@@ -1146,6 +1211,85 @@
       ],
       "additionalProperties": false,
       "description": "Replace one goal by id."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 1
+        },
+        "type": {
+          "type": "string",
+          "const": "repo.upsert"
+        },
+        "id": {
+          "description": "correlation id; messages that carry one are answered with `ack`",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "repo": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._:-]+$",
+              "description": "stable identifier, e.g. \"t3\", \"d4\", \"bussola\""
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "path": {
+              "type": "string",
+              "maxLength": 500,
+              "description": "checkout on the foreman machine"
+            },
+            "branch": {
+              "type": "string",
+              "maxLength": 200,
+              "description": "base branch agents start from and merge into"
+            },
+            "head": {
+              "description": "short sha of the base branch",
+              "type": "string",
+              "maxLength": 40
+            },
+            "dirty": {
+              "type": "boolean",
+              "description": "the checkout has uncommitted changes: merges are refused"
+            },
+            "versioning": {
+              "type": "string",
+              "enum": [
+                "in-place",
+                "new-folder"
+              ],
+              "description": "new-folder: every change goes into a new version folder"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "path",
+            "branch",
+            "dirty",
+            "versioning"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "repo"
+      ],
+      "additionalProperties": false,
+      "description": "Replace one repository by id."
     },
     {
       "type": "object",

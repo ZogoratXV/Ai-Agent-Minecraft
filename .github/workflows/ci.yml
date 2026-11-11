@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    name: foreman + protocol
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # typecheck, ESLint, Prettier, generated protocol files up to date, vitest
+      - run: npm run check
+
+  plugin:
+    name: plugin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v5
+      # compile, Spotless, JUnit + MockBukkit (reads the protocol fixtures from ../protocol)
+      - run: ./gradlew build --console=plain
+        working-directory: plugin
+      - uses: actions/upload-artifact@v5
+        with:
+          name: agentcraft-server-plugin
+          path: plugin/build/libs/*.jar

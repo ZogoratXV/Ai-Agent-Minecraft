@@ -10,19 +10,19 @@ Data: 2026-11-11.
 Repository: https://github.com/blendi-remade/agentcraft (MIT, © 2026 AgentCraft contributors).
 Letti: `README.md`, `foreman/README.md`, `docs/protocol.md`, `foreman/src/*` (struttura e moduli chiave).
 
-| Concetto agentcraft | Dove | Cosa riprendiamo | Cosa cambia per noi |
-|---|---|---|---|
-| Foreman = unico proprietario dello stato; il client (mod) è solo vista e controlli | `foreman.ts`, `store.ts` | Identico: il plugin non tiene stato di business, solo stato "fisico" (NPC, job nel mondo, snapshot undo) | Il plugin **esegue** anche azioni (world tools), quindi il protocollo diventa bidirezionale con RPC |
-| WebSocket `ws://127.0.0.1:7878`, envelope `{v, type, id?, ...}`, `hello → snapshot → upsert`, `ack {re, ok}` | `server.ts`, `protocol.ts` | Envelope, snapshot+upsert, ack, rifiuto di `Origin` e di Host non locali | Aggiungiamo **token condiviso** nell'handshake e una famiglia `tool.call`/`tool.result` (foreman→plugin) |
-| Protocollo definito in zod, doc generata e verificata in CI (`npm run check`) | `protocol.ts`, `scripts/gen-protocol-doc.ts` | Stesso approccio, ma in un package `/protocol` separato con export JSON Schema | Il lato Java viene verificato contro **fixture JSON generate** (contract test) |
-| TaskGraph (`todo/doing/review/done/blocked/cancelled`, deps, priority) | `taskgraph.ts` | Stessi stati e semantica | Task con `kind` (code, qa, build, analysis, generic) |
-| DecisionQueue (`question/permission/merge`) | `decisions.ts` | Stesso modello, opzioni etichettate | Nuovi tipi: `deploy`, `build` (approvazione costruzione), `config` (proposta analyst) |
-| Worktree per task `agentcraft/<agente>/<task>`, merge solo su approvazione, checkout sporco ⇒ merge rifiutato | `repos.ts` | Identico | — |
-| Git safety a livello di git (`GIT_ALLOW_PROTOCOL`, `protocol.allow=never`, `pushInsteadOf`, no signing, `GIT_CEILING_DIRECTORIES`) | `gitsafety.ts` | Stessa tecnica (reimplementata, con citazione) | — |
-| Policy shell (parser bash, allow/ask/deny, "always allow" con scope) | `policy.ts` (2150 righe) | Il **principio**: whitelist + richiesta in gioco + `git push` sempre negato | Versione più semplice e conservativa all'inizio (allowlist esplicita, tutto il resto chiede); la renderemo più fine solo se serve |
-| Claude Agent SDK: un `query()` per turno, `settingSources: []`, MCP in-process (`createSdkMcpServer`), ogni tool passa da `canUseTool`, `resume` per sessione, `maxTurns`, `maxBudgetUsd` | `agents/claude/engine.ts`, `tools.ts` | Stesso schema | Più ruoli (6), tool "mondo" inoltrati al plugin |
-| Backend `sim` deterministico con git reale | `agents/sim/` | Stesso concetto | Lo scenario sim pilota anche NPC e world tools (senza API) |
-| Memoria markdown shared + per agente | `memory.ts` | Identico (`memory/shared/`, `memory/agents/<id>/`) | Mostrata in gioco come libri |
+| Concetto agentcraft                                                                                                                                                                       | Dove                                         | Cosa riprendiamo                                                                                         | Cosa cambia per noi                                                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Foreman = unico proprietario dello stato; il client (mod) è solo vista e controlli                                                                                                        | `foreman.ts`, `store.ts`                     | Identico: il plugin non tiene stato di business, solo stato "fisico" (NPC, job nel mondo, snapshot undo) | Il plugin **esegue** anche azioni (world tools), quindi il protocollo diventa bidirezionale con RPC                               |
+| WebSocket `ws://127.0.0.1:7878`, envelope `{v, type, id?, ...}`, `hello → snapshot → upsert`, `ack {re, ok}`                                                                              | `server.ts`, `protocol.ts`                   | Envelope, snapshot+upsert, ack, rifiuto di `Origin` e di Host non locali                                 | Aggiungiamo **token condiviso** nell'handshake e una famiglia `tool.call`/`tool.result` (foreman→plugin)                          |
+| Protocollo definito in zod, doc generata e verificata in CI (`npm run check`)                                                                                                             | `protocol.ts`, `scripts/gen-protocol-doc.ts` | Stesso approccio, ma in un package `/protocol` separato con export JSON Schema                           | Il lato Java viene verificato contro **fixture JSON generate** (contract test)                                                    |
+| TaskGraph (`todo/doing/review/done/blocked/cancelled`, deps, priority)                                                                                                                    | `taskgraph.ts`                               | Stessi stati e semantica                                                                                 | Task con `kind` (code, qa, build, analysis, generic)                                                                              |
+| DecisionQueue (`question/permission/merge`)                                                                                                                                               | `decisions.ts`                               | Stesso modello, opzioni etichettate                                                                      | Nuovi tipi: `deploy`, `build` (approvazione costruzione), `config` (proposta analyst)                                             |
+| Worktree per task `agentcraft/<agente>/<task>`, merge solo su approvazione, checkout sporco ⇒ merge rifiutato                                                                             | `repos.ts`                                   | Identico                                                                                                 | —                                                                                                                                 |
+| Git safety a livello di git (`GIT_ALLOW_PROTOCOL`, `protocol.allow=never`, `pushInsteadOf`, no signing, `GIT_CEILING_DIRECTORIES`)                                                        | `gitsafety.ts`                               | Stessa tecnica (reimplementata, con citazione)                                                           | —                                                                                                                                 |
+| Policy shell (parser bash, allow/ask/deny, "always allow" con scope)                                                                                                                      | `policy.ts` (2150 righe)                     | Il **principio**: whitelist + richiesta in gioco + `git push` sempre negato                              | Versione più semplice e conservativa all'inizio (allowlist esplicita, tutto il resto chiede); la renderemo più fine solo se serve |
+| Claude Agent SDK: un `query()` per turno, `settingSources: []`, MCP in-process (`createSdkMcpServer`), ogni tool passa da `canUseTool`, `resume` per sessione, `maxTurns`, `maxBudgetUsd` | `agents/claude/engine.ts`, `tools.ts`        | Stesso schema                                                                                            | Più ruoli (6), tool "mondo" inoltrati al plugin                                                                                   |
+| Backend `sim` deterministico con git reale                                                                                                                                                | `agents/sim/`                                | Stesso concetto                                                                                          | Lo scenario sim pilota anche NPC e world tools (senza API)                                                                        |
+| Memoria markdown shared + per agente                                                                                                                                                      | `memory.ts`                                  | Identico (`memory/shared/`, `memory/agents/<id>/`)                                                       | Mostrata in gioco come libri                                                                                                      |
 
 Licenza: riprendiamo idee e architettura, non copiamo file. Dove un modulo segue da vicino l'originale (es. git safety), lo
 diremo in un commento di testa. `NOTICE` e README citeranno agentcraft e la licenza MIT.
@@ -33,20 +33,20 @@ diremo in un commento di testa. `NOTICE` e README citeranno agentcraft e la lice
 
 Verificate leggendo direttamente i branch `ver/26.2` di Purpur e Paper su GitHub e Maven Central.
 
-| Cosa | Valore | Fonte |
-|---|---|---|
-| Purpur | branch `ver/26.2`, `mcVersion=26.2`, `apiVersion=26.2`, `channel=STABLE`, ultimo sync upstream 2026-09-11 | `PurpurMC/Purpur@ver/26.2` `gradle.properties` |
-| Paper | branch `ver/26.2`, `apiVersion=26.2`, `STABLE` | `PaperMC/Paper@ver/26.2` |
-| Java | **25** (toolchain `JavaLanguageVersion.of(25)`, `options.release = 25`) | build di Purpur e Paper |
-| Formato versione artefatti | `26.2.build.<N>-stable` (es. `purpur-api:26.2.build.<N>-stable`) | `settings.gradle.kts` di entrambi |
-| Coordinate API | `org.purpurmc.purpur:purpur-api` su `https://repo.purpurmc.org/snapshots`; `io.papermc.paper:paper-api` su `https://repo.papermc.io/repository/maven-public/` | build di Purpur |
-| paperweight | `2.0.0-beta.21` (usato da Purpur/Paper; serve solo se usiamo userdev) | `build.gradle.kts` |
-| Entità Mannequin | presente: `org.bukkit.entity.Mannequin extends LivingEntity` (profilo/skin, skin parts, descrizione, pose) | `paper-api` 26.2 |
-| MockBukkit | `org.mockbukkit.mockbukkit:mockbukkit-v26.2:4.117.0` (Maven Central) | Maven Central |
-| JUnit | MockBukkit 26.2 dipende da **JUnit Jupiter 6.1.3**, non 5 | POM di MockBukkit |
-| Claude Agent SDK (TS) | `@anthropic-ai/claude-agent-sdk` 0.3.322 (npm) | npm |
-| Modelli | `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` (ID confermati) | riferimento API |
-| Node | 22 | richiesta del progetto |
+| Cosa                       | Valore                                                                                                                                                        | Fonte                                          |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Purpur                     | branch `ver/26.2`, `mcVersion=26.2`, `apiVersion=26.2`, `channel=STABLE`, ultimo sync upstream 2026-09-11                                                     | `PurpurMC/Purpur@ver/26.2` `gradle.properties` |
+| Paper                      | branch `ver/26.2`, `apiVersion=26.2`, `STABLE`                                                                                                                | `PaperMC/Paper@ver/26.2`                       |
+| Java                       | **25** (toolchain `JavaLanguageVersion.of(25)`, `options.release = 25`)                                                                                       | build di Purpur e Paper                        |
+| Formato versione artefatti | `26.2.build.<N>-stable` (es. `purpur-api:26.2.build.<N>-stable`)                                                                                              | `settings.gradle.kts` di entrambi              |
+| Coordinate API             | `org.purpurmc.purpur:purpur-api` su `https://repo.purpurmc.org/snapshots`; `io.papermc.paper:paper-api` su `https://repo.papermc.io/repository/maven-public/` | build di Purpur                                |
+| paperweight                | `2.0.0-beta.21` (usato da Purpur/Paper; serve solo se usiamo userdev)                                                                                         | `build.gradle.kts`                             |
+| Entità Mannequin           | presente: `org.bukkit.entity.Mannequin extends LivingEntity` (profilo/skin, skin parts, descrizione, pose)                                                    | `paper-api` 26.2                               |
+| MockBukkit                 | `org.mockbukkit.mockbukkit:mockbukkit-v26.2:4.117.0` (Maven Central)                                                                                          | Maven Central                                  |
+| JUnit                      | MockBukkit 26.2 dipende da **JUnit Jupiter 6.1.3**, non 5                                                                                                     | POM di MockBukkit                              |
+| Claude Agent SDK (TS)      | `@anthropic-ai/claude-agent-sdk` 0.3.322 (npm)                                                                                                                | npm                                            |
+| Modelli                    | `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` (ID confermati)                                                                                    | riferimento API                                |
+| Node                       | 22                                                                                                                                                            | richiesta del progetto                         |
 
 **Non verificato** (rete di questa sessione bloccata verso `repo.purpurmc.org`, `repo.papermc.io`, `api.purpurmc.org`,
 `maven.citizensnpcs.co`):
@@ -116,35 +116,35 @@ npm workspaces alla radice (`foreman`, `protocol`); Gradle separato in `/plugin`
 
 **Plugin → foreman**
 
-| type | contenuto |
-|---|---|
-| `hello` | `token`, `pluginVersion`, `server { id, role: "production"\|"staging", mcVersion, software }`, `capabilities` (Citizens, WorldGuard, WorldEdit, spark, LuckPerms), `limits` (blocchi/tick, volume max) |
-| `goal.submit`, `user.message`, `decision.answer`, `task.action`, `agent.action`, `diff.request`, `repo.add` | come agentcraft, più `actor { uuid, name }` per l'audit e il controllo permessi lato foreman |
-| `tool.result` | risposta a `tool.call`: `{ re, ok, result?, error { code, message }? }` |
-| `job.progress` | `{ jobId, done, total, state: running\|paused\|done\|failed\|undone }` |
-| `world.event` | eventi utili agli agenti (giocatore entra in regione, errori in console, crash plugin) — filtrati |
+| type                                                                                                        | contenuto                                                                                                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `hello`                                                                                                     | `token`, `pluginVersion`, `server { id, role: "production"\|"staging", mcVersion, software }`, `capabilities` (Citizens, WorldGuard, WorldEdit, spark, LuckPerms), `limits` (blocchi/tick, volume max) |
+| `goal.submit`, `user.message`, `decision.answer`, `task.action`, `agent.action`, `diff.request`, `repo.add` | come agentcraft, più `actor { uuid, name }` per l'audit e il controllo permessi lato foreman                                                                                                           |
+| `tool.result`                                                                                               | risposta a `tool.call`: `{ re, ok, result?, error { code, message }? }`                                                                                                                                |
+| `job.progress`                                                                                              | `{ jobId, done, total, state: running\|paused\|done\|failed\|undone }`                                                                                                                                 |
+| `world.event`                                                                                               | eventi utili agli agenti (giocatore entra in regione, errori in console, crash plugin) — filtrati                                                                                                      |
 
 **Foreman → plugin**
 
-| type | contenuto |
-|---|---|
+| type                                                                                                                        | contenuto                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `snapshot`, `agent.upsert`, `task.upsert`, `decision.upsert`, `goal.upsert`, `feed.add`, `notify`, `foreman.status`, `diff` | come agentcraft; `agent` aggiunge `role` esteso (lead, developer, qa, architect, builder, analyst), `skin`, `body { target?, follow? }` |
-| `tool.call` | `{ id, tool, args, agentId, taskId?, requestedBy, deadlineMs }` |
-| `job.control` | `{ jobId, action: pause\|resume\|cancel }` |
+| `tool.call`                                                                                                                 | `{ id, tool, args, agentId, taskId?, requestedBy, deadlineMs }`                                                                         |
+| `job.control`                                                                                                               | `{ jobId, action: pause\|resume\|cancel }`                                                                                              |
 
 ### World tools (`tool.call.tool`)
 
-| tool | args principali | dove | note |
-|---|---|---|---|
-| `world.inspect` | `region` (nome o box), `detail` | prod+staging | output compatto: palette + RLE per layer, biomi, conteggi entità; limite di volume |
-| `world.preview` | `blueprint`, `anchor`, `rotation`, `viewers[]` | prod+staging | BlockDisplay visibili solo agli admin indicati, scade dopo N minuti |
-| `world.place` | `blueprint` o `ops[]`, `region`, `jobId`, `approvalId` | prod+staging | rifiutato senza decisione `build` approvata; snapshot prima di ogni lotto |
-| `world.undo` | `jobId` | prod+staging | ripristina dallo snapshot |
-| `server.command` | `cmd`, `as: console\|fakeplayer` | prod (whitelist) / staging | whitelist per prefisso; deny fisso su op/deop/ban/pardon/whitelist/lp/permission/stop/reload |
-| `server.logs` | `since`, `filter`, `limit` | prod+staging | sola lettura, segreti mascherati |
-| `server.metrics` | — | prod+staging | TPS, MSPT, entità, chunk caricati, spark se presente |
-| `player.simulate` | `actions[]` | **solo staging** | rifiutato se `role=production` |
-| `body.move`, `body.say`, `body.status` | target, testo, riga di stato | prod+staging | movimento e comunicazione NPC |
+| tool                                   | args principali                                        | dove                       | note                                                                                         |
+| -------------------------------------- | ------------------------------------------------------ | -------------------------- | -------------------------------------------------------------------------------------------- |
+| `world.inspect`                        | `region` (nome o box), `detail`                        | prod+staging               | output compatto: palette + RLE per layer, biomi, conteggi entità; limite di volume           |
+| `world.preview`                        | `blueprint`, `anchor`, `rotation`, `viewers[]`         | prod+staging               | BlockDisplay visibili solo agli admin indicati, scade dopo N minuti                          |
+| `world.place`                          | `blueprint` o `ops[]`, `region`, `jobId`, `approvalId` | prod+staging               | rifiutato senza decisione `build` approvata; snapshot prima di ogni lotto                    |
+| `world.undo`                           | `jobId`                                                | prod+staging               | ripristina dallo snapshot                                                                    |
+| `server.command`                       | `cmd`, `as: console\|fakeplayer`                       | prod (whitelist) / staging | whitelist per prefisso; deny fisso su op/deop/ban/pardon/whitelist/lp/permission/stop/reload |
+| `server.logs`                          | `since`, `filter`, `limit`                             | prod+staging               | sola lettura, segreti mascherati                                                             |
+| `server.metrics`                       | —                                                      | prod+staging               | TPS, MSPT, entità, chunk caricati, spark se presente                                         |
+| `player.simulate`                      | `actions[]`                                            | **solo staging**           | rifiutato se `role=production`                                                               |
+| `body.move`, `body.say`, `body.status` | target, testo, riga di stato                           | prod+staging               | movimento e comunicazione NPC                                                                |
 
 Codici di errore standard: `forbidden`, `out_of_region`, `blacklisted_block`, `too_large`, `rate_limited`,
 `not_staging`, `needs_approval`, `invalid_args`, `timeout`, `busy`.
@@ -161,13 +161,25 @@ La CI fallisce se doc, schema o fixture non sono aggiornati.
 
 ```json
 {
-  "format": "agentcraft-blueprint", "version": 1,
-  "name": "Torre di guardia", "size": [9, 18, 9], "anchor": [4, 0, 4], "rotation": 0,
+  "format": "agentcraft-blueprint",
+  "version": 1,
+  "name": "Torre di guardia",
+  "size": [9, 18, 9],
+  "anchor": [4, 0, 4],
+  "rotation": 0,
   "palette": { "a": "minecraft:stone_bricks", "b": "minecraft:oak_stairs[facing=north,half=bottom]" },
   "modules": [
-    { "id": "fondazione", "ops": [ { "op": "fill", "from": [0,0,0], "to": [8,0,8], "block": "a" } ] },
-    { "id": "muri", "dependsOn": ["fondazione"], "ops": [ { "op": "line", "from": [0,1,0], "to": [8,1,0], "block": "a" } ] },
-    { "id": "tetto", "dependsOn": ["muri"], "ops": [ { "op": "roof", "style": "gable", "from": [0,12,0], "to": [8,12,8], "block": "b" } ] }
+    { "id": "fondazione", "ops": [{ "op": "fill", "from": [0, 0, 0], "to": [8, 0, 8], "block": "a" }] },
+    {
+      "id": "muri",
+      "dependsOn": ["fondazione"],
+      "ops": [{ "op": "line", "from": [0, 1, 0], "to": [8, 1, 0], "block": "a" }]
+    },
+    {
+      "id": "tetto",
+      "dependsOn": ["muri"],
+      "ops": [{ "op": "roof", "style": "gable", "from": [0, 12, 0], "to": [8, 12, 8], "block": "b" }]
+    }
   ]
 }
 ```
@@ -180,17 +192,17 @@ Ogni modulo diventa un task `build` separato. Validazione nel foreman (schema, s
 
 ## 6. Sicurezza: dove viene fatta rispettare ogni regola
 
-| Regola | Foreman | Plugin |
-|---|---|---|
-| Bridge solo locale + token, no Origin browser | ✔ (server) | ✔ (invia token, non accetta altro) |
-| Costruire solo in regione, blacklist blocchi, volume max, container | pre-validazione | **autoritativo** |
-| Whitelist comandi, deny fisso op/ban/permessi | pre-filtro | **autoritativo** |
-| `player.simulate` e modifiche plugin solo su staging | ✔ | **autoritativo** (`role` da config locale, non dal foreman) |
-| Rate limit per agente | ✔ | ✔ |
-| Niente `git push`, niente rete git | ✔ (git safety + policy) | — |
-| Merge/deploy/costruzione solo con approvazione umana | ✔ (decision queue) | ✔ (`world.place` richiede `approvalId` valido, verificato con il foreman) |
-| Audit JSONL | ✔ (azioni agenti) | ✔ (azioni nel mondo/server) |
-| Segreti solo in env o file ignorati da git | ✔ | ✔ |
+| Regola                                                              | Foreman                 | Plugin                                                                    |
+| ------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------- |
+| Bridge solo locale + token, no Origin browser                       | ✔ (server)              | ✔ (invia token, non accetta altro)                                        |
+| Costruire solo in regione, blacklist blocchi, volume max, container | pre-validazione         | **autoritativo**                                                          |
+| Whitelist comandi, deny fisso op/ban/permessi                       | pre-filtro              | **autoritativo**                                                          |
+| `player.simulate` e modifiche plugin solo su staging                | ✔                       | **autoritativo** (`role` da config locale, non dal foreman)               |
+| Rate limit per agente                                               | ✔                       | ✔                                                                         |
+| Niente `git push`, niente rete git                                  | ✔ (git safety + policy) | —                                                                         |
+| Merge/deploy/costruzione solo con approvazione umana                | ✔ (decision queue)      | ✔ (`world.place` richiede `approvalId` valido, verificato con il foreman) |
+| Audit JSONL                                                         | ✔ (azioni agenti)       | ✔ (azioni nel mondo/server)                                               |
+| Segreti solo in env o file ignorati da git                          | ✔                       | ✔                                                                         |
 
 Principio: il plugin non si fida mai del foreman né dell'LLM. Il ruolo del server (produzione/staging) è deciso
 solo dal `config.yml` del plugin.
@@ -208,14 +220,14 @@ solo dal `config.yml` del plugin.
 
 ## 8. Roadmap confermata (con criteri di uscita)
 
-| Fase | Uscita |
-|---|---|
-| 2. Scheletro | `./gradlew build` del plugin, `npm test` del foreman e protocol, CI verde, schema+doc generati |
-| 3. Bridge + sim | con `--backend sim` gli NPC compaiono su un server locale, camminano, cambiano stato; `/agent status/tasks/agents/feed` funzionano |
-| 4. Agenti di coding | goal reale → piano → worktree → build/test → decisione merge approvata in gioco |
-| 5. Staging e QA | deploy jar su staging, scenario in-game con fake player, report bug |
-| 6. Building | blueprint → anteprima → approvazione → costruzione visibile → undo |
-| 7. Analisi e rifiniture | metriche/spark, GUI completa, Discord, budget, documentazione completa |
+| Fase                    | Uscita                                                                                                                             |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 2. Scheletro            | `./gradlew build` del plugin, `npm test` del foreman e protocol, CI verde, schema+doc generati                                     |
+| 3. Bridge + sim         | con `--backend sim` gli NPC compaiono su un server locale, camminano, cambiano stato; `/agent status/tasks/agents/feed` funzionano |
+| 4. Agenti di coding     | goal reale → piano → worktree → build/test → decisione merge approvata in gioco                                                    |
+| 5. Staging e QA         | deploy jar su staging, scenario in-game con fake player, report bug                                                                |
+| 6. Building             | blueprint → anteprima → approvazione → costruzione visibile → undo                                                                 |
+| 7. Analisi e rifiniture | metriche/spark, GUI completa, Discord, budget, documentazione completa                                                             |
 
 ---
 

@@ -1,0 +1,17 @@
+# Purpur 26.2 staging server for AgentCraft (Phase 5 will add deploy + test scenarios).
+# 1. staging/fetch-purpur.sh                     downloads and verifies the Purpur jar into staging/server
+# 2. echo "eula=true" > staging/server/eula.txt   only if you accept https://aka.ms/MinecraftEULA
+# 3. docker compose -f staging/docker-compose.yml up -d
+services:
+  purpur-staging:
+    image: eclipse-temurin:25-jre
+    working_dir: /server
+    command: ['java', '-Xms2G', '-Xmx2G', '-jar', 'purpur.jar', '--nogui']
+    volumes:
+      - ./server:/server
+    # Bound to localhost only: the staging server is not meant to be public.
+    ports:
+      - '127.0.0.1:25566:25565'
+    stdin_open: true
+    tty: true
+    restart: unless-stopped

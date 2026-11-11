@@ -68,6 +68,7 @@ export const ConfigSchema = z.object({
     })
     .default({ dailyUsd: 15, monthlyUsd: 300, perTaskUsd: 5 }),
   cast: z.array(CastOverride).default([]),
+  sim: z.object({ stepMs: z.number().int().min(0).max(60_000).default(2500) }).default({ stepMs: 2500 }),
 });
 export type Config = z.infer<typeof ConfigSchema>;
 
@@ -110,6 +111,8 @@ export function buildConfig({ file = {}, env = {}, cli = {} }: ConfigSources): C
   set('maxConcurrent', num(cli['max-concurrent']));
   const daily = num(cli['max-budget']);
   if (daily !== undefined) merged.budget = { ...(merged.budget as object | undefined), dailyUsd: daily };
+  const stepMs = num(cli['step-ms']);
+  if (stepMs !== undefined) merged.sim = { ...(merged.sim as object | undefined), stepMs };
   const turns = num(cli['max-turns']);
   if (turns !== undefined) merged.maxTurns = { lead: turns, worker: turns };
 

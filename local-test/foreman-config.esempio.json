@@ -1,0 +1,12 @@
+{
+  "serverName": "Castamir (prova locale)",
+  "maxConcurrent": 2,
+  "budget": { "dailyUsd": 5, "monthlyUsd": 50, "perTaskUsd": 2 },
+  "repos": [
+    {
+      "path": "C:/agentcraft/castigo-ecosistema",
+      "forbidden": ["CastigoClassi", "CastigoMagia", "CastigoMagic", "CastigoCombat"],
+      "sparseAlways": ["scripts", "docs/plugins", "docs/collaborazione", "skills"]
+    }
+  ]
+}

@@ -64,6 +64,20 @@ export function parseCommand(line: string, module: string): CiCommand {
   return { dir: '', cmd, args };
 }
 
+/**
+ * On Windows mvn, gradle and npm are .cmd scripts, which Node can only start through cmd.exe.
+ * The arguments are ours (never typed by an agent), so passing them to cmd is safe.
+ */
+export function platformCommand(
+  cmd: string,
+  args: string[],
+  platform: NodeJS.Platform = process.platform,
+): [string, string[]] {
+  if (platform !== 'win32' || !['mvn', 'gradle', 'npm', 'npx', './gradlew'].includes(cmd)) return [cmd, args];
+  const name = cmd === './gradlew' ? 'gradlew.bat' : cmd;
+  return ['cmd.exe', ['/d', '/s', '/c', name, ...args]];
+}
+
 export async function runCi(
   worktree: string,
   commands: CiCommand[],
@@ -81,7 +95,8 @@ export async function runCi(
   const lines: string[] = [];
   let lastOutput = '';
   for (const c of commands) {
-    const r = await run(c.cmd, c.args, { cwd: join(worktree, c.dir), env, timeoutMs, maxOutput: 20_000 });
+    const [cmd, args] = platformCommand(c.cmd, c.args);
+    const r = await run(cmd, args, { cwd: join(worktree, c.dir), env, timeoutMs, maxOutput: 20_000 });
     const label = `${c.dir || '.'}: ${c.cmd} ${c.args.join(' ')}`;
     lastOutput = (r.stdout + '\n' + r.stderr).trim().split('\n').slice(-60).join('\n');
     if (r.timedOut) return { ok: false, skipped: false, summary: `${label} — timeout`, output: lastOutput };

@@ -1,0 +1,54 @@
+AGENTI VERI SUL TUO PC
+======================
+
+Gli agenti Claude lavorano davvero sul codice di una repo sul tuo PC: la leggono, la
+modificano in copie separate, fanno build e test, e ti chiedono in gioco di approvare.
+L'approvazione unisce il lavoro nella tua copia locale. Non pubblicano mai niente su GitHub.
+
+COSTA DENARO (API di Claude): una prova piccola costa pochi dollari. Sotto trovi come
+abbassare i limiti.
+
+1) COSA SERVE IN PIU'
+   - git: su Windows installa "Git for Windows" (https://git-scm.com/download/win),
+     serve anche agli agenti per i comandi.
+   - Una chiave API Claude: https://console.anthropic.com (meglio crearne una solo per questo).
+   - Una copia della repo dei plugin sul PC, per esempio:
+       git clone https://github.com/Knefas90/castigo-ecosistema C:\agentcraft\castigo-ecosistema
+     (la repo e' privata: serve il tuo accesso GitHub). Lasciala sul branch main, senza
+     modifiche non salvate.
+   Maven e l'Agent SDK li scarica il plugin da solo al primo avvio (circa 20 secondi).
+
+2) CONFIGURAZIONE (con il server FERMO)
+   a. Crea il file  plugins\AgentCraftServer\anthropic.key  con dentro solo la chiave.
+   b. Apri  plugins\AgentCraftServer\config.yml  e nella sezione "foreman:" cambia:
+        backend: claude
+        api-key-file: anthropic.key
+   c. Copia  foreman-config.esempio.json  in  plugins\AgentCraftServer\foreman\config.json
+      e correggi "path" con la cartella della tua copia della repo.
+      Su Windows usa le barre normali:  "C:/agentcraft/castigo-ecosistema"
+
+3) AVVIO
+   Avvia di nuovo il server. In console devi vedere "Claude Agent SDK installed" e
+   "connected to the foreman". In gioco:
+     /agent status   -> "Backend: claude" e NESSUNA riga "Agenti fermi"
+     /agent repos    -> la tua repo
+
+4) PRIMA PROVA (piccola e chiara)
+   /agent goal In CastigoBanca aggiungi un test che verifica che un prelievo maggiore del saldo venga rifiutato
+
+   - /agent tasks e /agent feed per seguire il lavoro; gli NPC mostrano cosa fanno.
+   - Ti arriveranno richieste di PERMESSO (Allow once / Always allow / Deny) per comandi
+     che la sicurezza non conosce: leggi cosa chiedono prima di accettare.
+   - Alla fine: "Unire t1?". Prima guarda  /agent diff t1  (ti dice anche dove sta il file
+     .diff completo da aprire). Merge = il lavoro entra nella tua copia locale.
+   - /agent status mostra quanto hai speso oggi.
+
+5) LIMITI DI SPESA (consigliati per la prova)
+   In config.json la parte "budget": 5 $ al giorno, 2 $ per task. Raggiunto il limite gli
+   agenti si fermano e te lo dicono.
+
+COSA SEGNALARCI
+   Tutto quello che non va. File utili:
+     plugins\AgentCraftServer\foreman\foreman.log
+     plugins\AgentCraftServer\foreman\home\audit.jsonl (se presente)
+     logs\latest.log

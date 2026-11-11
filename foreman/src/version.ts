@@ -1,1 +1,1 @@
-export const FOREMAN_VERSION = '0.2.2';
+export const FOREMAN_VERSION = '0.2.3';

@@ -13,6 +13,7 @@ public record PluginSettings(
         int reconnectMinSeconds,
         int reconnectMaxSeconds,
         int blocksPerTick,
+        int visibleBlocksPerSecond,
         double pauseWhenMsptAbove,
         int maxJobVolume,
         int maxInspectVolume,

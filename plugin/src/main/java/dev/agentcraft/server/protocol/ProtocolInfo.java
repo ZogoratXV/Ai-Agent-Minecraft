@@ -42,6 +42,7 @@ public final class ProtocolInfo {
             "error");
 
     public static final List<String> TOOLS = List.of(
+            "world.regions",
             "world.inspect",
             "world.preview",
             "world.place",

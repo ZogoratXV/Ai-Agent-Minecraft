@@ -8,6 +8,10 @@ import dev.agentcraft.server.body.Stations;
 import dev.agentcraft.server.bridge.BridgeClient;
 import dev.agentcraft.server.bridge.MessageRouter;
 import dev.agentcraft.server.bridge.TokenSource;
+import dev.agentcraft.server.build.BuildJobs;
+import dev.agentcraft.server.build.BuildService;
+import dev.agentcraft.server.build.PreviewManager;
+import dev.agentcraft.server.build.Regions;
 import dev.agentcraft.server.command.AgentCommand;
 import dev.agentcraft.server.config.PluginSettings;
 import dev.agentcraft.server.config.SettingsException;
@@ -42,6 +46,9 @@ public class AgentCraftPlugin extends JavaPlugin {
     private BodyManager bodies;
     private BridgeClient bridge;
     private ForemanLauncher launcher;
+    private Regions regions;
+    private PreviewManager previews;
+    private BuildJobs jobs;
     private String token;
 
     @Override
@@ -68,7 +75,22 @@ public class AgentCraftPlugin extends JavaPlugin {
 
         ToolGate gate = new ToolGate(settings.role(), settings.toolCallsPerMinute(), System::currentTimeMillis);
         ToolExecutor tools = new ToolExecutor(gate, bodies, audit, this::send);
+        regions = new Regions(getDataPath().resolve("regions.yml").toFile(), getLogger());
+        previews = new PreviewManager(this);
+        jobs = new BuildJobs(
+                this,
+                getDataPath().resolve("jobs"),
+                bodies,
+                audit,
+                this::send,
+                getLogger(),
+                settings.blocksPerTick(),
+                settings.visibleBlocksPerSecond(),
+                settings.pauseWhenMsptAbove());
+        jobs.start();
+        tools.setBuildService(new BuildService(regions, previews, jobs, teamView, settings));
         MessageRouter router = new MessageRouter(teamView, tools, notifier, getLogger());
+        router.setJobs(jobs);
 
         getLifecycleManager()
                 .registerEventHandler(
@@ -191,6 +213,12 @@ public class AgentCraftPlugin extends JavaPlugin {
         if (launcher != null) {
             launcher.stop();
         }
+        if (previews != null) {
+            previews.clearAll();
+        }
+        if (jobs != null) {
+            jobs.stop();
+        }
         if (bodies != null) {
             bodies.removeAll();
         }
@@ -237,5 +265,13 @@ public class AgentCraftPlugin extends JavaPlugin {
 
     public Stations stations() {
         return stations;
+    }
+
+    public Regions regions() {
+        return regions;
+    }
+
+    public BuildJobs jobs() {
+        return jobs;
     }
 }

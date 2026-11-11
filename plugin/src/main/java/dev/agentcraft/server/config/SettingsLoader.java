@@ -137,6 +137,7 @@ public final class SettingsLoader {
                 reconnectMin,
                 reconnectMax,
                 blocksPerTick,
+                positive(cfg, "world.build-blocks-per-second", 10, errors),
                 maxMspt,
                 positive(cfg, "world.max-job-volume", 200_000, errors),
                 positive(cfg, "world.max-inspect-volume", 65_536, errors),

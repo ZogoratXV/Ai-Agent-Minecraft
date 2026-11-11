@@ -23,12 +23,17 @@ public final class ToolExecutor {
     private final BodyManager bodies;
     private final AuditLog audit;
     private final Consumer<JsonObject> reply;
+    private dev.agentcraft.server.build.BuildService build;
 
     public ToolExecutor(ToolGate gate, BodyManager bodies, AuditLog audit, Consumer<JsonObject> reply) {
         this.gate = gate;
         this.bodies = bodies;
         this.audit = audit;
         this.reply = reply;
+    }
+
+    public void setBuildService(dev.agentcraft.server.build.BuildService build) {
+        this.build = build;
     }
 
     /** Thrown for malformed arguments; becomes {@code invalid_args}. */
@@ -114,6 +119,32 @@ public final class ToolExecutor {
                         finish(id, agentId, requestedBy, tool, target, null, "not_found", err.get());
                         return;
                     }
+                }
+                case "world.regions", "world.inspect", "world.preview", "world.place", "world.undo" -> {
+                    if (build == null) {
+                        finish(id, agentId, requestedBy, tool, "", null, "internal", "building is not available");
+                        return;
+                    }
+                    target = args.has("region") && args.get("region").isJsonPrimitive()
+                            ? args.get("region").getAsString()
+                            : args.has("jobId") ? args.get("jobId").getAsString() : "";
+                    try {
+                        JsonObject result = build.handle(tool, args, agentId, requestedBy);
+                        finish(id, agentId, requestedBy, tool, target, result, null, null);
+                    } catch (ToolFailure f) {
+                        finish(id, agentId, requestedBy, tool, target, null, f.code(), f.getMessage());
+                    } catch (RuntimeException e) {
+                        finish(
+                                id,
+                                agentId,
+                                requestedBy,
+                                tool,
+                                target,
+                                null,
+                                "invalid_args",
+                                String.valueOf(e.getMessage()));
+                    }
+                    return;
                 }
                 default -> {
                     finish(id, agentId, requestedBy, tool, "", null, "internal", tool + " is not available yet");

@@ -49,7 +49,10 @@ bridge:
   reconnect-max-seconds: 60
 
 world:
-  # Blocks placed per server tick by a build job (lower it if TPS drops).
+  # Speed of agent builds, in blocks per second: slow enough to watch the builders at work
+  # (a 300-block house takes about half a minute at 10).
+  build-blocks-per-second: 10
+  # Hard limit of blocks changed per server tick (also the speed of /agent undo). Lower it if TPS drops.
   blocks-per-tick: 200
   # Build jobs pause while MSPT is above this value.
   pause-when-mspt-above: 45.0

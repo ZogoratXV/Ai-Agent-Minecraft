@@ -29,6 +29,7 @@ public final class AgentCommand {
     public static final String PERM_GOAL = "agentcraft.goal";
     public static final String PERM_APPROVE = "agentcraft.approve";
     public static final String PERM_MANAGE = "agentcraft.manage";
+    public static final String PERM_REGION = "agentcraft.region";
 
     private final AgentCraftPlugin plugin;
 
@@ -125,6 +126,51 @@ public final class AgentCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument("path", StringArgumentType.greedyString())
                                         .executes(ctx -> repoAdd(ctx.getSource().getSender(), str(ctx, "path"))))))
+                .then(Commands.literal("jobs").executes(ctx -> {
+                    List<String> lines = plugin.jobs().describe();
+                    ctx.getSource().getSender().sendMessage(Texts.header("Lavori di costruzione"));
+                    if (lines.isEmpty()) {
+                        ctx.getSource()
+                                .getSender()
+                                .sendMessage(Component.text("nessun lavoro", NamedTextColor.DARK_GRAY));
+                    }
+                    lines.forEach(
+                            l -> ctx.getSource().getSender().sendMessage(Component.text(l, NamedTextColor.WHITE)));
+                    return Command.SINGLE_SUCCESS;
+                }))
+                .then(Commands.literal("undo")
+                        .requires(perm(PERM_REGION))
+                        .then(Commands.argument("id", StringArgumentType.word())
+                                .suggests((ctx, b) -> {
+                                    plugin.jobs().undoable("").forEach(b::suggest);
+                                    return b.buildFuture();
+                                })
+                                .executes(ctx -> undo(ctx.getSource().getSender(), str(ctx, "id")))))
+                .then(Commands.literal("region")
+                        .requires(perm(PERM_REGION))
+                        .then(Commands.literal("pos1")
+                                .executes(ctx -> regionPos(ctx.getSource().getSender(), 0)))
+                        .then(Commands.literal("pos2")
+                                .executes(ctx -> regionPos(ctx.getSource().getSender(), 1)))
+                        .then(Commands.literal("list")
+                                .executes(ctx -> regionList(ctx.getSource().getSender())))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("name", StringArgumentType.word())
+                                        .suggests((ctx, b) -> {
+                                            plugin.regions().all().forEach(r -> b.suggest(r.name()));
+                                            return b.buildFuture();
+                                        })
+                                        .executes(ctx ->
+                                                regionRemove(ctx.getSource().getSender(), str(ctx, "name")))))
+                        .then(Commands.literal("create")
+                                .then(Commands.argument("name", StringArgumentType.word())
+                                        .executes(ctx ->
+                                                regionCreate(ctx.getSource().getSender(), str(ctx, "name"), null))
+                                        .then(Commands.argument("coords", StringArgumentType.greedyString())
+                                                .executes(ctx -> regionCreate(
+                                                        ctx.getSource().getSender(),
+                                                        str(ctx, "name"),
+                                                        str(ctx, "coords")))))))
                 .then(Commands.literal("base")
                         .requires(perm(PERM_MANAGE))
                         .then(Commands.literal("set")
@@ -185,6 +231,8 @@ public final class AgentCommand {
             {"diff <task>", "riepilogo delle modifiche di un task"},
             {"repos | repo add <percorso>", "repository su cui lavorano gli agenti"},
             {"push [repo]", "pubblica su GitHub il lavoro unito (solo persone)"},
+            {"region pos1 | pos2 | create <nome> | list | remove", "zone dove gli agenti possono costruire"},
+            {"jobs | undo <lavoro o task>", "lavori di costruzione e annulla"},
             {"base set <stazione>", "posiziona le stazioni della base dove sei"},
         };
         s.sendMessage(Texts.header("AgentCraft"));
@@ -363,6 +411,114 @@ public final class AgentCommand {
                 m,
                 ack -> "Repository registrato" + resultField(ack, "repoId", " (", ")")
                         + resultField(ack, "versioning", ", ", "") + ".");
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private final java.util.Map<java.util.UUID, org.bukkit.Location[]> selections = new java.util.HashMap<>();
+
+    private int regionPos(CommandSender s, int which) {
+        if (!(s instanceof Player p)) {
+            s.sendMessage(Component.text(
+                    "Dalla console usa: /agent region create <nome> <mondo> x1 y1 z1 x2 y2 z2", NamedTextColor.RED));
+            return 0;
+        }
+        org.bukkit.Location[] sel = selections.computeIfAbsent(p.getUniqueId(), k -> new org.bukkit.Location[2]);
+        sel[which] = p.getLocation().toBlockLocation();
+        s.sendMessage(Component.text(
+                "Angolo " + (which + 1) + " segnato: " + sel[which].getBlockX() + " " + sel[which].getBlockY() + " "
+                        + sel[which].getBlockZ()
+                        + (sel[0] != null && sel[1] != null ? ". Ora: /agent region create <nome>" : ""),
+                NamedTextColor.GREEN));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int regionCreate(CommandSender s, String name, String coords) {
+        dev.agentcraft.server.build.Region r;
+        try {
+            if (coords != null) {
+                String[] c = coords.trim().split("\\s+");
+                if (c.length != 7) {
+                    throw new IllegalArgumentException("uso: /agent region create <nome> <mondo> x1 y1 z1 x2 y2 z2");
+                }
+                if (org.bukkit.Bukkit.getWorld(c[0]) == null) {
+                    throw new IllegalArgumentException("il mondo " + c[0] + " non esiste");
+                }
+                r = dev.agentcraft.server.build.Region.of(
+                        name,
+                        c[0],
+                        Integer.parseInt(c[1]),
+                        Integer.parseInt(c[2]),
+                        Integer.parseInt(c[3]),
+                        Integer.parseInt(c[4]),
+                        Integer.parseInt(c[5]),
+                        Integer.parseInt(c[6]));
+            } else {
+                org.bukkit.Location[] sel = s instanceof Player p ? selections.get(p.getUniqueId()) : null;
+                if (sel == null || sel[0] == null || sel[1] == null) {
+                    throw new IllegalArgumentException("segna prima i due angoli con /agent region pos1 e pos2");
+                }
+                if (!sel[0].getWorld().equals(sel[1].getWorld())) {
+                    throw new IllegalArgumentException("i due angoli sono in mondi diversi");
+                }
+                r = dev.agentcraft.server.build.Region.of(
+                        name,
+                        sel[0].getWorld().getName(),
+                        sel[0].getBlockX(),
+                        sel[0].getBlockY(),
+                        sel[0].getBlockZ(),
+                        sel[1].getBlockX(),
+                        sel[1].getBlockY(),
+                        sel[1].getBlockZ());
+            }
+            plugin.regions().create(r);
+        } catch (IllegalArgumentException e) {
+            s.sendMessage(Component.text(e.getMessage(), NamedTextColor.RED));
+            return 0;
+        }
+        plugin.audit()
+                .record(new dev.agentcraft.server.audit.AuditLog.Entry(
+                        "-", Actor.of(s).name(), "region.create", r.describe(), "ok"));
+        s.sendMessage(Component.text("Regione creata: " + r.describe(), NamedTextColor.GREEN));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int regionList(CommandSender s) {
+        s.sendMessage(Texts.header("Regioni di costruzione"));
+        if (plugin.regions().all().isEmpty()) {
+            s.sendMessage(Component.text(
+                    "nessuna regione: /agent region pos1, pos2, create <nome>", NamedTextColor.DARK_GRAY));
+        }
+        plugin.regions().all().forEach(r -> s.sendMessage(Component.text(r.describe(), NamedTextColor.WHITE)));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int regionRemove(CommandSender s, String name) {
+        boolean ok = plugin.regions().remove(name);
+        s.sendMessage(Component.text(
+                ok ? "Regione " + name + " rimossa." : "Nessuna regione " + name,
+                ok ? NamedTextColor.GREEN : NamedTextColor.RED));
+        return ok ? Command.SINGLE_SUCCESS : 0;
+    }
+
+    private int undo(CommandSender s, String id) {
+        List<String> ids = plugin.jobs().undoable(id);
+        if (ids.isEmpty()) {
+            s.sendMessage(Component.text("Niente da annullare per " + id + " (vedi /agent jobs)", NamedTextColor.RED));
+            return 0;
+        }
+        int blocks = 0;
+        for (String j : ids) {
+            try {
+                blocks += plugin.jobs().undo(j, Actor.of(s).name());
+            } catch (java.io.IOException | IllegalArgumentException e) {
+                s.sendMessage(Component.text("Non annullato " + j + ": " + e.getMessage(), NamedTextColor.RED));
+            }
+        }
+        plugin.audit()
+                .record(new dev.agentcraft.server.audit.AuditLog.Entry(
+                        "-", Actor.of(s).name(), "world.undo", String.join(",", ids), "requested"));
+        s.sendMessage(Component.text(
+                "Annullo " + String.join(", ", ids) + ": ripristino " + blocks + " blocchi.", NamedTextColor.GREEN));
         return Command.SINGLE_SUCCESS;
     }
 

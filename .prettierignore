@@ -1,0 +1,6 @@
+node_modules/
+plugin/
+protocol/schema/
+protocol/examples/
+docs/protocol.md
+package-lock.json

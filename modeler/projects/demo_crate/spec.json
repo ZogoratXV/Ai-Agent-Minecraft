@@ -1,0 +1,126 @@
+{
+  "name": "demo_crate",
+  "format": "java_block",
+  "pixelsPerUnit": 1,
+  "texture": {
+    "width": 64,
+    "height": 64
+  },
+  "bones": [],
+  "cubes": [
+    {
+      "name": "body",
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        15,
+        15
+      ]
+    },
+    {
+      "name": "lid",
+      "from": [
+        0.5,
+        13,
+        0.5
+      ],
+      "to": [
+        15.5,
+        15,
+        15.5
+      ],
+      "hideFaces": [
+        "up",
+        "down"
+      ]
+    },
+    {
+      "name": "strap",
+      "from": [
+        0.5,
+        5,
+        0.5
+      ],
+      "to": [
+        15.5,
+        8,
+        15.5
+      ],
+      "hideFaces": [
+        "up",
+        "down"
+      ]
+    },
+    {
+      "name": "post_nw",
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        2,
+        16,
+        2
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "post_ne",
+      "from": [
+        14,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "hideFaces": [
+        "down"
+      ],
+      "uvFrom": "post_nw"
+    },
+    {
+      "name": "post_sw",
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "hideFaces": [
+        "down"
+      ],
+      "uvFrom": "post_nw"
+    },
+    {
+      "name": "post_se",
+      "from": [
+        14,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "hideFaces": [
+        "down"
+      ],
+      "uvFrom": "post_nw"
+    }
+  ]
+}

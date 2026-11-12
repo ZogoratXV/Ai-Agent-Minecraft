@@ -84,6 +84,28 @@ public final class CommandPolicy {
         return new Denied("'" + root + "' is not in commands.whitelist");
     }
 
+    /**
+     * For the test player: it has only the permissions given in qa.tester-permissions, like a normal
+     * player, so the whitelist does not apply; the fixed deny list still does.
+     */
+    public Verdict checkAsPlayer(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return new Denied("empty command");
+        }
+        if (raw.length() > MAX_LENGTH) {
+            return new Denied("command longer than " + MAX_LENGTH + " characters");
+        }
+        if (raw.chars().anyMatch(c -> c < 0x20 || c == 0x7f)) {
+            return new Denied("control characters are not allowed");
+        }
+        String command = CommandText.normalize(raw);
+        String root = CommandText.rootLabel(command);
+        if (FIXED_DENY.contains(root)) {
+            return new Denied("'" + root + "' is never allowed for agents");
+        }
+        return new Allowed(command);
+    }
+
     private static boolean startsWith(String[] words, String[] entry) {
         if (entry.length > words.length) {
             return false;

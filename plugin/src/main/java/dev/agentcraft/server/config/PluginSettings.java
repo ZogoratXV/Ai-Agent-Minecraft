@@ -24,7 +24,40 @@ public record PluginSettings(
         int toolCallsPerMinute,
         String auditFile,
         NpcBackend npcBackend,
-        Foreman foreman) {
+        Foreman foreman,
+        Deploy deploy,
+        Qa qa,
+        String discordWebhookFile) {
+
+    /**
+     * Installing plugin jars built by the agents (staging only, after an admin's approval) and
+     * restarting the server.
+     */
+    public record Deploy(
+            String fromDir,
+            List<String> protectedPlugins,
+            RestartMethod restart,
+            String pelicanUrl,
+            String pelicanKeyFile,
+            String pelicanServerId) {
+        public Deploy {
+            protectedPlugins = List.copyOf(protectedPlugins);
+        }
+    }
+
+    public enum RestartMethod {
+        AUTO,
+        PELICAN,
+        SCRIPT,
+        NONE
+    }
+
+    /** The test player of player.simulate (a Citizens NPC that is a real Player entity). */
+    public record Qa(String testerName, List<String> testerPermissions) {
+        public Qa {
+            testerPermissions = List.copyOf(testerPermissions);
+        }
+    }
 
     /** The foreman the plugin starts itself ({@code managed}), or an external one. */
     public record Foreman(

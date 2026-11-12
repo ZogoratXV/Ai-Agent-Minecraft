@@ -15,6 +15,12 @@ public final class MessageRouter {
     private final Logger log;
     private dev.agentcraft.server.build.BuildJobs jobs;
 
+    private dev.agentcraft.server.notify.DiscordNotifier discord;
+
+    public void setDiscord(dev.agentcraft.server.notify.DiscordNotifier discord) {
+        this.discord = discord;
+    }
+
     public void setJobs(dev.agentcraft.server.build.BuildJobs jobs) {
         this.jobs = jobs;
     }
@@ -33,11 +39,17 @@ public final class MessageRouter {
         }
         switch (env.type()) {
             case "tool.call" -> tools.handle(body);
-            case "notify" ->
+            case "notify" -> {
+                String level = body.has("level") ? body.get("level").getAsString() : "info";
+                String text = body.has("text") ? body.get("text").getAsString() : "";
                 notifier.onNotify(
-                        body.has("level") ? body.get("level").getAsString() : "info",
-                        body.has("text") ? body.get("text").getAsString() : "",
+                        level,
+                        text,
                         body.has("decisionId") ? body.get("decisionId").getAsString() : null);
+                if (discord != null) {
+                    discord.onNotify(level, text);
+                }
+            }
             case "job.control" -> {
                 if (jobs != null && body.has("jobId") && body.has("action")) {
                     String id = body.get("jobId").getAsString();

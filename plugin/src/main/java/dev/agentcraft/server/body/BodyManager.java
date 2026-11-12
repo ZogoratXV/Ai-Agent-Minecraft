@@ -73,10 +73,16 @@ public final class BodyManager implements TeamView.Listener {
 
     public void removeAll() {
         walkers.values().forEach(w -> {
-            if (w.task != null) {
-                w.task.cancel();
+            try {
+                if (w.task != null) {
+                    w.task.cancel();
+                }
+            } catch (RuntimeException e) {
+                // already cancelled, or a test server without cancelling
             }
-            w.body.remove();
+            if (w.body != null) {
+                w.body.remove();
+            }
         });
         walkers.clear();
     }

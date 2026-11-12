@@ -49,7 +49,7 @@ public final class AuditLog implements AutoCloseable {
         });
     }
 
-    public void record(Entry entry) {
+    public synchronized void record(Entry entry) {
         JsonObject line = new JsonObject();
         line.addProperty("ts", clock.millis());
         line.addProperty("agent", entry.agentId());

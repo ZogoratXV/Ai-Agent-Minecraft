@@ -24,6 +24,19 @@ public final class ToolExecutor {
     private final AuditLog audit;
     private final Consumer<JsonObject> reply;
     private dev.agentcraft.server.build.BuildService build;
+    private dev.agentcraft.server.ops.ServerOps ops;
+    private dev.agentcraft.server.ops.Tester tester;
+    private dev.agentcraft.server.ops.DeployService deploy;
+    private dev.agentcraft.server.state.TeamView view;
+
+    /** Roles allowed to use each server tool (the plugin decides, whatever the foreman asks). */
+    private static final java.util.Map<String, java.util.Set<String>> SERVER_ROLES = java.util.Map.of(
+            "server.command", java.util.Set.of("qa", "analyst", "lead", "developer"),
+            "server.logs", java.util.Set.of("qa", "analyst", "lead", "developer"),
+            "server.metrics", java.util.Set.of("qa", "analyst", "lead", "developer", "architect"),
+            "player.simulate", java.util.Set.of("qa"),
+            "server.deploy", java.util.Set.of("developer"),
+            "server.restart", java.util.Set.of("developer"));
 
     public ToolExecutor(ToolGate gate, BodyManager bodies, AuditLog audit, Consumer<JsonObject> reply) {
         this.gate = gate;
@@ -34,6 +47,17 @@ public final class ToolExecutor {
 
     public void setBuildService(dev.agentcraft.server.build.BuildService build) {
         this.build = build;
+    }
+
+    public void setServerServices(
+            dev.agentcraft.server.ops.ServerOps ops,
+            dev.agentcraft.server.ops.Tester tester,
+            dev.agentcraft.server.ops.DeployService deploy,
+            dev.agentcraft.server.state.TeamView view) {
+        this.ops = ops;
+        this.tester = tester;
+        this.deploy = deploy;
+        this.view = view;
     }
 
     /** Thrown for malformed arguments; becomes {@code invalid_args}. */
@@ -146,8 +170,69 @@ public final class ToolExecutor {
                     }
                     return;
                 }
+                case "server.command",
+                        "server.logs",
+                        "server.metrics",
+                        "player.simulate",
+                        "server.deploy",
+                        "server.restart" -> {
+                    if (ops == null) {
+                        finish(id, agentId, requestedBy, tool, "", null, "internal", tool + " is not available");
+                        return;
+                    }
+                    String role = view.agent(agentId)
+                            .map(dev.agentcraft.server.state.Views.Agent::role)
+                            .orElse("?");
+                    if (!SERVER_ROLES.get(tool).contains(role)) {
+                        finish(
+                                id,
+                                agentId,
+                                requestedBy,
+                                tool,
+                                "",
+                                null,
+                                "forbidden",
+                                "role " + role + " may not use " + tool);
+                        return;
+                    }
+                    String t = args.has("command") && args.get("command").isJsonPrimitive()
+                            ? args.get("command").getAsString()
+                            : args.has("file") && args.get("file").isJsonPrimitive()
+                                    ? args.get("file").getAsString()
+                                    : "";
+                    java.util.concurrent.CompletableFuture<JsonObject> f;
+                    try {
+                        f = switch (tool) {
+                            case "player.simulate" -> {
+                                if (!args.has("actions") || !args.get("actions").isJsonArray()) {
+                                    throw new ToolFailure("invalid_args", "missing array 'actions'");
+                                }
+                                yield tester.run(args.getAsJsonArray("actions"));
+                            }
+                            case "server.deploy", "server.restart" -> deploy.handle(tool, args, agentId, requestedBy);
+                            default -> ops.handle(tool, args);
+                        };
+                    } catch (ToolFailure fail) {
+                        finish(id, agentId, requestedBy, tool, t, null, fail.code(), fail.getMessage());
+                        return;
+                    } catch (RuntimeException e) {
+                        finish(id, agentId, requestedBy, tool, t, null, "invalid_args", String.valueOf(e.getMessage()));
+                        return;
+                    }
+                    f.whenComplete((res, err) -> {
+                        Throwable c = err instanceof java.util.concurrent.CompletionException ? err.getCause() : err;
+                        if (c == null) {
+                            finish(id, agentId, requestedBy, tool, t, res, null, null);
+                        } else if (c instanceof ToolFailure fail) {
+                            finish(id, agentId, requestedBy, tool, t, null, fail.code(), fail.getMessage());
+                        } else {
+                            finish(id, agentId, requestedBy, tool, t, null, "internal", String.valueOf(c.getMessage()));
+                        }
+                    });
+                    return;
+                }
                 default -> {
-                    finish(id, agentId, requestedBy, tool, "", null, "internal", tool + " is not available yet");
+                    finish(id, agentId, requestedBy, tool, "", null, "invalid_args", "unknown tool " + tool);
                     return;
                 }
             }

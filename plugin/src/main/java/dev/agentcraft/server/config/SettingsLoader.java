@@ -126,6 +126,48 @@ public final class SettingsLoader {
             }
         }
 
+        String fromDir = cfg.getString("deploy.from-dir", "foreman/home/deploy");
+        if (fromDir == null || fromDir.isBlank() || fromDir.contains("..") || fromDir.startsWith("/")) {
+            errors.add("deploy.from-dir must be a folder inside the plugin folder");
+        }
+        PluginSettings.RestartMethod restart = parseEnum(
+                PluginSettings.RestartMethod.class, cfg.getString("deploy.restart", "auto"), "deploy.restart", errors);
+        String pelicanUrl = cfg.getString("deploy.pelican.url", "");
+        if (pelicanUrl != null && !pelicanUrl.isBlank() && !pelicanUrl.matches("https?://[^\\s/]+(:\\d+)?/?")) {
+            errors.add("deploy.pelican.url must be the panel address, e.g. https://panel.example.com");
+        }
+        String pelicanKey = cfg.getString("deploy.pelican.api-key-file", "");
+        if (pelicanKey != null && (pelicanKey.contains("..") || pelicanKey.startsWith("/"))) {
+            errors.add("deploy.pelican.api-key-file must be a file name inside the plugin folder");
+        }
+        String pelicanId = cfg.getString("deploy.pelican.server-id", "");
+        if (pelicanId != null && !pelicanId.isBlank() && !pelicanId.matches("[0-9a-fA-F-]{8,36}")) {
+            errors.add("deploy.pelican.server-id must be the server identifier shown in the panel");
+        }
+        if (restart == PluginSettings.RestartMethod.PELICAN
+                && (pelicanUrl == null || pelicanUrl.isBlank() || pelicanKey == null || pelicanKey.isBlank())) {
+            errors.add("deploy.restart: pelican needs deploy.pelican.url and deploy.pelican.api-key-file");
+        }
+        List<String> protectedPlugins = new ArrayList<>(cfg.getStringList("deploy.protected-plugins"));
+        String testerName = cfg.getString("qa.tester-name", "AgentTester");
+        if (testerName == null || !testerName.matches("[A-Za-z0-9_]{3,16}")) {
+            errors.add("qa.tester-name must be a valid player name (3-16 letters, digits or _)");
+        }
+        List<String> testerPerms = cfg.getStringList("qa.tester-permissions");
+        for (String perm : testerPerms) {
+            String l = perm.toLowerCase(java.util.Locale.ROOT);
+            if (perm.equals("*")
+                    || l.startsWith("agentcraft.")
+                    || l.startsWith("luckperms")
+                    || l.startsWith("minecraft.command.op")) {
+                errors.add("qa.tester-permissions must not give '" + perm + "'");
+            }
+        }
+        String discord = cfg.getString("notify.discord-webhook-file", "");
+        if (discord != null && (discord.contains("..") || discord.startsWith("/"))) {
+            errors.add("notify.discord-webhook-file must be a file name inside the plugin folder");
+        }
+
         if (!errors.isEmpty()) {
             throw new SettingsException(errors);
         }
@@ -155,7 +197,16 @@ public final class SettingsLoader {
                         backend,
                         extraArgs,
                         apiKeyFile == null ? "" : apiKeyFile,
-                        claudeTokenFile == null ? "" : claudeTokenFile));
+                        claudeTokenFile == null ? "" : claudeTokenFile),
+                new PluginSettings.Deploy(
+                        fromDir,
+                        protectedPlugins,
+                        restart,
+                        pelicanUrl == null ? "" : pelicanUrl.replaceAll("/+$", ""),
+                        pelicanKey == null ? "" : pelicanKey,
+                        pelicanId == null ? "" : pelicanId),
+                new PluginSettings.Qa(testerName, testerPerms),
+                discord == null ? "" : discord);
     }
 
     /** Loopback or private ranges only, without any DNS lookup. */

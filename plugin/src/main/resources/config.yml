@@ -107,3 +107,40 @@ audit:
 npc:
   # auto = Citizens if installed, otherwise vanilla Mannequin entities.
   backend: auto
+
+deploy:
+  # Staging only. After a merge the agents build the plugin jar and ask "Installare ...?"; the jar
+  # is installed only if an admin says yes. Jars are taken only from this folder (in the plugin
+  # folder), where the managed foreman puts them.
+  from-dir: foreman/home/deploy
+  # Plugins the agents may never replace (AgentCraftServer itself is always protected).
+  protected-plugins:
+    - LuckPerms
+  # How "Installa e riavvia" restarts the server:
+  #   auto    = pelican if the pelican settings below are set; on a panel without them, none;
+  #             otherwise script
+  #   pelican = through the panel API (Pelican or Pterodactyl)
+  #   script  = stops the server and leaves the file .agentcraft-restart: the start scripts of
+  #             local-test/ start it again (spigot restart-script is not needed)
+  #   none    = never: the admins restart by hand
+  restart: auto
+  pelican:
+    # Panel address, e.g. https://panel.example.com
+    url: ''
+    # File (in the plugin folder) with a CLIENT API key of an account that may restart this server
+    # (Account > API Keys in the panel). Keep it out of git; do not use an admin account.
+    api-key-file: ''
+    # Server identifier; empty = the P_SERVER_UUID the panel gives the container.
+    server-id: ''
+
+qa:
+  # The test player used by the QA agent (needs Citizens): it runs commands, chats and clicks like
+  # a normal player. Never op.
+  tester-name: AgentTester
+  # Permissions it gets, e.g. the ones of your normal players. '*', agentcraft.* and luckperms.* are refused.
+  tester-permissions: []
+
+notify:
+  # Optional: file (in the plugin folder) with a Discord webhook URL; new decisions and warnings
+  # are posted there. Keep it secret.
+  discord-webhook-file: ''

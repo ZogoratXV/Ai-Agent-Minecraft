@@ -50,9 +50,11 @@ public final class ProtocolInfo {
             "server.command",
             "server.logs",
             "server.metrics",
+            "server.deploy",
+            "server.restart",
             "player.simulate",
             "body.move",
             "body.say");
 
-    public static final List<String> STAGING_ONLY_TOOLS = List.of("player.simulate");
+    public static final List<String> STAGING_ONLY_TOOLS = List.of("player.simulate", "server.deploy", "server.restart");
 }

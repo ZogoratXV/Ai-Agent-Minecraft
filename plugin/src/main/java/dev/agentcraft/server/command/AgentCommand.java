@@ -57,6 +57,8 @@ public final class AgentCommand {
                         .executes(ctx -> help(ctx.getSource().getSender())))
                 .then(Commands.literal("status")
                         .executes(ctx -> status(ctx.getSource().getSender())))
+                .then(Commands.literal("gui")
+                        .executes(ctx -> gui(ctx.getSource().getSender())))
                 .then(Commands.literal("agents").executes(ctx -> show(ctx, Texts.agents(view()))))
                 .then(Commands.literal("tasks").executes(ctx -> show(ctx, Texts.tasks(view()))))
                 .then(Commands.literal("feed").executes(ctx -> show(ctx, Texts.feed(view(), 12))))
@@ -221,6 +223,7 @@ public final class AgentCommand {
 
     private int help(CommandSender s) {
         String[][] lines = {
+            {"gui", "interfaccia: agenti, decisioni da cliccare, task, attività"},
             {"status", "stato del foreman e dei lavori"},
             {"agents | tasks | feed | decisions", "squadra, task, attività, decisioni"},
             {"goal <testo>", "nuovo obiettivo per il caposquadra"},
@@ -243,6 +246,15 @@ public final class AgentCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    private int gui(CommandSender s) {
+        if (s instanceof org.bukkit.entity.Player p) {
+            plugin.gui().openMain(p);
+        } else {
+            s.sendMessage(Component.text("La GUI si apre solo in gioco.", NamedTextColor.RED));
+        }
+        return Command.SINGLE_SUCCESS;
+    }
+
     private int status(CommandSender s) {
         StatusView.render(
                         plugin.getPluginMeta().getVersion(),
@@ -250,6 +262,16 @@ public final class AgentCommand {
                         plugin.integrations(),
                         plugin.isBridgeConnected())
                 .forEach(s::sendMessage);
+        if (plugin.settings().role() == dev.agentcraft.server.config.ServerRole.STAGING && plugin.deploy() != null) {
+            String how = switch (plugin.deploy().method()) {
+                case PELICAN -> "dal pannello Pelican (API)";
+                case SCRIPT -> "con lo script di avvio (.agentcraft-restart)";
+                case NONE -> "a mano dal pannello";
+                case AUTO -> "automatico";
+            };
+            s.sendMessage(Component.text(
+                    "Installazione plugin: dopo la vostra approvazione; riavvio " + how, NamedTextColor.GRAY));
+        }
         view().status().ifPresent(st -> {
             String budget = st.budget() == null
                     ? ""

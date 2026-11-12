@@ -49,6 +49,9 @@ public class AgentCraftPlugin extends JavaPlugin {
     private Regions regions;
     private PreviewManager previews;
     private BuildJobs jobs;
+    private dev.agentcraft.server.ops.Tester tester;
+    private dev.agentcraft.server.ops.DeployService deploy;
+    private dev.agentcraft.server.gui.AgentGui gui;
     private String token;
 
     @Override
@@ -72,6 +75,8 @@ public class AgentCraftPlugin extends JavaPlugin {
         teamView.addListener(bodies);
         teamView.addListener(notifier);
         getServer().getPluginManager().registerEvents(notifier, this);
+        gui = new dev.agentcraft.server.gui.AgentGui(teamView);
+        getServer().getPluginManager().registerEvents(gui, this);
 
         ToolGate gate = new ToolGate(settings.role(), settings.toolCallsPerMinute(), System::currentTimeMillis);
         ToolExecutor tools = new ToolExecutor(gate, bodies, audit, this::send);
@@ -89,8 +94,26 @@ public class AgentCraftPlugin extends JavaPlugin {
                 settings.pauseWhenMsptAbove());
         jobs.start();
         tools.setBuildService(new BuildService(regions, previews, jobs, teamView, settings));
+        dev.agentcraft.server.security.CommandPolicy policy =
+                new dev.agentcraft.server.security.CommandPolicy(settings.commandWhitelist());
+        tester = new dev.agentcraft.server.ops.Tester(this, policy, settings.qa(), stations::base);
+        deploy = new dev.agentcraft.server.ops.DeployService(
+                this, getDataPath(), settings.deploy(), teamView, audit, getLogger(), System.getenv());
+        tools.setServerServices(
+                new dev.agentcraft.server.ops.ServerOps(policy, java.nio.file.Path.of("logs", "latest.log"), tester),
+                tester,
+                deploy,
+                teamView);
         MessageRouter router = new MessageRouter(teamView, tools, notifier, getLogger());
         router.setJobs(jobs);
+        if (!settings.discordWebhookFile().isBlank()) {
+            dev.agentcraft.server.notify.DiscordNotifier.create(
+                            getDataPath().resolve(settings.discordWebhookFile()), settings.serverId(), getLogger())
+                    .ifPresent(d -> {
+                        teamView.addListener(d);
+                        router.setDiscord(d);
+                    });
+        }
 
         getLifecycleManager()
                 .registerEventHandler(
@@ -100,8 +123,15 @@ public class AgentCraftPlugin extends JavaPlugin {
 
         Bukkit.getGlobalRegionScheduler().execute(this, () -> {
             bodies.removeStrays();
+            if (Bukkit.getWorlds().isEmpty()) {
+                return;
+            }
             Location base = stations.base();
-            base.getWorld().addPluginChunkTicket(base.getBlockX() >> 4, base.getBlockZ() >> 4, this);
+            try {
+                base.getWorld().addPluginChunkTicket(base.getBlockX() >> 4, base.getBlockZ() >> 4, this);
+            } catch (RuntimeException e) {
+                // test servers: the base chunk simply is not kept loaded
+            }
         });
 
         startBridge(router);
@@ -216,6 +246,9 @@ public class AgentCraftPlugin extends JavaPlugin {
         if (previews != null) {
             previews.clearAll();
         }
+        if (tester != null) {
+            tester.remove();
+        }
         if (jobs != null) {
             jobs.stop();
         }
@@ -273,5 +306,13 @@ public class AgentCraftPlugin extends JavaPlugin {
 
     public BuildJobs jobs() {
         return jobs;
+    }
+
+    public dev.agentcraft.server.gui.AgentGui gui() {
+        return gui;
+    }
+
+    public dev.agentcraft.server.ops.DeployService deploy() {
+        return deploy;
     }
 }

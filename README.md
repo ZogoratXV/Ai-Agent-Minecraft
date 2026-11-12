@@ -6,7 +6,10 @@ dalla chat (`/agent ...`) o da una GUI, e approvano ogni merge, deploy e costruz
 
 Ispirato ad [AgentCraft](https://github.com/blendi-remade/agentcraft) (MIT), vedi [NOTICE](NOTICE).
 
-> **Stato: Fase 6 (costruzioni) e Fase 4 (codice).** Gli agenti costruiscono edifici nelle regioni
+> **Stato: tutte le fasi (0.4.0).** Codice dei plugin con merge approvato, installazione sul server di prova con
+> riavvio (anche Pelican) e collaudo in gioco, costruzioni, analisi del server, GUI `/agent gui`, avvisi Discord.
+>
+> **Fase 6 (costruzioni) e Fase 4 (codice).** Gli agenti costruiscono edifici nelle regioni
 > autorizzate dopo la vostra approvazione dell'anteprima, con annulla.
 >
 > **Fase 4.** Con `foreman.backend: claude` gli agenti Claude lavorano davvero sul codice

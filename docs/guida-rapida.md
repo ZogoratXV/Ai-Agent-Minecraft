@@ -1,6 +1,6 @@
 # Guida rapida: AgentCraft Server sul vostro server
 
-Versione 0.3.1. Il plugin funziona con la **squadra simulata** (gratis, per provare) e con gli
+Versione 0.4.0. Il plugin funziona con la **squadra simulata** (gratis, per provare) e con gli
 **agenti Claude veri** (codice dei plugin, sezione 11; costruzioni, sezione 12). Si avvia su
 **Windows** e su **Pelican/Pterodactyl** (sezione 13). Riferimento completo:
 [admin-guide.md](admin-guide.md).
@@ -130,9 +130,9 @@ Tutti hanno il completamento con Tab.
 | Fase | Novità                                                                                                        |
 | ---- | ------------------------------------------------------------------------------------------------------------- |
 | 4 ✔  | agenti Claude veri sui vostri plugin: worktree git, build e test, merge solo dopo la tua approvazione, budget |
+| 5 ✔  | installazione sul server di prova, riavvio (anche da Pelican), collaudo in gioco, report dei bug (sezione 14) |
 | 6 ✔  | costruzioni: progetto, anteprima, approvazione, costruzione blocco per blocco, annulla, regioni               |
-| 5    | deploy sul server di staging, scenari di test in gioco, report dei bug                                        |
-| 7    | analisi di TPS/economia/drop, GUI, Discord, rifiniture                                                        |
+| 7 ✔  | analisi del server (TPS, memoria, log), GUI `/agent gui`, avvisi Discord (sezioni 14-15)                      |
 
 ## Problemi comuni
 
@@ -302,3 +302,49 @@ Lo **stesso jar** va bene per entrambi. Il plugin trova o scarica da solo quello
 Su Linux il plugin estrae Node e Maven in Java puro: non servono `tar`, `xz` o `unzip` nel
 container. Verificato qui su Linux senza Node, npm e Maven installati; Windows è verificato dal vostro
 server di prova (avvio, foreman, abbonamento), non da prove automatiche.
+
+## 14. Installazione sul server di prova e collaudo in gioco (Fase 5)
+
+Solo con `server.role: staging` e gli agenti veri. Il giro completo, dopo che un lavoro sul codice
+di un plugin è stato unito:
+
+1. Lucciola costruisce il jar del plugin (Maven o Gradle, senza rifare i test) e arriva la
+   decisione **"Installare `<Plugin>` `<versione>` sul server di prova?"**:
+   - **Installa e riavvia** → il jar va in `plugins/update/` e il server si riavvia dopo 15
+     secondi di avviso in chat;
+   - **Installa, riavvio io** → il jar va in `plugins/update/`, sarà attivo al prossimo riavvio;
+   - **No** → non si installa niente.
+2. Al ritorno del server **Briciola collauda il plugin in gioco**: controlla che sia caricato con
+   la versione giusta, cerca errori nei log, prova i comandi e le GUI con un **giocatore di prova**
+   (serve Citizens) e scrive un report in `plugins/AgentCraftServer/foreman/home/reports/`.
+3. Se trova bug arriva la decisione **"N bug trovati… Li faccio correggere?"**: con **Correggi**
+   nasce un nuovo task per Lucciola con i passi per riprodurli, e il giro ricomincia.
+
+**Come si riavvia** (`deploy.restart` nel config, default `auto`):
+
+| Dove                        | Cosa succede                                                                                                                                                                                                                                                 |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| PC con `local-test/start.*` | il plugin ferma il server e lascia il file `.agentcraft-restart`; lo script di avvio lo rivede e riparte da solo                                                                                                                                             |
+| Pelican/Pterodactyl con API | il plugin chiede il riavvio al pannello. Crea nel pannello (Account → API Keys) una chiave **client** di un account che può riavviare il server, mettila in un file nella cartella del plugin e imposta `deploy.pelican.url` e `deploy.pelican.api-key-file` |
+| Pelican senza API           | il jar viene installato, il riavvio lo fate voi dal pannello                                                                                                                                                                                                 |
+
+**Sicurezza**: il plugin installa solo jar che stanno in `foreman/home/deploy/`, che sono plugin
+veri (`plugin.yml`), e solo dopo la vostra risposta alla decisione; mai su un server
+`production`; mai AgentCraftServer stesso né i plugin in `deploy.protected-plugins` (LuckPerms di
+default). Il giocatore di prova (`qa.tester-name`) non è mai op e ha solo i permessi di
+`qa.tester-permissions`; i comandi da console restano quelli di `commands.whitelist`. Agli agenti i
+log arrivano senza indirizzi IP e senza token o password.
+
+**Analisi del server**: Briciola, Civetta (analista, fuori turno: `/agent spawn civetta`) e
+Bussola leggono TPS, MSPT, memoria, chunk ed entità per mondo, plugin e versioni e i log. Esempio:
+`/agent goal analizza perché il TPS cala la sera`.
+
+## 15. GUI e avvisi Discord
+
+- `/agent gui` apre l'interfaccia: in alto gli agenti (clic = pausa/riprendi), al centro le
+  **decisioni in attesa** (clic = scegli la risposta), sotto i task aperti, in basso stato e ultime
+  attività. Ogni clic esegue il comando `/agent` corrispondente, con gli stessi permessi.
+- **Discord** (facoltativo): crea un webhook nel canale (Impostazioni canale → Integrazioni →
+  Webhook), salva l'URL in un file nella cartella del plugin (es. `discord.txt`) e imposta
+  `notify.discord-webhook-file: discord.txt`. Arrivano lì le nuove decisioni e gli avvisi (budget,
+  merge o installazioni non riusciti). Nessuna menzione @everyone.

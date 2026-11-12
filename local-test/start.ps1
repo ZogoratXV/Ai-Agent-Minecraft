@@ -66,5 +66,11 @@ Write-Host ''
 Write-Host "Avvio il server. Quando vedi 'Done', entra in Minecraft (26.2) su: localhost" -ForegroundColor Green
 Write-Host 'Per darti i permessi scrivi qui:  op <il tuo nome>      Per fermarlo:  stop' -ForegroundColor Green
 Write-Host ''
-& java "-Xms$Ram" "-Xmx$Ram" -jar purpur.jar --nogui
+while ($true) {
+    & java "-Xms$Ram" "-Xmx$Ram" -jar purpur.jar --nogui
+    # AgentCraft leaves this file when it restarts the server to install an updated plugin
+    if (-not (Test-Path '.agentcraft-restart')) { break }
+    Remove-Item '.agentcraft-restart' -Force
+    Write-Host 'Riavvio richiesto da AgentCraft: riparto...' -ForegroundColor Yellow
+}
 Read-Host 'Server fermo. Premi Invio per chiudere'

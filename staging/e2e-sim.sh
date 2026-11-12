@@ -107,6 +107,10 @@ plain "$LOG" | grep -q "t1 \[done\]" || fail "t1 is not done"
 plain "$LOG" | grep -q "t2 \[done\]" || fail "t2 is not done"
 MOVES=$(grep -c '"action":"body.move".*"outcome":"ok"' "$AUDIT" || true)
 SAYS=$(grep -c '"action":"body.say".*"outcome":"ok"' "$AUDIT" || true)
+for tool in server.metrics server.logs server.command; do
+  grep -q "\"action\":\"$tool\".*\"outcome\":\"ok\"" "$AUDIT" || fail "$tool was not executed"
+done
+
 [ "$MOVES" -ge 5 ] || fail "only $MOVES successful body.move calls"
 [ "$SAYS" -ge 3 ] || fail "only $SAYS successful body.say calls"
 # the sandbox has no Mojang auth services: ignore that one, fail on anything else

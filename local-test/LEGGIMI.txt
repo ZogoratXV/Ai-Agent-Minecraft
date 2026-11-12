@@ -27,6 +27,7 @@ Quando nella finestra compare "Done", e poco dopo "connected to the foreman":
    /agent goal prova      la squadra simulata lavora: gli NPC camminano, parlano,
                           ti fanno una domanda e chiedono il "Merge" con pulsanti in chat
    /agent tasks           i task devono finire "done"
+   /agent gui             interfaccia con agenti e decisioni da cliccare
    /agent help            tutti i comandi
 
    COSTRUZIONI: segna una zona con /agent region pos1 (un angolo, a terra) e pos2 (l'angolo

@@ -19,6 +19,7 @@ NPC, comandi e decisioni gratis.
 | ------------------------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------- |
 | `/agent`, `/agent help`                                                   | `agentcraft.use`     | elenco comandi                                                                                                  |
 | `/agent status`                                                           | `agentcraft.use`     | ruolo del server, foreman, integrazioni, backend, budget, obiettivi attivi                                      |
+| `/agent gui`                                                              | `agentcraft.use`     | interfaccia con agenti, decisioni cliccabili, task e attività                                                   |
 | `/agent agents`                                                           | `agentcraft.use`     | squadra con ruolo, stato e task                                                                                 |
 | `/agent tasks`                                                            | `agentcraft.use`     | task con stato, assegnatario e dipendenze                                                                       |
 | `/agent feed`                                                             | `agentcraft.use`     | ultime attività                                                                                                 |
@@ -72,6 +73,12 @@ Tutti i comandi hanno il completamento con Tab (agenti, task, decisioni aperte, 
 3 worker contemporanei, tetto di **15 $ al giorno**, **300 $ al mese**, **5 $ per task**. Raggiunto un
 tetto, gli agenti si mettono in pausa e gli admin vengono avvisati (Fase 4). Tutto modificabile in `config.json`.
 
+## Installazione, riavvio, collaudo, Discord
+
+Vedi le sezioni 13-15 di [guida-rapida.md](guida-rapida.md): avvio su Windows e Pelican,
+installazione dei jar dopo il merge, riavvio (script o API di Pelican), collaudo in gioco di
+Briciola con il giocatore di prova, GUI e Discord.
+
 ## Agenti veri
 
 Vedi la sezione 11 di [guida-rapida.md](guida-rapida.md): chiave API, copia locale della repo,
@@ -82,5 +89,9 @@ configurazione di castigo-ecosistema, ciclo piano → lavoro → test → revisi
 `ACCEPT_EULA=true staging/e2e-sim.sh` avvia foreman (sim) e un server Purpur 26.2 con il plugin,
 gioca un obiettivo intero dalla console e controlla task, decisioni, movimenti e audit.
 Con `MODE=managed` il foreman lo avvia il plugin, con il token generato.
+`ACCEPT_EULA=true staging/e2e-build.sh` prova regione, progetto, anteprima, costruzione e annulla.
+`ACCEPT_EULA=true staging/e2e-deploy.sh` prova gli strumenti del server, i rifiuti (op, ruoli,
+decisioni non approvate, file fuori cartella), l'installazione approvata di un plugin, il riavvio e
+il ritorno con la nuova versione.
 `ACCEPT_EULA=true staging/e2e-claude-setup.sh` prova il setup degli agenti veri senza chiave e senza
 spesa: installazione dell'SDK, avviso in `/agent status`, `/agent repo add`.

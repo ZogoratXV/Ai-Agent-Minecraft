@@ -65,4 +65,10 @@ echo
 echo "Avvio il server. Quando vedi 'Done', entra in Minecraft (26.2) su: localhost"
 echo "Per darti i permessi scrivi qui:  op <il tuo nome>      Per fermarlo:  stop"
 echo
-exec java -Xms"$RAM" -Xmx"$RAM" -jar purpur.jar --nogui
+while :; do
+  java -Xms"$RAM" -Xmx"$RAM" -jar purpur.jar --nogui
+  # AgentCraft leaves this file when it restarts the server to install an updated plugin
+  [ -f .agentcraft-restart ] || break
+  rm -f .agentcraft-restart
+  echo "Riavvio richiesto da AgentCraft: riparto..."
+done

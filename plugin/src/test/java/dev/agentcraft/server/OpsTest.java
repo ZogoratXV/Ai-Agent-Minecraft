@@ -119,4 +119,15 @@ class OpsTest {
         assertFalse(DiscordNotifier.isDiscordWebhook("https://evil.example.com/api/webhooks/1/x"));
         assertFalse(DiscordNotifier.isDiscordWebhook("http://discord.com/api/webhooks/1/x"));
     }
+
+    @Test
+    void theProductionConfigIsValidAndSafe() throws Exception {
+        YamlConfiguration c = new YamlConfiguration();
+        c.loadFromString(Files.readString(Path.of("../server-config/produzione/plugins/AgentCraftServer/config.yml")));
+        PluginSettings s = SettingsLoader.load(c);
+        assertEquals(dev.agentcraft.server.config.ServerRole.PRODUCTION, s.role());
+        assertEquals(PluginSettings.RestartMethod.NONE, s.deploy().restart());
+        assertEquals("", s.foreman().claudeTokenFile());
+        assertFalse(s.commandWhitelist().contains("say"));
+    }
 }

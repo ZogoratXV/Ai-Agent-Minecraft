@@ -1,0 +1,7 @@
+{
+  "serverName": "Castamir",
+  "maxConcurrent": 1,
+  "budget": { "dailyUsd": 3, "monthlyUsd": 40, "perTaskUsd": 1 },
+  "deployAfterMerge": false,
+  "repos": []
+}

@@ -1,0 +1,148 @@
+# AgentCraft Server - configurazione per il SERVER PRINCIPALE (production).
+# Pronta da copiare in plugins/AgentCraftServer/config.yml. Riavviare il server dopo la modifica.
+#
+# AgentCraft Server - plugin configuration.
+# Secrets never go in this file: the bridge token comes from the AGENTCRAFT_TOKEN environment
+# variable or from the file named in bridge.token-file (keep it outside git). With
+# foreman.managed and no token set, one is generated in plugins/AgentCraftServer/token.txt.
+
+server:
+  # Free-form id, shown to the agents (e.g. "survival", "staging").
+  id: castamir
+  # production | staging. Decided ONLY here, never by the foreman.
+  # On production, staging-only tools (player.simulate) are always refused.
+  role: production
+
+foreman:
+  # true = the plugin starts the foreman bundled in its jar with the local Node (22+),
+  # restarts it if it stops and stops it with the server. Its files and log are in
+  # plugins/AgentCraftServer/foreman/. If a foreman is already running at bridge.url
+  # (started by hand), that one is used instead.
+  managed: true
+  # Node executable: auto = the machine's Node 22+ if there is one, otherwise Node 22.23.4 is
+  # downloaded once into plugins/AgentCraftServer/runtime/ and checked against its official SHA-256
+  # (needed in the Java containers of Pelican/Pterodactyl, which have no Node). Or a full path.
+  node: auto
+  # sim = scripted team, no API usage. claude = real agents (from phase 4; needs ANTHROPIC_API_KEY
+  # in the server's environment).
+  backend: claude
+  # npm executable, used once to install the Claude Agent SDK for the claude backend (auto = the
+  # one next to Node). The claude backend also needs Maven: if 'mvn' is missing, Maven 3.9.16 is
+  # downloaded the same way (SHA-512 checked).
+  npm: auto
+  # claude backend: file (in the plugin folder, readable only by the server user) holding the
+  # Anthropic API key. It is given only to the foreman process, never to the whole server.
+  # Alternative: ANTHROPIC_API_KEY in the server's environment.
+  api-key-file: anthropic.key
+  # PERSONAL USE ONLY, instead of api-key-file: the agents work with your Claude subscription
+  # (Pro/Max). Make a token with `claude setup-token` (Claude Code), put it in this file (in the
+  # plugin folder) and restart. The agents share your plan's usage limits. Do not use it on a
+  # server where other people give the agents work: use an API key there.
+  claude-token-file: ''
+  # Extra command line options for the foreman, e.g. ['--step-ms', '1000'].
+  extra-args: []
+
+bridge:
+  # Where the foreman listens. Only loopback or private network addresses are accepted.
+  url: ws://127.0.0.1:7878
+  # Optional: read the token from this file (in the plugin folder) instead of AGENTCRAFT_TOKEN.
+  token-file: ''
+  # Reconnect backoff in seconds.
+  reconnect-min-seconds: 2
+  reconnect-max-seconds: 60
+
+world:
+  # Speed of agent builds, in blocks per second: slow enough to watch the builders at work
+  # (a 300-block house takes about half a minute at 10).
+  build-blocks-per-second: 8
+  # Hard limit of blocks changed per server tick (also the speed of /agent undo). Lower it if TPS drops.
+  blocks-per-tick: 100
+  # Build jobs pause while MSPT is above this value.
+  pause-when-mspt-above: 40.0
+  # Max blocks in one build job and in one world.inspect.
+  max-job-volume: 50000
+  max-inspect-volume: 65536
+  # Containers with items are never removed or replaced.
+  protect-containers: true
+  # Blocks agents may never place. Namespaced ids; "minecraft:" may be omitted.
+  block-blacklist:
+    - tnt
+    - lava
+    - fire
+    - soul_fire
+    - command_block
+    - chain_command_block
+    - repeating_command_block
+    - command_block_minecart
+    - structure_block
+    - jigsaw
+    - spawner
+    - trial_spawner
+    - end_portal
+    - end_gateway
+    - nether_portal
+    - respawn_anchor
+    - bedrock
+    - barrier
+
+commands:
+  # Commands agents may run, matched by leading words ("time query" allows "time query day").
+  # A fixed deny list (op, deop, ban, pardon, whitelist, lp, permissions, stop, reload, execute, ...)
+  # is always applied on top and cannot be changed here.
+  whitelist:
+    - list
+    - tps
+    - mspt
+    - time query
+    - weather query
+  # console | fakeplayer
+  run-as: console
+
+limits:
+  # world tool calls per agent per minute
+  tool-calls-per-minute: 30
+
+audit:
+  # JSON Lines file inside the plugin folder: one line per agent action on the world or server.
+  file: audit.jsonl
+
+npc:
+  # auto = Citizens if installed, otherwise vanilla Mannequin entities.
+  backend: auto
+
+deploy:
+  # Staging only. After a merge the agents build the plugin jar and ask "Installare ...?"; the jar
+  # is installed only if an admin says yes. Jars are taken only from this folder (in the plugin
+  # folder), where the managed foreman puts them.
+  from-dir: foreman/home/deploy
+  # Plugins the agents may never replace (AgentCraftServer itself is always protected).
+  protected-plugins:
+    - LuckPerms
+  # How "Installa e riavvia" restarts the server:
+  #   auto    = pelican if the pelican settings below are set; on a panel without them, none;
+  #             otherwise script
+  #   pelican = through the panel API (Pelican or Pterodactyl)
+  #   script  = stops the server and leaves the file .agentcraft-restart: the start scripts of
+  #             local-test/ start it again (spigot restart-script is not needed)
+  #   none    = never: the admins restart by hand
+  restart: none
+  pelican:
+    # Panel address, e.g. https://panel.example.com
+    url: ''
+    # File (in the plugin folder) with a CLIENT API key of an account that may restart this server
+    # (Account > API Keys in the panel). Keep it out of git; do not use an admin account.
+    api-key-file: anthropic.key
+    # Server identifier; empty = the P_SERVER_UUID the panel gives the container.
+    server-id: ''
+
+qa:
+  # The test player used by the QA agent (needs Citizens): it runs commands, chats and clicks like
+  # a normal player. Never op.
+  tester-name: AgentTester
+  # Permissions it gets, e.g. the ones of your normal players. '*', agentcraft.* and luckperms.* are refused.
+  tester-permissions: []
+
+notify:
+  # Optional: file (in the plugin folder) with a Discord webhook URL; new decisions and warnings
+  # are posted there. Keep it secret.
+  discord-webhook-file: ''

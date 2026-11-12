@@ -1,7 +1,8 @@
 # Guida rapida: AgentCraft Server sul vostro server
 
-Stato al termine della Fase 3. Il plugin funziona con la **squadra simulata**: gli agenti Claude
-veri (che lavorano su codice e mondo) arrivano dalla Fase 4. Riferimento completo:
+Versione 0.3.1. Il plugin funziona con la **squadra simulata** (gratis, per provare) e con gli
+**agenti Claude veri** (codice dei plugin, sezione 11; costruzioni, sezione 12). Si avvia su
+**Windows** e su **Pelican/Pterodactyl** (sezione 13). Riferimento completo:
 [admin-guide.md](admin-guide.md).
 
 ## 1. Cosa serve
@@ -9,7 +10,7 @@ veri (che lavorano su codice e mondo) arrivano dalla Fase 4. Riferimento complet
 |           |                                                                                                                                                                                       |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Server    | Purpur **26.2** su Java **25**                                                                                                                                                        |
-| Foreman   | Node **22** sulla stessa macchina del server (o nella stessa rete privata)                                                                                                            |
+| Foreman   | niente: è nel jar; Node 22 lo scarica il plugin se manca (sezione 13)                                                                                                                 |
 | Opzionale | **Citizens** (NPC con skin e pathfinding di Citizens; senza, si usano i Mannequin vanilla). WorldGuard, WorldEdit, LuckPerms e spark vengono rilevati; li useremo nelle prossime fasi |
 
 ## 2. Il foreman parte da solo
@@ -17,8 +18,8 @@ veri (che lavorano su codice e mondo) arrivano dalla Fase 4. Riferimento complet
 Il foreman (il "cervello" degli agenti) è dentro il jar. Con `foreman.managed: true` (default) il
 plugin, all'avvio del server:
 
-1. controlla che ci sia **Node 22+** (`node --version`); se manca lo scrive in console e gli
-   agenti restano scollegati;
+1. usa il **Node 22+** della macchina; se manca (es. container Pelican) scarica Node 22.23.4 in
+   `plugins/AgentCraftServer/runtime/`, una volta sola, controllandone l'impronta ufficiale;
 2. genera un token segreto in `plugins/AgentCraftServer/token.txt`, se non ce n'è già uno;
 3. avvia il foreman, lo riavvia se si ferma e lo spegne insieme al server.
 
@@ -48,7 +49,8 @@ il plugin usa quello anche con `managed: true`.
 | `bridge.url`                                 | `ws://127.0.0.1:7878`                                                | indirizzo del foreman. Solo IP locali o privati (niente nomi di dominio)                                                                    |
 | `bridge.token-file`                          | vuoto                                                                | file col token, in alternativa ad `AGENTCRAFT_TOKEN`                                                                                        |
 | `bridge.reconnect-min/max-seconds`           | 2 / 60                                                               | attesa tra i tentativi di riconnessione                                                                                                     |
-| `world.blocks-per-tick`                      | 200                                                                  | velocità delle costruzioni (usata dalla Fase 6); abbassala se cala il TPS                                                                   |
+| `world.build-blocks-per-second`              | 10                                                                   | velocità delle costruzioni, per vedere i costruttori al lavoro (una casa di 300 blocchi ≈ 30 secondi)                                       |
+| `world.blocks-per-tick`                      | 200                                                                  | tetto di blocchi per tick (anche velocità di `/agent undo`); abbassalo se cala il TPS                                                       |
 | `world.pause-when-mspt-above`                | 45                                                                   | le costruzioni si fermano se il server è sotto sforzo                                                                                       |
 | `world.max-job-volume`, `max-inspect-volume` | 200000 / 65536                                                       | limiti di blocchi per lavoro e per ispezione                                                                                                |
 | `world.protect-containers`                   | `true`                                                               | le casse con oggetti non vengono mai toccate                                                                                                |
@@ -96,7 +98,7 @@ Le stazioni non impostate vengono messe attorno alla base. Sono salvate in `stat
   `❓ attende risposta`, `⏸ in pausa`, `💤 fuori turno`). Camminano tra le stazioni, muovono il
   braccio mentre lavorano e "parlano" in chat ai giocatori vicini.
 - **Obiettivi**: `/agent goal <testo>`. Bussola divide il lavoro in task con dipendenze e li
-  assegna; la squadra li esegue (per ora in modo simulato).
+  assegna; la squadra li esegue (simulata o con gli agenti veri, sezioni 11 e 12).
 - **Decisioni**: quando un agente ha bisogno di te va al podio e ricevi un messaggio con pulsanti
   cliccabili e un suono (domande, approvazione di un merge). Chi entra nel server trova un
   promemoria se ci sono decisioni aperte.
@@ -127,9 +129,9 @@ Tutti hanno il completamento con Tab.
 
 | Fase | Novità                                                                                                        |
 | ---- | ------------------------------------------------------------------------------------------------------------- |
-| 4    | agenti Claude veri sui vostri plugin: worktree git, build e test, merge solo dopo la tua approvazione, budget |
+| 4 ✔  | agenti Claude veri sui vostri plugin: worktree git, build e test, merge solo dopo la tua approvazione, budget |
+| 6 ✔  | costruzioni: progetto, anteprima, approvazione, costruzione blocco per blocco, annulla, regioni               |
 | 5    | deploy sul server di staging, scenari di test in gioco, report dei bug                                        |
-| 6    | costruzioni: progetto, anteprima, approvazione, costruzione blocco per blocco, annulla, regioni               |
 | 7    | analisi di TPS/economia/drop, GUI, Discord, rifiniture                                                        |
 
 ## Problemi comuni
@@ -140,6 +142,9 @@ Tutti hanno il completamento con Tab.
 | "No bridge token" in console          | manca `AGENTCRAFT_TOKEN` o `token-file` nell'ambiente del server                                                   |
 | Il plugin si disattiva all'avvio      | `config.yml` non valido: la console elenca ogni errore                                                             |
 | NPC "di legno" senza skin di Citizens | Citizens assente o in errore: in console "using Mannequin bodies"                                                  |
+| "a foreman is already running"        | è rimasto acceso un foreman vecchio: Windows `Get-Process node \| Stop-Process`, Linux `pkill -f foreman.mjs`      |
+| Un agente "torna a posto" senza fare  | guarda `/agent feed` e `/agent tasks`: il motivo è scritto lì. `/agent task <id> retry` per riprovare              |
+| Matita non costruisce                 | serve una regione di almeno 9×9×9 (`/agent region create`); il progetto vero richiede qualche minuto               |
 
 ## 11. Agenti veri sui plugin (Fase 4)
 
@@ -258,3 +263,42 @@ metà). `/agent jobs` elenca i lavori.
 (`world.block-blacklist`: TNT, lava, fuoco, command block, spawner, portali, bedrock, barriere…),
 toccare contenitori con oggetti, piazzare senza la vostra approvazione. Anche se il foreman
 sbagliasse, il plugin rifiuta da solo.
+
+## 13. Avvio su Windows e su Pelican
+
+Lo **stesso jar** va bene per entrambi. Il plugin trova o scarica da solo quello che serve
+(Node 22, Maven, Claude Agent SDK) e avvia il foreman: non c'è nient'altro da installare.
+
+**Windows (PC di prova)**
+
+1. Java 25 e Purpur 26.2: la cartella `local-test/` del repository ha `start.bat` (doppio clic)
+   che li prepara e avvia il server.
+2. Copia `AgentCraftServer-<versione>.jar` in `plugins\`, avvia, poi chiudi con `stop`.
+3. Per gli agenti veri con il tuo abbonamento: `claude setup-token`, salva il token in
+   `plugins\AgentCraftServer\claude.token` (attenzione: Windows può aggiungere `.txt` da solo) e
+   in `config.yml` metti `backend: claude` e `claude-token-file: claude.token`. Riavvia.
+4. Se chiudi il server dalla X invece che con `stop`, il foreman si spegne da solo entro pochi
+   secondi.
+
+**Pelican / Pterodactyl (server di test condiviso)**
+
+1. Egg **Paper/Purpur** con immagine **Java 25** (l'immagine `java_25` delle yolks).
+   Carica Purpur 26.2 e il jar in `plugins/` dal file manager o via SFTP.
+2. **Rete in uscita**: al primo avvio il container deve raggiungere `nodejs.org`,
+   `registry.npmjs.org` e (per i plugin Maven) `repo1.maven.org`; con gli agenti veri anche
+   `api.anthropic.com`. Il bridge usa `127.0.0.1:7878` **dentro** il container: non serve
+   allocare porte e non va esposto.
+3. **Memoria**: Node, agenti e build Maven girano nello stesso container, fuori dalla memoria di
+   Java. Se il container ha 8 GB, non dare a Java più di 5-6 GB (`-Xmx`, o il campo memoria
+   dell'egg con un po' di margine), altrimenti Pelican uccide il server per memoria esaurita.
+4. **Disco**: circa 300 MB per Node e SDK in `plugins/AgentCraftServer/runtime/` e
+   `foreman/`, più le copie di lavoro delle repository.
+5. **Agenti veri**: su un server condiviso usa una **chiave API** (`api-key-file`), non il token
+   dell'abbonamento personale. Crea il file della chiave dal file manager di Pelican nella
+   cartella del plugin.
+6. Il pulsante **Stop** del pannello spegne anche il foreman; se il container viene ucciso, il
+   foreman se ne accorge e si chiude da solo.
+
+Su Linux il plugin estrae Node e Maven in Java puro: non servono `tar`, `xz` o `unzip` nel
+container. Verificato qui su Linux senza Node, npm e Maven installati; Windows è verificato dal vostro
+server di prova (avvio, foreman, abbonamento), non da prove automatiche.

@@ -2092,6 +2092,80 @@
               "properties": {
                 "tool": {
                   "type": "string",
+                  "const": "server.deploy"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1024,
+                      "description": "a plugin jar inside the plugin's deploy folder"
+                    },
+                    "approvalId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64,
+                      "pattern": "^[A-Za-z0-9._:-]+$",
+                      "description": "id of the answered `deploy` decision; the plugin checks it was approved"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "approvalId"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
+                  "const": "server.restart"
+                },
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "approvalId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64,
+                      "pattern": "^[A-Za-z0-9._:-]+$",
+                      "description": "id of the answered `deploy` decision whose first option (install and restart) was chosen"
+                    },
+                    "delaySeconds": {
+                      "default": 15,
+                      "type": "integer",
+                      "minimum": 5,
+                      "maximum": 300
+                    }
+                  },
+                  "required": [
+                    "approvalId",
+                    "delaySeconds"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "tool",
+                "args"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "tool": {
+                  "type": "string",
                   "const": "player.simulate"
                 },
                 "args": {

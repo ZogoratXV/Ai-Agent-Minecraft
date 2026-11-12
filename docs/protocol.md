@@ -14,9 +14,9 @@
 
 ## World tools
 
-`tool.call.call.tool` is one of: `world.regions`, `world.inspect`, `world.preview`, `world.place`, `world.undo`, `server.command`, `server.logs`, `server.metrics`, `player.simulate`, `body.move`, `body.say`.
+`tool.call.call.tool` is one of: `world.regions`, `world.inspect`, `world.preview`, `world.place`, `world.undo`, `server.command`, `server.logs`, `server.metrics`, `server.deploy`, `server.restart`, `player.simulate`, `body.move`, `body.say`.
 
-Staging only (refused with `not_staging` when the plugin's configured role is production): `player.simulate`.
+Staging only (refused with `not_staging` when the plugin's configured role is production): `player.simulate`, `server.deploy`, `server.restart`.
 
 The plugin validates every call (region, block blacklist, command whitelist, volume, rate limit) and never trusts the arguments.
 
@@ -364,7 +364,7 @@ Ask the plugin to run a world tool. Always answered with `tool.result`.
 | `taskId` | string | no | stable identifier, e.g. "t3", "d4", "bussola" |
 | `requestedBy` | string | yes | who started the work: "user:<name>" or an agent id |
 | `deadlineMs` | integer | yes |  |
-| `call` | object \| object \| object \| object \| object \| object \| object \| object \| object \| object \| object | yes |  |
+| `call` | object \| object \| object \| object \| object \| object \| object \| object \| object \| object \| object \| object \| object | yes |  |
 
 ```json
 {"v":1,"type":"tool.call","id":"f12","agentId":"mattone","taskId":"t9","requestedBy":"user:Zogorat","deadlineMs":30000,"call":{"tool":"world.place","args":{"jobId":"j7","approvalId":"d5","region":"piazza","rotation":0,"module":"fondamenta","blueprint":{"format":"agentcraft-blueprint","version":1,"name":"Casetta","size":[9,7,9],"palette":{"a":"minecraft:cobblestone"},"modules":[{"id":"fondamenta","ops":[{"op":"fill","from":[0,0,0],"to":[8,0,8],"block":"a"}]}]}}}}

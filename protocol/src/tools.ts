@@ -83,6 +83,22 @@ export const SimAction = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('wait'), ticks: z.number().int().min(1).max(1200) }),
 ]);
 
+const ServerDeploy = z.object({
+  tool: z.literal('server.deploy'),
+  args: z.object({
+    file: z.string().min(1).max(1024).describe("a plugin jar inside the plugin's deploy folder"),
+    approvalId: Id.describe('id of the answered `deploy` decision; the plugin checks it was approved'),
+  }),
+});
+
+const ServerRestart = z.object({
+  tool: z.literal('server.restart'),
+  args: z.object({
+    approvalId: Id.describe('id of the answered `deploy` decision whose first option (install and restart) was chosen'),
+    delaySeconds: z.number().int().min(5).max(300).default(15),
+  }),
+});
+
 const PlayerSimulate = z.object({
   tool: z.literal('player.simulate'),
   args: z.object({ actions: z.array(SimAction).min(1).max(200) }).describe('staging only'),
@@ -109,6 +125,8 @@ export const ToolInvocation = z.discriminatedUnion('tool', [
   ServerCommand,
   ServerLogs,
   ServerMetrics,
+  ServerDeploy,
+  ServerRestart,
   PlayerSimulate,
   BodyMove,
   BodySay,
@@ -119,7 +137,7 @@ export type ToolName = ToolInvocation['tool'];
 export const TOOL_NAMES = ToolInvocation.options.map((o) => o.shape.tool.value) as ToolName[];
 
 /** Tools refused by the plugin when its configured role is `production`. */
-export const STAGING_ONLY_TOOLS: readonly ToolName[] = ['player.simulate'];
+export const STAGING_ONLY_TOOLS: readonly ToolName[] = ['player.simulate', 'server.deploy', 'server.restart'];
 
 export const ToolErrorCode = z.enum([
   'forbidden',

@@ -39,11 +39,15 @@
     "server.command",
     "server.logs",
     "server.metrics",
+    "server.deploy",
+    "server.restart",
     "player.simulate",
     "body.move",
     "body.say"
   ],
   "stagingOnlyTools": [
-    "player.simulate"
+    "player.simulate",
+    "server.deploy",
+    "server.restart"
   ]
 }

@@ -99,4 +99,75 @@ class RuntimesTest {
         assertTrue(Runtimes.nodeFor("Linux", "riscv64").isEmpty());
         assertEquals("SHA-512", Runtimes.MAVEN.algorithm());
     }
+
+    private static byte[] header(String name, char type, long size, int mode, String link) {
+        byte[] h = new byte[512];
+        byte[] n = name.getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(n, 0, h, 0, Math.min(100, n.length));
+        byte[] m = String.format("%07o\0", mode).getBytes(StandardCharsets.US_ASCII);
+        System.arraycopy(m, 0, h, 100, m.length);
+        byte[] sz = String.format("%011o\0", size).getBytes(StandardCharsets.US_ASCII);
+        System.arraycopy(sz, 0, h, 124, sz.length);
+        h[156] = (byte) type;
+        byte[] l = link.getBytes(StandardCharsets.UTF_8);
+        System.arraycopy(l, 0, h, 157, l.length);
+        System.arraycopy("ustar\0".getBytes(StandardCharsets.US_ASCII), 0, h, 257, 6);
+        return h;
+    }
+
+    private static void entry(java.io.OutputStream out, String name, char type, byte[] data, int mode, String link)
+            throws IOException {
+        out.write(header(name, type, data.length, mode, link));
+        out.write(data);
+        out.write(new byte[(512 - data.length % 512) % 512]);
+    }
+
+    private static Path tarGz(Path dir, java.util.function.Consumer<java.io.OutputStream> body) throws IOException {
+        Path file = dir.resolve("a.tar.gz");
+        try (java.io.OutputStream out = new java.util.zip.GZIPOutputStream(Files.newOutputStream(file))) {
+            body.accept(out);
+            out.write(new byte[1024]);
+        }
+        return file;
+    }
+
+    @Test
+    void untarsLongNamesExecutablesAndLinks(@TempDir Path dir) throws Exception {
+        String longName = "node/lib/node_modules/npm/" + "x".repeat(120) + "/file.js";
+        String pax = "path=" + longName + "\n";
+        String rec = (pax.length() + 4) + " " + pax;
+        rec = (rec.length()) + " " + pax;
+        String record = rec;
+        Path archive = tarGz(dir, out -> {
+            try {
+                entry(out, "node/", '5', new byte[0], 0755, "");
+                entry(out, "node/bin/node", '0', "bin".getBytes(StandardCharsets.UTF_8), 0755, "");
+                entry(out, "node/bin/npm", '2', new byte[0], 0777, "../lib/npm-cli.js");
+                entry(out, "PaxHeader", 'x', record.getBytes(StandardCharsets.UTF_8), 0644, "");
+                entry(out, "ignored", '0', "deep".getBytes(StandardCharsets.UTF_8), 0644, "");
+            } catch (IOException e) {
+                throw new java.io.UncheckedIOException(e);
+            }
+        });
+        Path into = Files.createDirectory(dir.resolve("out"));
+        Runtimes.untarGz(archive, into);
+        assertEquals("bin", Files.readString(into.resolve("node/bin/node")));
+        assertTrue(Files.isExecutable(into.resolve("node/bin/node")));
+        assertEquals("deep", Files.readString(into.resolve(longName)));
+        assertTrue(Files.isSymbolicLink(into.resolve("node/bin/npm")));
+    }
+
+    @Test
+    void untarRefusesPathsOutsideTheTarget(@TempDir Path dir) throws Exception {
+        Path archive = tarGz(dir, out -> {
+            try {
+                entry(out, "../evil.txt", '0', "x".getBytes(StandardCharsets.UTF_8), 0644, "");
+            } catch (IOException e) {
+                throw new java.io.UncheckedIOException(e);
+            }
+        });
+        Path into = Files.createDirectory(dir.resolve("out"));
+        assertThrows(IOException.class, () -> Runtimes.untarGz(archive, into));
+        assertFalse(Files.exists(dir.resolve("evil.txt")));
+    }
 }

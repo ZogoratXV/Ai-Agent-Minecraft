@@ -17,7 +17,6 @@ import java.time.Duration;
 import java.util.HexFormat;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -159,16 +158,7 @@ public final class Runtimes {
         if (a.url().endsWith(".zip")) {
             unzip(tmp, unpack);
         } else {
-            Process p = new ProcessBuilder("tar", "-xzf", tmp.toString(), "-C", unpack.toString())
-                    .redirectErrorStream(true)
-                    .start();
-            String out;
-            try (InputStream in = p.getInputStream()) {
-                out = new String(in.readNBytes(2000));
-            }
-            if (!p.waitFor(5, TimeUnit.MINUTES) || p.exitValue() != 0) {
-                throw new IOException("cannot unpack " + label + ": " + out.strip());
-            }
+            untarGz(tmp, unpack);
         }
         Path unpacked = unpack.resolve(a.folder());
         if (!Files.isDirectory(a.binDir().isEmpty() ? unpacked : unpacked.resolve(a.binDir()))) {
@@ -217,6 +207,151 @@ public final class Runtimes {
             Files.deleteIfExists(to);
             throw new IOException("checksum mismatch for " + a.url() + ": refusing it");
         }
+    }
+
+    /**
+     * Extracts a .tar.gz in pure Java (no external {@code tar}: minimal Pelican/Pterodactyl images may
+     * lack it), keeping executable bits and symlinks and refusing entries outside {@code into}.
+     */
+    public static void untarGz(Path archive, Path into) throws IOException {
+        Path root = into.toAbsolutePath().normalize();
+        try (InputStream in = new java.io.BufferedInputStream(
+                new java.util.zip.GZIPInputStream(Files.newInputStream(archive), 65536))) {
+            byte[] header = new byte[512];
+            String longName = null;
+            String longLink = null;
+            while (true) {
+                if (in.readNBytes(header, 0, 512) < 512) {
+                    break;
+                }
+                boolean empty = true;
+                for (byte b : header) {
+                    if (b != 0) {
+                        empty = false;
+                        break;
+                    }
+                }
+                if (empty) {
+                    break;
+                }
+                char type = (char) header[156];
+                long size = octal(header, 124, 12);
+                int mode = (int) octal(header, 100, 8);
+                String name = cString(header, 0, 100);
+                String prefix = cString(header, 345, 155);
+                if (!prefix.isEmpty() && "ustar".equals(cString(header, 257, 5))) {
+                    name = prefix + "/" + name;
+                }
+                String link = cString(header, 157, 100);
+                if (type == 'L' || type == 'K' || type == 'x' || type == 'g') {
+                    byte[] data = in.readNBytes((int) size);
+                    skipPadding(in, size);
+                    String text = new String(data, java.nio.charset.StandardCharsets.UTF_8);
+                    if (type == 'L') {
+                        longName = text.replace("\0", "");
+                    } else if (type == 'K') {
+                        longLink = text.replace("\0", "");
+                    } else if (type == 'x') {
+                        for (String rec : text.split("\n")) {
+                            int sp = rec.indexOf(' ');
+                            int eq = rec.indexOf('=');
+                            if (sp < 0 || eq < sp) {
+                                continue;
+                            }
+                            String key = rec.substring(sp + 1, eq);
+                            if (key.equals("path")) {
+                                longName = rec.substring(eq + 1);
+                            } else if (key.equals("linkpath")) {
+                                longLink = rec.substring(eq + 1);
+                            }
+                        }
+                    }
+                    continue;
+                }
+                if (longName != null) {
+                    name = longName;
+                    longName = null;
+                }
+                if (longLink != null) {
+                    link = longLink;
+                    longLink = null;
+                }
+                Path out = root.resolve(name).normalize();
+                if (!out.startsWith(root)) {
+                    throw new IOException("unsafe archive entry: " + name);
+                }
+                switch (type) {
+                    case '5' -> Files.createDirectories(out);
+                    case '2' -> {
+                        Path target = out.getParent().resolve(link).normalize();
+                        if (!target.startsWith(root)) {
+                            throw new IOException("unsafe archive link: " + name + " -> " + link);
+                        }
+                        Files.createDirectories(out.getParent());
+                        Files.deleteIfExists(out);
+                        try {
+                            Files.createSymbolicLink(out, Path.of(link));
+                        } catch (UnsupportedOperationException | IOException e) {
+                            // not essential: npm is run through npm-cli.js, never through bin/npm
+                        }
+                    }
+                    case '0', '\0', '7' -> {
+                        Files.createDirectories(out.getParent());
+                        try (java.io.OutputStream os = Files.newOutputStream(out)) {
+                            long left = size;
+                            byte[] buf = new byte[65536];
+                            while (left > 0) {
+                                int n = in.read(buf, 0, (int) Math.min(buf.length, left));
+                                if (n < 0) {
+                                    throw new IOException("truncated archive at " + name);
+                                }
+                                os.write(buf, 0, n);
+                                left -= n;
+                            }
+                        }
+                        skipPadding(in, size);
+                        if ((mode & 0111) != 0) {
+                            out.toFile().setExecutable(true, false);
+                        }
+                    }
+                    default -> {
+                        in.skipNBytes(size);
+                        skipPadding(in, size);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void skipPadding(InputStream in, long size) throws IOException {
+        long pad = (512 - (size % 512)) % 512;
+        in.skipNBytes(pad);
+    }
+
+    private static long octal(byte[] b, int off, int len) {
+        long v = 0;
+        for (int i = off; i < off + len; i++) {
+            int c = b[i] & 0xff;
+            if (c == 0 || c == ' ') {
+                if (v > 0) {
+                    break;
+                }
+                continue;
+            }
+            if (c < '0' || c > '7') {
+                break;
+            }
+            v = v * 8 + (c - '0');
+        }
+        return v;
+    }
+
+    private static String cString(byte[] b, int off, int len) {
+        int end = off;
+        while (end < off + len && b[end] != 0) {
+            end++;
+        }
+        return new String(b, off, end - off, java.nio.charset.StandardCharsets.UTF_8);
     }
 
     /** Extracts a zip, refusing entries that would land outside {@code into} ("zip slip"). */

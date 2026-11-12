@@ -25,5 +25,7 @@ export interface Backend {
   onRepoAdd?(path: string): Promise<unknown>;
   onDiff?(taskId: string): Promise<unknown>;
   onRepoPush?(repoId: string | undefined, by: string): Promise<unknown>;
+  /** the connected plugins changed (a server restarted, ...) */
+  onSessionsChanged?(sessions: { server: { id: string; role: string } }[]): void;
   onJobProgress?(msg: Extract<PluginToForeman, { type: 'job.progress' }>): void;
 }

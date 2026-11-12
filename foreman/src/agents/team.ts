@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import type { Backend } from '../backend.js';
 import type { CastMember } from '../cast.js';
@@ -14,10 +14,20 @@ import { ROLES } from '../roles.js';
 import type { AgentT, DecisionT, GoalT, TaskT, TeamState } from '../state.js';
 import type { Store } from '../store.js';
 import { detectApiAuth, NO_API_AUTH_MESSAGE, NO_LOGIN_MESSAGE, withAuthMode } from './auth.js';
-import { architectPrompt, basePrompt, planPrompt, qaPrompt, repoPrompt, reviewPrompt, workPrompt } from './prompts.js';
+import {
+  architectPrompt,
+  basePrompt,
+  ingamePrompt,
+  planPrompt,
+  qaPrompt,
+  repoPrompt,
+  reviewPrompt,
+  workPrompt,
+} from './prompts.js';
 import type { PluginToForeman } from '@agentcraft-server/protocol';
 import type { ToolPort } from '../backend.js';
 import { BuildCoordinator } from '../build.js';
+import { DEPLOY_OPTIONS, INSTALL_AND_RESTART, INSTALL_ONLY, packageJar, readPluginInfo, sha256 } from '../deploy.js';
 import house from '../../../blueprints/examples/casa-medievale.json' with { type: 'json' };
 import type { Permission, Runner, TurnResult } from './runner.js';
 import { buildTools, type TeamApi } from './tools.js';
@@ -27,6 +37,19 @@ type Job =
   | { kind: 'work'; taskId: string }
   | { kind: 'review'; taskId: string }
   | { kind: 'chat'; agentId: string };
+
+interface DeployOffer {
+  taskId: string;
+  agentId: string;
+  jar: string;
+  plugin: string;
+  version: string;
+  commands: string[];
+  change: string;
+  repoId?: string | undefined;
+  module?: string | undefined;
+  goalId?: string | undefined;
+}
 
 interface TaskRuntime {
   repoId?: string;
@@ -44,6 +67,8 @@ interface TaskRuntime {
   frozen?: string[];
   /** set by request_merge / request_changes during a review turn */
   reviewOutcome?: 'merge' | 'changes' | undefined;
+  /** an in-game test of an installed plugin */
+  ingame?: DeployOffer;
 }
 
 interface Budget {
@@ -60,6 +85,12 @@ interface Persisted {
   budget: Budget;
   inbox: Record<string, string[]>;
   repos: RepoSettings[];
+  /** open deploy decisions */
+  deploys?: Record<string, DeployOffer>;
+  /** installed, waiting for the server to come back to be tested */
+  pendingQa?: DeployOffer[];
+  /** open "fix these bugs?" decisions */
+  bugfixes?: Record<string, { offer: DeployOffer; bugs: string }>;
 }
 
 export interface TeamOptions {
@@ -78,6 +109,10 @@ export interface TeamOptions {
   baseEnv?: NodeJS.ProcessEnv;
   /** the plugin's world tools (the bridge); needed for building */
   tools?: ToolPort;
+  /** wait after a staging server reconnects before testing (lets it finish loading) */
+  ingameDelayMs?: number;
+  /** builds the plugin jar after a merge (tests replace it) */
+  packager?: typeof packageJar;
 }
 
 const PERMISSION_OPTIONS = ['Allow once', 'Always allow for this agent', 'Deny'];
@@ -176,7 +211,8 @@ export class TeamBackend implements Backend, TeamApi {
   private reconcile(): void {
     const s = this.o.state;
     for (const d of s.decisions.values()) {
-      if (d.status === 'open' && d.kind !== 'merge') s.putDecision({ ...d, status: 'cancelled' });
+      const kept = d.kind === 'merge' || this.data.deploys?.[d.id] || this.data.bugfixes?.[d.id];
+      if (d.status === 'open' && !kept) s.putDecision({ ...d, status: 'cancelled' });
     }
     for (const g of s.goals.values()) {
       const tasks = [...s.tasks.values()].filter((t) => t.goalId === g.id);
@@ -240,6 +276,8 @@ export class TeamBackend implements Backend, TeamApi {
       return;
     }
     if (d.kind === 'merge' && d.taskId) void this.onMergeAnswer(d);
+    if (d.kind === 'deploy' && this.data.deploys?.[d.id]) void this.onDeployAnswer(d);
+    if (this.data.bugfixes?.[d.id]) this.onBugfixAnswer(d);
   }
 
   onAgentAction(agentId: string, action: 'pause' | 'resume' | 'stop' | 'spawn'): void {
@@ -481,6 +519,7 @@ export class TeamBackend implements Backend, TeamApi {
     if (t.status === 'cancelled' || t.status === 'done') return;
     const rt = this.rt(taskId);
     if (t.kind === 'build') return this.design(t, agentId, signal);
+    if (rt.ingame) return this.ingame(t, agentId, signal);
     if (!rt.repoId && t.repoId && this.o.repos.repos.has(t.repoId)) rt.repoId = t.repoId;
     const agent = this.o.state.agents.get(agentId)!;
     const repo = rt.repoId ? this.o.repos.get(rt.repoId) : undefined;
@@ -789,7 +828,7 @@ export class TeamBackend implements Backend, TeamApi {
         join(this.o.home, 'claude-config'),
         this.o.cfg.useClaudeLogin,
       ),
-      tools: buildTools(t.agentId, agent.role === 'lead', this, agent.role === 'architect'),
+      tools: buildTools(t.agentId, agent.role, this, !!(t.taskId && this.rt(t.taskId).ingame)),
       canUseTool: (tool, input) =>
         this.permission(
           t.agentId,
@@ -930,6 +969,11 @@ export class TeamBackend implements Backend, TeamApi {
           text: `${taskId} unito (${r.sha}) da ${d.answer?.by ?? 'admin'}. Il push lo fate voi.`,
           agentId: d.agentId,
         });
+        try {
+          await this.offerDeploy(taskId);
+        } catch (e) {
+          this.log(`deploy offer for ${taskId} failed: ${e instanceof Error ? e.message : String(e)}`);
+        }
         await this.cleanup(taskId, false);
         this.goalProgress(t.goalId);
       } else if (r.conflict) {
@@ -955,6 +999,274 @@ export class TeamBackend implements Backend, TeamApi {
     }
     this.save();
     this.pump();
+  }
+
+  // ------------------------------------------------------------------ deploy and in-game QA
+
+  /** After a merge: build the plugin jar and ask the admins whether to install it on staging. */
+  private async offerDeploy(taskId: string): Promise<void> {
+    const t = this.task(taskId);
+    const rt = this.rt(taskId);
+    if (!this.o.tools || !rt.worktree || this.o.cfg.deployAfterMerge === false) return;
+    const module = t.module ?? rt.paths[0];
+    const info = readPluginInfo(rt.worktree, module);
+    if (!info) return; // not a Minecraft plugin
+    const devs = [...this.o.state.agents.values()].filter((a) => a.role === 'developer');
+    const agentId =
+      (t.assignee && this.o.state.agents.get(t.assignee)?.role === 'developer' ? t.assignee : devs[0]?.id) ??
+      'lucciola';
+    this.setAgent(agentId, 'running', 'terminal', `jar di ${info.name}`, taskId);
+    const built = await (this.o.packager ?? packageJar)(
+      rt.worktree,
+      module,
+      agentEnv(this.o.baseEnv ?? process.env, rt.worktree, this.identity(agentId)),
+    );
+    if (!built.jar) {
+      this.o.state.addFeed({ kind: 'ci', text: `${taskId}: jar non creato (${built.error})`, agentId });
+      return;
+    }
+    const dir = join(this.o.home, 'deploy');
+    mkdirSync(dir, { recursive: true });
+    const jar = join(dir, `${taskId}-${basename(built.jar)}`);
+    copyFileSync(built.jar, jar);
+    const s = this.o.state;
+    const id = s.nextId('d');
+    (this.data.deploys ??= {})[id] = {
+      taskId,
+      agentId,
+      jar,
+      plugin: info.name,
+      version: info.version,
+      commands: info.commands,
+      change: (t.summary ?? t.title).slice(0, 1000),
+      repoId: rt.repoId,
+      module,
+      goalId: t.goalId,
+    };
+    s.putDecision({
+      id,
+      agentId,
+      kind: 'deploy',
+      question: `Installare ${info.name} ${info.version} sul server di prova?`.slice(0, 500),
+      options: DEPLOY_OPTIONS,
+      context: [
+        `Da ${taskId}: ${t.title}`,
+        `Jar: ${basename(jar)} (${Math.round(statSync(jar).size / 1024)} KB, sha256 ${sha256(jar).slice(0, 16)}…)`,
+        'Il jar vecchio viene sostituito al riavvio. Dopo il riavvio Briciola lo collauda in gioco.',
+      ].join('\n'),
+      status: 'open',
+      taskId,
+      createdAt: this.o.clock.now(),
+    });
+    s.notify('need_user', `${info.name} ${info.version} pronto da installare`);
+    this.save();
+  }
+
+  private async onDeployAnswer(d: DecisionT): Promise<void> {
+    const offer = this.data.deploys![d.id]!;
+    delete this.data.deploys![d.id];
+    this.save();
+    const option = d.answer?.option;
+    const s = this.o.state;
+    if (option !== INSTALL_AND_RESTART && option !== INSTALL_ONLY) {
+      s.addFeed({ kind: 'system', text: `${offer.plugin} ${offer.version} non installato` });
+      return;
+    }
+    const tools = this.o.tools!;
+    const by = d.answer?.by ?? 'admin';
+    const r = await tools.callTool(
+      offer.agentId,
+      { tool: 'server.deploy', args: { file: offer.jar, approvalId: d.id } },
+      { requestedBy: by, taskId: offer.taskId, deadlineMs: 60_000 },
+    );
+    if (!r.ok) {
+      s.notify('warn', `Installazione di ${offer.plugin} non riuscita: ${r.error?.message ?? 'errore'}`);
+      return;
+    }
+    const res = (r.result ?? {}) as { installedAs?: string };
+    s.addFeed({
+      kind: 'system',
+      text: `${offer.plugin} ${offer.version} installato (${res.installedAs ?? '?'}), attivo dopo il riavvio`,
+      agentId: offer.agentId,
+    });
+    const qa = [...s.agents.values()].find((a) => a.role === 'qa' && a.active);
+    if (qa) (this.data.pendingQa ??= []).push(offer);
+    this.save();
+    if (option === INSTALL_AND_RESTART) {
+      const rr = await tools.callTool(
+        offer.agentId,
+        { tool: 'server.restart', args: { approvalId: d.id, delaySeconds: 15 } },
+        { requestedBy: by, taskId: offer.taskId, deadlineMs: 30_000 },
+      );
+      if (rr.ok) s.addFeed({ kind: 'system', text: 'Il server si riavvia tra 15 secondi' });
+      else s.notify('warn', `Riavvio non eseguito (${rr.error?.message ?? 'errore'}): riavviate a mano`);
+    } else {
+      s.notify('info', `${offer.plugin} sarà attivo al prossimo riavvio del server`);
+    }
+  }
+
+  /** Called when the connected plugins change: after a restart, start the pending in-game tests. */
+  onSessionsChanged(sessions: { server: { id: string; role: string } }[]): void {
+    if (!sessions.some((x) => x.server.role === 'staging') || !this.data.pendingQa?.length) return;
+    const pending = this.data.pendingQa.splice(0);
+    this.save();
+    setTimeout(() => {
+      for (const offer of pending) this.startIngameQa(offer);
+    }, this.o.ingameDelayMs ?? 20_000).unref?.();
+  }
+
+  private startIngameQa(offer: DeployOffer): void {
+    const s = this.o.state;
+    const qa = [...s.agents.values()].find((a) => a.role === 'qa' && a.active);
+    if (!qa) return;
+    const now = this.o.clock.now();
+    const t = s.putTask({
+      id: s.nextId('t'),
+      title: `Collaudo in gioco di ${offer.plugin} ${offer.version}`.slice(0, 200),
+      description: offer.change,
+      kind: 'qa',
+      status: 'todo',
+      assignee: qa.id,
+      deps: [],
+      ...(offer.goalId ? { goalId: offer.goalId } : {}),
+      priority: 1,
+      ci: 'unknown',
+      createdBy: 'foreman',
+      createdAt: now,
+      updatedAt: now,
+    });
+    this.rt(t.id).ingame = offer;
+    s.addFeed({ kind: 'task', text: `${t.id}: ${qa.name} collauda ${offer.plugin} in gioco`, agentId: qa.id });
+    this.save();
+    this.pump();
+  }
+
+  private async ingame(t: TaskT, agentId: string, signal: AbortSignal): Promise<void> {
+    const rt = this.rt(t.id);
+    this.o.state.patchTask(t.id, { status: 'doing' });
+    this.setAgent(agentId, 'testing', 'testbench', `collauda ${rt.ingame!.plugin}`, t.id, true);
+    const feedback = rt.feedback;
+    rt.feedback = undefined;
+    const res = await this.turn({
+      agentId,
+      cwd: this.scratch(t.id),
+      writer: false,
+      repo: undefined,
+      prompt: ingamePrompt(t, rt.ingame!, feedback),
+      resume: rt.sessions[agentId],
+      signal,
+      taskId: t.id,
+    });
+    if (res.sessionId) rt.sessions[agentId] = res.sessionId;
+    if (signal.aborted) return;
+    const now = this.task(t.id);
+    if (now.status === 'done' || now.status === 'blocked' || now.status === 'cancelled') return;
+    if (!res.ok) {
+      this.o.state.patchTask(t.id, {
+        status: 'blocked',
+        blockedReason: `collaudo non riuscito: ${res.error ?? 'errore'}`.slice(0, 400),
+      });
+      return;
+    }
+    if (!rt.nudged) {
+      rt.nudged = true;
+      rt.feedback = 'You ended your turn without qa_report. Finish the test and call qa_report.';
+      this.enqueue({ kind: 'work', taskId: t.id });
+    } else {
+      this.o.state.patchTask(t.id, { status: 'blocked', blockedReason: 'collaudo finito senza report' });
+    }
+  }
+
+  qaReport(
+    agentId: string,
+    r: {
+      passed: boolean;
+      summary: string;
+      bugs: { title: string; steps: string; expected: string; actual: string; severity: string }[];
+    },
+  ): string {
+    const t = [...this.o.state.tasks.values()].find(
+      (x) => x.assignee === agentId && x.status === 'doing' && this.data.runtime[x.id]?.ingame,
+    );
+    if (!t) throw new Error('you have no in-game test in progress');
+    const offer = this.rt(t.id).ingame!;
+    const bugs = r.bugs
+      .map(
+        (b, i) =>
+          `### ${i + 1}. ${b.title} (${b.severity})\n\nPassi: ${b.steps}\n\nAtteso: ${b.expected}\n\nSuccede: ${b.actual}`,
+      )
+      .join('\n\n');
+    const report = `# Collaudo di ${offer.plugin} ${offer.version} (${t.id})\n\nEsito: ${r.passed ? 'superato' : 'NON superato'}\n\n${r.summary}\n\n## Bug\n\n${bugs || 'nessuno'}\n`;
+    const dir = join(this.o.home, 'reports');
+    mkdirSync(dir, { recursive: true });
+    const file = join(dir, `${t.id}-${offer.plugin}.md`);
+    writeFileSync(file, report);
+    const s = this.o.state;
+    s.patchTask(t.id, {
+      status: 'done',
+      summary: `${r.passed ? 'Superato' : 'NON superato'}, ${r.bugs.length} bug. ${r.summary}`.slice(0, 4000),
+    });
+    s.addFeed({
+      kind: 'ci',
+      text: `Collaudo di ${offer.plugin}: ${r.passed ? 'superato' : 'NON superato'}, ${r.bugs.length} bug (report: ${file})`.slice(
+        0,
+        400,
+      ),
+      agentId,
+    });
+    if (r.bugs.length > 0) {
+      const id = s.nextId('d');
+      (this.data.bugfixes ??= {})[id] = { offer, bugs: report };
+      s.putDecision({
+        id,
+        agentId,
+        kind: 'question',
+        question: `${r.bugs.length} bug trovati in ${offer.plugin}. Li faccio correggere?`,
+        options: ['Correggi', 'Ignora'],
+        context: r.bugs
+          .map((b, i) => `${i + 1}. [${b.severity}] ${b.title}`)
+          .join('\n')
+          .slice(0, 4000),
+        status: 'open',
+        taskId: t.id,
+        createdAt: this.o.clock.now(),
+      });
+      s.notify('need_user', `Bug trovati in ${offer.plugin}`);
+    }
+    this.goalProgress(t.goalId);
+    this.save();
+    return 'Report saved. End your turn.';
+  }
+
+  private onBugfixAnswer(d: DecisionT): void {
+    const fix = this.data.bugfixes![d.id]!;
+    delete this.data.bugfixes![d.id];
+    this.save();
+    if (d.answer?.option !== 'Correggi') return;
+    const dev = [...this.o.state.agents.values()].find((a) => a.role === 'developer' && a.active);
+    this.createTask('foreman', {
+      title: `Correggere i bug del collaudo di ${fix.offer.plugin}`,
+      description: `${fix.bugs}\n${d.answer?.text ? `Nota degli admin: ${d.answer.text}` : ''}`.slice(0, 8000),
+      kind: 'code',
+      ...(dev ? { assignee: dev.id } : {}),
+      deps: [],
+      ...(fix.offer.module ? { module: fix.offer.module, paths: [fix.offer.module] } : { paths: [] }),
+    });
+  }
+
+  async serverTool(
+    agentId: string,
+    tool: 'server.metrics' | 'server.logs' | 'server.command' | 'player.simulate',
+    args: Record<string, unknown>,
+  ): Promise<string> {
+    if (!this.o.tools) return 'The server is not reachable (no plugin connection).';
+    const r = await this.o.tools.callTool(agentId, { tool, args } as never, {
+      requestedBy: agentId,
+      deadlineMs: tool === 'player.simulate' ? 150_000 : 30_000,
+    });
+    if (!r.ok) return `Error (${r.error?.code}): ${r.error?.message}`;
+    const text = JSON.stringify(r.result);
+    return text.length > 30_000 ? `${text.slice(0, 30_000)}… (truncated)` : text;
   }
 
   private async cleanup(taskId: string, cancel = true): Promise<void> {

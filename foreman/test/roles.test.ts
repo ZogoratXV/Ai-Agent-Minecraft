@@ -15,7 +15,10 @@ describe('roles and cast', () => {
   it('only builders may place blocks, only qa may simulate players', () => {
     for (const [role, spec] of Object.entries(ROLES)) {
       expect(spec.worldTools.includes('world.place'), role).toBe(role === 'builder');
-      for (const t of STAGING_ONLY_TOOLS) expect(spec.worldTools.includes(t), role).toBe(role === 'qa');
+      expect(spec.worldTools.includes('player.simulate'), role).toBe(role === 'qa');
+      for (const t of STAGING_ONLY_TOOLS.filter((x) => x.startsWith('server.'))) {
+        expect(spec.worldTools.includes(t), role).toBe(role === 'developer');
+      }
     }
   });
 

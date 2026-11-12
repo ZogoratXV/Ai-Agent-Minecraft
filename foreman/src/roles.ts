@@ -28,8 +28,13 @@ export interface RoleSpec {
 const READ_WORLD: readonly ToolName[] = ['world.inspect', 'server.logs', 'server.metrics', 'body.move', 'body.say'];
 
 export const ROLES: Record<Role, RoleSpec> = {
-  lead: { tier: 'lead', code: false, worldTools: READ_WORLD, leadTools: true },
-  developer: { tier: 'worker', code: true, worldTools: ['body.move', 'body.say'], leadTools: false },
+  lead: { tier: 'lead', code: false, worldTools: [...READ_WORLD, 'server.command'], leadTools: true },
+  developer: {
+    tier: 'worker',
+    code: true,
+    worldTools: [...READ_WORLD, 'server.command', 'server.deploy', 'server.restart'],
+    leadTools: false,
+  },
   qa: {
     tier: 'worker',
     code: true,
@@ -43,7 +48,7 @@ export const ROLES: Record<Role, RoleSpec> = {
     worldTools: [...READ_WORLD, 'world.place', 'world.undo'],
     leadTools: false,
   },
-  analyst: { tier: 'worker', code: false, worldTools: READ_WORLD, leadTools: false },
+  analyst: { tier: 'worker', code: false, worldTools: [...READ_WORLD, 'server.command'], leadTools: false },
 };
 
 export function toolsFor(role: Role): string[] {

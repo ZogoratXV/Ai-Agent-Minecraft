@@ -29,13 +29,28 @@ export interface TeamApi {
   drainInbox(agentId: string): string;
   worldRegions(agentId: string): Promise<string>;
   worldInspect(agentId: string, region: string): Promise<string>;
+  serverTool(
+    agentId: string,
+    tool: 'server.metrics' | 'server.logs' | 'server.command' | 'player.simulate',
+    args: Record<string, unknown>,
+  ): Promise<string>;
+  qaReport(
+    agentId: string,
+    r: {
+      passed: boolean;
+      summary: string;
+      bugs: { title: string; steps: string; expected: string; actual: string; severity: string }[];
+    },
+  ): string;
   submitBlueprint(
     agentId: string,
     a: { blueprint: unknown; region: string; anchor?: [number, number, number]; rotation?: 0 | 90 | 180 | 270 },
   ): Promise<string>;
 }
 
-export function buildTools(agentId: string, lead: boolean, api: TeamApi, architect = false): ToolDef[] {
+export function buildTools(agentId: string, role: string, api: TeamApi, ingame = false): ToolDef[] {
+  const lead = role === 'lead';
+  const architect = role === 'architect';
   const wrap =
     (fn: (args: Record<string, unknown>) => string | Promise<string>) => async (args: Record<string, unknown>) => {
       try {
@@ -137,7 +152,84 @@ export function buildTools(agentId: string, lead: boolean, api: TeamApi, archite
       },
     );
   }
-  if (!lead && !architect) {
+  if (['qa', 'analyst', 'lead', 'developer'].includes(role)) {
+    tools.push(
+      {
+        name: 'server_metrics',
+        description:
+          'Live state of the Minecraft server: TPS, MSPT, memory, players, chunks and entities per world, plugins and versions.',
+        shape: {},
+        handler: wrap(() => api.serverTool(agentId, 'server.metrics', {})),
+      },
+      {
+        name: 'server_logs',
+        description:
+          'Last lines of the server log (newest last), optionally only those containing filter. IPs and secrets are hidden.',
+        shape: { filter: z.string().max(200).optional(), limit: z.number().int().min(1).max(500).default(100) },
+        handler: wrap((a) =>
+          api.serverTool(agentId, 'server.logs', { limit: a.limit ?? 100, ...(a.filter ? { filter: a.filter } : {}) }),
+        ),
+      },
+      {
+        name: 'server_command',
+        description:
+          'Run a command and get its output. as "console" only for the commands the admins allowed; as "fakeplayer" the test player runs it with normal player permissions (staging).',
+        shape: { command: z.string().min(1).max(256), as: z.enum(['console', 'fakeplayer']).default('console') },
+        handler: wrap((a) =>
+          api.serverTool(agentId, 'server.command', {
+            command: String(a.command).replace(/^\//, ''),
+            as: a.as ?? 'console',
+          }),
+        ),
+      },
+    );
+  }
+  if (role === 'qa') {
+    tools.push({
+      name: 'player_simulate',
+      description:
+        'Staging only. The test player performs actions in order: {"kind":"command","command":"..."}, {"kind":"chat","text":"..."}, {"kind":"move","to":{"world","x","y","z"}}, {"kind":"interact","at":{"world","x","y","z"},"hand":"right"}, {"kind":"click_slot","slot":0} (in the open inventory), {"kind":"wait","ticks":20}. Returns the result of each action and the open inventory (title and items), so GUIs can be tested.',
+      shape: { actions: z.array(z.record(z.string(), z.unknown())).min(1).max(200) },
+      handler: wrap((a) => api.serverTool(agentId, 'player.simulate', { actions: a.actions })),
+    });
+  }
+  if (ingame) {
+    tools.push({
+      name: 'qa_report',
+      description:
+        'Finish the in-game test: passed, an Italian summary of what you tried, and every bug found (title, steps to reproduce, expected, actual, severity low|medium|high).',
+      shape: {
+        passed: z.boolean(),
+        summary: z.string().min(1).max(4000),
+        bugs: z
+          .array(
+            z.object({
+              title: z.string().min(1).max(200),
+              steps: z.string().max(2000),
+              expected: z.string().max(1000),
+              actual: z.string().max(1000),
+              severity: z.enum(['low', 'medium', 'high']),
+            }),
+          )
+          .max(30)
+          .default([]),
+      },
+      handler: wrap((a) =>
+        api.qaReport(agentId, {
+          passed: Boolean(a.passed),
+          summary: String(a.summary),
+          bugs: (a.bugs ?? []) as {
+            title: string;
+            steps: string;
+            expected: string;
+            actual: string;
+            severity: string;
+          }[],
+        }),
+      ),
+    });
+  }
+  if (!lead && !architect && !ingame) {
     tools.push({
       name: 'update_task',
       description:

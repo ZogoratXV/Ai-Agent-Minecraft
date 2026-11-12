@@ -73,6 +73,7 @@ const state = new TeamState(realClock, {
 for (const agent of buildTeam(cfg)) state.agents.set(agent.id, agent);
 
 const foreman = new Foreman(state, realClock);
+const hooks: { backend?: Backend } = {};
 const bridge = new Bridge({
   host: cfg.host,
   port: cfg.port,
@@ -82,8 +83,10 @@ const bridge = new Bridge({
     log(`${session.server.id}: ${intent.type}`);
     return foreman.handle(intent);
   },
-  onSessionChange: (s) =>
-    log(`connected plugins: ${s.map((x) => `${x.server.id}(${x.server.role})`).join(', ') || 'none'}`),
+  onSessionChange: (s) => {
+    log(`connected plugins: ${s.map((x) => `${x.server.id}(${x.server.role})`).join(', ') || 'none'}`);
+    hooks.backend?.onSessionsChanged?.(s);
+  },
   log,
 });
 state.on('message', (m) => bridge.broadcast(m));
@@ -121,6 +124,7 @@ if (cfg.backend === 'sim') {
   backend = team;
 }
 foreman.setBackend(backend);
+hooks.backend = backend;
 backend.start();
 if (cfg.backend === 'claude' && cfg.useClaudeLogin) {
   log('Agents use a Claude subscription (personal use only): its usage limits are shared with your own Claude use.');

@@ -121,3 +121,19 @@ Blueprint format (JSON):
 Example (a 9x9x9 medieval house):
 ${example}`;
 }
+
+export function ingamePrompt(
+  task: TaskT,
+  info: { plugin: string; version: string; commands: string[]; change: string },
+  feedback?: string,
+): string {
+  return `${feedback ? `${feedback}\n\n` : ''}In-game test ${task.id}: ${info.plugin} ${info.version} was just installed on the staging Minecraft server.
+What changed: ${info.change || '(see the plugin)'}
+Its commands: ${info.commands.length ? info.commands.map((c) => `/${c}`).join(', ') : '(unknown: try /help ' + info.plugin + ')'}
+
+1. server_metrics: check the plugin is loaded and enabled with this version, and the server is healthy.
+2. server_logs with filter "${info.plugin}" and "exception": look for errors at start-up.
+3. Try the changed feature and the main commands as a normal player with player_simulate (commands, chat, clicking blocks, GUI slots; read the open inventory it returns). Use server_command as console only for allowed commands.
+4. After each step check server_logs for new errors.
+5. Call qa_report once: passed, an Italian summary of what you tried, and every bug with steps to reproduce. Do not change any code and never touch players' data. Then end your turn.`;
+}

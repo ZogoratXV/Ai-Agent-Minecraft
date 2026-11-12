@@ -125,6 +125,20 @@ export class SimBackend implements Backend {
     await this.step(a);
     await this.act(a, 'testing', 'testbench', `testing ${t.id}`, t.id);
     await this.say(a, 'Provo i comandi sul server di staging.');
+    // real reads of the server, so the simulated team exercises the plugin's server tools too
+    const m = await this.tools.callTool(a, { tool: 'server.metrics', args: {} }, { requestedBy: a, taskId: t.id });
+    const tps = ((m.result ?? {}) as { tps1m5m15m?: number[] }).tps1m5m15m?.[0];
+    await this.tools.callTool(
+      a,
+      { tool: 'server.logs', args: { limit: 20, filter: 'agentcraft' } },
+      { requestedBy: a, taskId: t.id },
+    );
+    await this.tools.callTool(
+      a,
+      { tool: 'server.command', args: { command: 'list', as: 'console' } },
+      { requestedBy: a, taskId: t.id },
+    );
+    if (m.ok && tps !== undefined) this.state.addFeed({ kind: 'ci', text: `Server a ${tps} TPS`, agentId: a });
     await this.step(a);
     if (!this.alive(t.id)) return;
 

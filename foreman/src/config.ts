@@ -66,6 +66,8 @@ export const ConfigSchema = z.object({
   host: z.string().default('127.0.0.1').refine(isPrivateHost, 'host must be loopback or a private network address'),
   port: z.number().int().min(1024).max(65535).default(7878),
   /** state root: tasks, decisions, memory, worktrees, logs */
+  /** after a merge of a plugin: build its jar and offer to install it on the staging server */
+  deployAfterMerge: z.boolean().default(true),
   home: z.string().default('.agentcraft'),
   backend: z.enum(['sim', 'claude']).default('sim'),
   tokenFile: z.string().optional(),

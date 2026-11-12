@@ -182,7 +182,14 @@ export class TeamBackend implements Backend, TeamApi {
       const tasks = [...s.tasks.values()].filter((t) => t.goalId === g.id);
       if (g.status === 'planning' && tasks.length === 0) this.enqueue({ kind: 'plan', goalId: g.id });
     }
-    for (const t of s.tasks.values()) {
+    for (const t0 of s.tasks.values()) {
+      let t = t0;
+      // 0.3.0: tasks given to the architect could be created as 'generic' and got stuck
+      if (t.kind !== 'build' && t.assignee && s.agents.get(t.assignee)?.role === 'architect') {
+        if (t.status === 'done' || t.status === 'cancelled') continue;
+        s.patchTask(t.id, { kind: 'build', status: 'doing' });
+        t = s.tasks.get(t.id)!;
+      }
       if (t.kind === 'build' && (t.status === 'doing' || t.status === 'review')) {
         // an open build decision does not survive a restart: the architect submits again
         if (t.status === 'review') s.patchTask(t.id, { status: 'doing' });
@@ -537,6 +544,7 @@ export class TeamBackend implements Backend, TeamApi {
     const rt = this.rt(t.id);
     this.o.state.patchTask(t.id, { status: 'doing' });
     this.setAgent(agentId, 'thinking', 'desk', `progetta ${t.id}`, t.id, true);
+    this.o.state.addFeed({ kind: 'build', text: `inizia il progetto di "${t.title}" (qualche minuto)`, agentId });
     const feedback = rt.feedback;
     rt.feedback = undefined;
     const res = await this.turn({
@@ -553,10 +561,7 @@ export class TeamBackend implements Backend, TeamApi {
     if (signal.aborted) return;
     const now = this.task(t.id);
     if (!res.ok) {
-      this.o.state.patchTask(t.id, {
-        status: 'blocked',
-        blockedReason: `progetto non riuscito: ${res.error ?? 'errore'}`.slice(0, 400),
-      });
+      this.designFailed(t.id, agentId, `progetto non riuscito: ${res.error ?? 'errore'}`);
       return;
     }
     if (now.status === 'review' || now.status === 'blocked' || now.status === 'cancelled') return;
@@ -565,18 +570,38 @@ export class TeamBackend implements Backend, TeamApi {
       rt.feedback = 'You ended your turn without submit_blueprint. Design the building and submit it.';
       this.enqueue({ kind: 'work', taskId: t.id });
     } else {
-      this.o.state.patchTask(t.id, { status: 'blocked', blockedReason: 'nessun progetto consegnato' });
+      this.designFailed(t.id, agentId, 'nessun progetto consegnato');
     }
+  }
+
+  private designFailed(taskId: string, agentId: string, reason: string): void {
+    this.o.state.patchTask(taskId, { status: 'blocked', blockedReason: reason.slice(0, 400) });
+    this.o.state.addFeed({
+      kind: 'build',
+      text: `${taskId} bloccato: ${reason} (riprova con /agent task ${taskId} retry)`.slice(0, 400),
+      agentId,
+    });
+    this.setAgent(agentId, 'error', 'base', `${taskId} bloccato`);
+  }
+
+  private buildTaskOf(agentId: string): TaskT | undefined {
+    return [...this.o.state.tasks.values()].find(
+      (x) => x.assignee === agentId && x.kind === 'build' && x.status === 'doing',
+    );
   }
 
   async worldRegions(agentId: string): Promise<string> {
     if (!this.o.tools) return 'Building is not available (no plugin connection).';
+    this.o.state.addFeed({ kind: 'build', text: 'guarda le regioni autorizzate', agentId });
     const r = await this.o.tools.callTool(agentId, { tool: 'world.regions', args: {} }, { requestedBy: agentId });
     return r.ok ? JSON.stringify(r.result) : `Error: ${r.error?.message}`;
   }
 
   async worldInspect(agentId: string, region: string): Promise<string> {
     if (!this.o.tools) return 'Building is not available (no plugin connection).';
+    this.o.state.addFeed({ kind: 'build', text: `esamina la regione ${region.slice(0, 64)}`, agentId });
+    const t = this.buildTaskOf(agentId);
+    if (t) this.setAgent(agentId, 'thinking', 'desk', `disegna ${t.id}`, t.id, true);
     const r = await this.o.tools.callTool(
       agentId,
       { tool: 'world.inspect', args: { region: { region }, detail: 'summary' } },
@@ -590,9 +615,7 @@ export class TeamBackend implements Backend, TeamApi {
     a: { blueprint: unknown; region: string; anchor?: [number, number, number]; rotation?: 0 | 90 | 180 | 270 },
   ): Promise<string> {
     if (!this.builds) return 'Building is not available (no plugin connection).';
-    const t = [...this.o.state.tasks.values()].find(
-      (x) => x.assignee === agentId && x.kind === 'build' && x.status === 'doing',
-    );
+    const t = this.buildTaskOf(agentId);
     if (!t) throw new Error('you have no build task in progress');
     const goal = t.goalId ? this.o.state.goals.get(t.goalId) : undefined;
     const err = await this.builds.propose({
@@ -604,7 +627,10 @@ export class TeamBackend implements Backend, TeamApi {
       ...(a.rotation !== undefined ? { rotation: a.rotation } : {}),
       requestedBy: goal?.createdBy ?? agentId,
     });
-    if (err) return `Not accepted: ${err}. Fix it and call submit_blueprint again.`;
+    if (err) {
+      this.o.state.addFeed({ kind: 'build', text: `corregge il progetto: ${err}`.slice(0, 300), agentId });
+      return `Not accepted: ${err}. Fix it and call submit_blueprint again.`;
+    }
     this.o.state.patchTask(t.id, { status: 'review', summary: `Progetto consegnato per la regione ${a.region}.` });
     return 'Submitted: the admins see the preview and decide. End your turn now.';
   }
@@ -1051,9 +1077,14 @@ export class TeamBackend implements Backend, TeamApi {
     const goal = [...s.goals.values()].filter((g) => g.status === 'planning' || g.status === 'active').pop();
     for (const d of a.deps) if (!s.tasks.has(d)) throw new Error(`unknown dependency '${d}'`);
     if (a.assignee && !s.agents.has(a.assignee)) throw new Error(`unknown agent '${a.assignee}'`);
-    const kind = (
-      ['code', 'qa', 'analysis', 'build', 'generic'].includes(a.kind) ? a.kind : 'generic'
-    ) as TaskT['kind'];
+    let kind = (['code', 'qa', 'analysis', 'build', 'generic'].includes(a.kind) ? a.kind : 'generic') as TaskT['kind'];
+    // constructions always go to an architect, and an architect only does constructions
+    if (a.assignee && s.agents.get(a.assignee)?.role === 'architect') kind = 'build';
+    if (kind === 'build' && (!a.assignee || s.agents.get(a.assignee)?.role !== 'architect')) {
+      const architect = [...s.agents.values()].find((x) => x.role === 'architect' && x.active);
+      if (!architect) throw new Error('no architect on duty for a build task: ask the admins to /agent spawn one');
+      a = { ...a, assignee: architect.id };
+    }
     const now = this.o.clock.now();
     const t = s.putTask({
       id: s.nextId('t'),
@@ -1064,7 +1095,7 @@ export class TeamBackend implements Backend, TeamApi {
       ...(a.assignee ? { assignee: a.assignee } : {}),
       deps: a.deps,
       ...(goal ? { goalId: goal.id } : {}),
-      ...(this.defaultRepo() ? { repoId: this.defaultRepo()!.id } : {}),
+      ...(kind !== 'build' && this.defaultRepo() ? { repoId: this.defaultRepo()!.id } : {}),
       priority: a.priority ?? 0,
       ...(a.module ? { module: a.module } : {}),
       ci: 'unknown',
@@ -1075,7 +1106,7 @@ export class TeamBackend implements Backend, TeamApi {
     const rt = this.rt(t.id);
     rt.paths = a.paths.filter((p) => !p.includes('..'));
     const repo = this.defaultRepo();
-    if (repo) rt.repoId = repo.id;
+    if (repo && kind !== 'build') rt.repoId = repo.id;
     this.save();
     this.pump();
     return `Created ${t.id}.`;

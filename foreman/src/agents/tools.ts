@@ -121,14 +121,14 @@ export function buildTools(agentId: string, lead: boolean, api: TeamApi, archite
         description:
           'Submit your blueprint (format described in your instructions) for a region. It is validated, shown to the admins as ghost blocks and they decide. Fix and resubmit if it returns errors. anchor = world block where blueprint (0,0,0) goes (default: region min corner); rotation 0/90/180/270 clockwise.',
         shape: {
-          blueprint: z.record(z.string(), z.unknown()),
+          blueprint: z.union([z.record(z.string(), z.unknown()), z.string().max(2_000_000)]),
           region: z.string().min(1).max(64),
           anchor: z.tuple([z.number().int(), z.number().int(), z.number().int()]).optional(),
           rotation: z.union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)]).optional(),
         },
         handler: wrap((a) =>
           api.submitBlueprint(agentId, {
-            blueprint: a.blueprint,
+            blueprint: parseBlueprintArg(a.blueprint),
             region: String(a.region),
             ...(a.anchor ? { anchor: a.anchor as [number, number, number] } : {}),
             ...(a.rotation !== undefined ? { rotation: a.rotation as 0 | 90 | 180 | 270 } : {}),
@@ -157,7 +157,7 @@ export function buildTools(agentId: string, lead: boolean, api: TeamApi, archite
       {
         name: 'create_task',
         description:
-          'Create a task on the board. kind: code | qa | analysis | generic. assignee: a worker id of the right role. deps: task ids that must be done first. module: the folder it changes. paths: folders to check out for it.',
+          'Create a task on the board. kind: code | qa | analysis | build | generic (build = a construction in the Minecraft world, always assigned to the architect). assignee: a worker id of the right role. deps: task ids that must be done first. module: the folder it changes. paths: folders to check out for it.',
         shape: {
           title: z.string().min(1).max(120),
           description: z.string().max(4000).optional(),
@@ -197,4 +197,14 @@ export function buildTools(agentId: string, lead: boolean, api: TeamApi, archite
     );
   }
   return tools;
+}
+
+/** Models sometimes pass the blueprint as a JSON string instead of an object. */
+export function parseBlueprintArg(v: unknown): unknown {
+  if (typeof v !== 'string') return v;
+  try {
+    return JSON.parse(v) as unknown;
+  } catch {
+    throw new Error('blueprint is not valid JSON: pass it as an object');
+  }
 }

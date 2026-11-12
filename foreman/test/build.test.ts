@@ -211,4 +211,81 @@ describe('building (real team, scripted agents)', () => {
     expect(turns).toEqual(['bussola', 'matita']); // no AI turns for placing blocks
     team.stop();
   });
+
+  it('a generic task given to the architect becomes a build, and a JSON-string blueprint is accepted', async () => {
+    const house = JSON.parse(
+      readFileSync(join(import.meta.dirname, '../../blueprints/examples/casa-medievale.json'), 'utf8'),
+    );
+    const turns: string[] = [];
+    let firstError = '';
+    const runner: Runner = {
+      async run(spec: TurnSpec): Promise<TurnResult> {
+        turns.push(spec.agentId);
+        const call = (name: string, args: Record<string, unknown>) =>
+          spec.tools.find((t) => t.name === name)!.handler(args);
+        if (spec.agentId === 'bussola') {
+          expect(spec.prompt).toContain('kind "build"');
+          await call('create_task', {
+            title: 'Casa medievale in piazza',
+            kind: 'generic',
+            assignee: 'matita',
+            deps: [],
+            paths: [],
+          });
+        }
+        if (spec.agentId === 'matita') {
+          expect(spec.tools.map((t) => t.name)).toEqual(
+            expect.arrayContaining(['world_regions', 'world_inspect', 'submit_blueprint']),
+          );
+          expect(spec.tools.map((t) => t.name)).not.toContain('update_task');
+          expect(await call('world_regions', {})).toContain('piazza');
+          firstError = await call('submit_blueprint', { blueprint: { ...house, palette: {} }, region: 'piazza' });
+          expect(await call('submit_blueprint', { blueprint: JSON.stringify(house), region: 'piazza' })).toContain(
+            'Submitted',
+          );
+        }
+        return { ok: true, costUsd: 0.01, text: 'ok', sessionId: `s-${spec.agentId}` };
+      },
+    };
+    const home = mkdtempSync(join(tmpdir(), 'ac-build-'));
+    const state = newState();
+    const cfg = ConfigSchema.parse({ backend: 'claude' });
+    for (const a of buildTeam(cfg)) state.agents.set(a.id, a);
+    const world = new FakeWorld();
+    const team = new TeamBackend({
+      cfg,
+      state,
+      repos: new RepoManager(join(home, 'wt')),
+      memory: new Memory(join(home, 'mem')),
+      runner,
+      store: new Store(home),
+      clock: realClock,
+      cast: DEFAULT_CAST,
+      home,
+      baseEnv: { ...process.env, ANTHROPIC_API_KEY: 'k' },
+      tools: world,
+    });
+    const foreman = new Foreman(state, realClock, team);
+    world.foreman = foreman;
+    team.start();
+    const { goalId } = foreman.handle({
+      v: 1,
+      type: 'goal.submit',
+      actor,
+      text: 'costruite una casa medievale in piazza',
+    }) as { goalId: string };
+    const d = await open(state, 'build');
+    expect(firstError).toContain('not in the palette'); // a broken blueprint went back to the architect
+    expect(state.tasks.get('t1')).toMatchObject({ kind: 'build', status: 'review', assignee: 'matita' });
+    foreman.handle({ v: 1, type: 'decision.answer', actor, decisionId: d.id, option: '1' });
+    await expect.poll(() => state.goals.get(goalId)?.status, { timeout: 5000, interval: 5 }).toBe('done');
+    expect(
+      world.calls
+        .filter((c) => c.call.tool === 'world.place')
+        .map((c) => c.agentId)
+        .every((a) => a === 'mattone'),
+    ).toBe(true);
+    expect(turns).toEqual(['bussola', 'matita']); // no AI turns for placing blocks
+    team.stop();
+  });
 });

@@ -1,36 +1,35 @@
 {
   "palette": {
-    "c_hi": "#f2fbf4",
-    "c_lt": "#b3e6e6",
-    "c_mid": "#8fbfe6",
-    "c_vi": "#aa86d6",
-    "c_dk": "#5d3f86",
-    "leaf_lt": "#a9c785"
+    "c_hi": "#f2ffff",
+    "c_lt": "#8ef3ff",
+    "c_mid": "#46c8f5",
+    "c_vi": "#a26af5",
+    "c_dk": "#5b2db0"
   },
   "ramps": {
     "wood": {
-      "base": "#c99a65",
+      "base": "#d68a43",
       "steps": 5,
-      "hueShift": 12,
+      "hueShift": 14,
       "contrast": 0.17,
-      "saturationShift": 0.04
+      "saturationShift": 0.06
     },
     "cloth": {
-      "base": "#55639a",
+      "base": "#4c4fd0",
       "steps": 5,
-      "hueShift": 10,
-      "contrast": 0.13,
-      "saturationShift": 0.04
+      "hueShift": 12,
+      "contrast": 0.14,
+      "saturationShift": 0.05
     },
     "leather": {
-      "base": "#8a5434",
+      "base": "#a64e28",
       "steps": 3,
       "hueShift": 10,
       "contrast": 0.15,
-      "saturationShift": 0.04
+      "saturationShift": 0.05
     },
     "iron": {
-      "base": "#8197a6",
+      "base": "#7d9cbb",
       "steps": 4,
       "hueShift": 8,
       "contrast": 0.15,
@@ -322,56 +321,18 @@
       "color": "wood1"
     },
     {
-      "op": "pattern",
+      "op": "rect",
       "target": {
         "cubes": [
-          "knot_a",
-          "knot_b"
+          "shaft_low"
         ],
         "faces": "sides"
       },
-      "rows": [
-        "333",
-        "201",
-        "111",
-        "000"
-      ],
-      "key": {
-        "0": "wood0",
-        "1": "wood1",
-        "2": "wood2",
-        "3": "wood3"
-      },
       "x": 0,
       "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": [
-          "knot_a",
-          "knot_b"
-        ],
-        "faces": [
-          "up"
-        ]
-      },
-      "color": "wood3"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": [
-          "knot_a",
-          "knot_b"
-        ],
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "wood0"
+      "w": 4,
+      "h": 1,
+      "color": "wood1"
     },
     {
       "op": "fill",
@@ -589,57 +550,6 @@
       "w": 3,
       "h": 3,
       "color": "wood1"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "lace"
-      },
-      "color": "leather1"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "lace"
-      },
-      "from": [
-        0,
-        0
-      ],
-      "to": [
-        0,
-        6
-      ],
-      "color": "leather2"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "lace"
-      },
-      "points": [
-        [
-          0,
-          0
-        ],
-        [
-          1,
-          0
-        ],
-        [
-          1,
-          6
-        ],
-        [
-          0,
-          7
-        ],
-        [
-          1,
-          7
-        ]
-      ],
-      "color": "leather0"
     },
     {
       "op": "fill",
@@ -914,94 +824,7 @@
           1
         ]
       ],
-      "color": "wood3"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "twig",
-        "faces": "sides"
-      },
-      "from": [
-        1,
-        0
-      ],
-      "to": [
-        1,
-        5
-      ],
-      "color": "wood1"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "twig",
-        "faces": "sides"
-      },
-      "from": [
-        0,
-        0
-      ],
-      "to": [
-        0,
-        2
-      ],
-      "color": "wood3"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "twig",
-        "faces": [
-          "up"
-        ]
-      },
-      "color": "wood3"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "twig",
-        "faces": [
-          "up"
-        ]
-      },
-      "points": [
-        [
-          1,
-          1
-        ]
-      ],
-      "color": "wood1"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "leaf"
-      },
-      "x": 0,
-      "y": 0,
-      "w": 3,
-      "h": 3
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "leaf"
-      },
-      "rows": [
-        ".LL",
-        "LLL",
-        "D.."
-      ],
-      "key": {
-        "L": "leaf_lt",
-        "D": "wood1"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
+      "color": "wood4"
     },
     {
       "op": "gradient",

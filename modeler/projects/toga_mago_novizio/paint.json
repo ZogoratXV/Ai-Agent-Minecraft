@@ -2148,6 +2148,48 @@
         ]
       },
       "color": "l0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "torso",
+        "faces": [
+          "north"
+        ]
+      },
+      "points": [
+        [
+          6,
+          8
+        ],
+        [
+          8,
+          8
+        ]
+      ],
+      "color": "r2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "torso",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        ".s.",
+        "sHs",
+        ".s."
+      ],
+      "key": {
+        "s": "v1",
+        "H": "t3"
+      },
+      "x": 6,
+      "y": 6,
+      "tile": false,
+      "anchor": "top-left"
     }
   ]
 }

@@ -39,22 +39,6 @@
       ]
     },
     {
-      "name": "knot_a",
-      "from": [
-        6,
-        -6,
-        7.25
-      ],
-      "to": [
-        7,
-        -4,
-        8.75
-      ],
-      "hideFaces": [
-        "east"
-      ]
-    },
-    {
       "name": "grip",
       "from": [
         6.75,
@@ -68,105 +52,20 @@
       ]
     },
     {
-      "name": "lace",
-      "from": [
-        9.5,
-        4,
-        8
-      ],
-      "to": [
-        9.5,
-        8,
-        9
-      ],
-      "pivot": [
-        9.25,
-        8,
-        8.5
-      ],
-      "rotation": [
-        0,
-        0,
-        22.5
-      ]
-    },
-    {
       "name": "shaft_mid",
       "from": [
-        7.25,
+        7,
         8,
         7
       ],
       "to": [
-        9.25,
+        9,
         20,
         9
       ],
       "hideFaces": [
         "up",
         "down"
-      ]
-    },
-    {
-      "name": "knot_b",
-      "from": [
-        7.5,
-        11,
-        6
-      ],
-      "to": [
-        9,
-        13,
-        7
-      ],
-      "hideFaces": [
-        "south"
-      ]
-    },
-    {
-      "name": "twig",
-      "from": [
-        9.25,
-        14,
-        7.5
-      ],
-      "to": [
-        10.25,
-        17,
-        8.5
-      ],
-      "pivot": [
-        9.25,
-        14,
-        8
-      ],
-      "rotation": [
-        0,
-        0,
-        -45
-      ]
-    },
-    {
-      "name": "leaf",
-      "from": [
-        11.25,
-        16,
-        8
-      ],
-      "to": [
-        12.75,
-        17.5,
-        8
-      ],
-      "pivot": [
-        11.25,
-        16,
-        8
-      ],
-      "rotation": [
-        0,
-        0,
-        -22.5
       ]
     },
     {
@@ -436,5 +335,143 @@
         0
       ]
     }
-  ]
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2.6,
+        0
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2.6,
+        0
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        15
+      ],
+      "translation": [
+        0,
+        2.4,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -15
+      ],
+      "translation": [
+        0,
+        2.4,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.48,
+        0.48,
+        0.48
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "head": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  }
 }

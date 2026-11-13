@@ -4,30 +4,20 @@
     "c_lt": "#8ef3ff",
     "c_mid": "#46c8f5",
     "c_vi": "#a26af5",
-    "c_dk": "#5b2db0"
+    "c_dk": "#5b2db0",
+    "wood0": "#6a2c26",
+    "wood1": "#9a5230",
+    "wood2": "#cd8745",
+    "wood3": "#e8b366",
+    "wood4": "#f5d48a",
+    "leather0": "#6b281c",
+    "leather1": "#9a4526",
+    "leather2": "#c7753a",
+    "cloth0": "#2d2985",
+    "cloth2": "#4a4fd0",
+    "cloth3": "#6f8cf5"
   },
   "ramps": {
-    "wood": {
-      "base": "#d68a43",
-      "steps": 5,
-      "hueShift": 14,
-      "contrast": 0.17,
-      "saturationShift": 0.06
-    },
-    "cloth": {
-      "base": "#4c4fd0",
-      "steps": 5,
-      "hueShift": 12,
-      "contrast": 0.14,
-      "saturationShift": 0.05
-    },
-    "leather": {
-      "base": "#a64e28",
-      "steps": 3,
-      "hueShift": 10,
-      "contrast": 0.15,
-      "saturationShift": 0.05
-    },
     "iron": {
       "base": "#7d9cbb",
       "steps": 4,
@@ -186,10 +176,6 @@
           3
         ],
         [
-          1,
-          10
-        ],
-        [
           2,
           17
         ]
@@ -284,10 +270,6 @@
         [
           2,
           13
-        ],
-        [
-          0,
-          19
         ]
       ],
       "color": "wood0"
@@ -764,14 +746,6 @@
         "faces": "sides"
       },
       "points": [
-        [
-          1,
-          3
-        ],
-        [
-          0,
-          6
-        ],
         [
           1,
           7

@@ -1,22 +1,23 @@
 {
   "palette": {
-    "r0": "#1c1a2c",
-    "r1": "#2c2a45",
-    "r2": "#403d62",
-    "r3": "#56567f",
-    "r4": "#6e72a0",
-    "t0": "#5868a0",
-    "t1": "#7f9acb",
-    "t2": "#a9c6e4",
-    "t3": "#d6e6ee",
+    "r0": "#211d3a",
+    "r1": "#34325e",
+    "r2": "#4a4a86",
+    "r3": "#626daa",
+    "r4": "#808fc8",
+    "t0": "#5f78b4",
+    "t1": "#8cacdf",
+    "t2": "#b9d1f0",
+    "t3": "#e8f0f7",
+    "v0": "#8a74c6",
+    "v1": "#bba6ea",
     "l0": "#2a1820",
-    "l1": "#4a2829",
-    "l2": "#6e3a2e",
-    "l3": "#985a3a",
+    "l1": "#4a2a29",
+    "l2": "#71402e",
+    "l3": "#9c6440",
     "p0": "#b98a5a",
     "p1": "#e2c27e",
     "p2": "#f3e6b0",
-    "g0": "#c27a32",
     "g1": "#e9b04f",
     "g2": "#f8dc8a"
   },
@@ -53,18 +54,18 @@
       "op": "shade",
       "target": {
         "cubes": [
-          "hat_*",
+          "hat_crown",
           "torso",
           "hood",
-          "hood_fold",
           "peplum",
-          "sleeve_*",
-          "shoulder_*",
-          "robe_*"
+          "sleeve_r",
+          "shoulder_r",
+          "sleeve_mid_r",
+          "robe_leg_r"
         ],
         "faces": "sides"
       },
-      "strength": 0.14,
+      "strength": 0.12,
       "light": "top"
     },
     {
@@ -72,13 +73,11 @@
       "target": {
         "cubes": [
           "torso",
-          "robe_leg_*",
+          "robe_leg_r",
           "sleeve_r",
-          "sleeve_mid_r",
-          "hat_crown",
-          "hat_cone1",
-          "hat_cone2",
-          "hood"
+          "hood",
+          "peplum",
+          "shoulder_r"
         ],
         "faces": "sides"
       },
@@ -86,38 +85,186 @@
         "r1",
         "r3"
       ],
-      "density": 0.07,
-      "seed": 7
+      "density": 0.08,
+      "seed": 11
     },
     {
-      "op": "border",
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_cone1",
+        "faces": [
+          "north",
+          "west",
+          "south",
+          "east"
+        ]
+      },
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "color": "r3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_cone2",
+        "faces": [
+          "north",
+          "west",
+          "south",
+          "east"
+        ]
+      },
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "color": "r3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_cone3",
+        "faces": [
+          "north",
+          "west",
+          "south",
+          "east"
+        ]
+      },
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "color": "r3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_cone4",
+        "faces": [
+          "north",
+          "west",
+          "south",
+          "east"
+        ]
+      },
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "color": "r3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_cone1",
+        "faces": [
+          "north",
+          "west",
+          "south",
+          "east"
+        ]
+      },
+      "points": [
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "color": "r1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_cone2",
+        "faces": [
+          "north",
+          "west",
+          "south",
+          "east"
+        ]
+      },
+      "points": [
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "color": "r1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_cone3",
+        "faces": [
+          "north",
+          "west",
+          "south",
+          "east"
+        ]
+      },
+      "points": [
+        [
+          4,
+          1
+        ]
+      ],
+      "color": "r1"
+    },
+    {
+      "op": "fill",
       "target": {
         "cubes": [
-          "hat_cone*",
-          "hat_tip*"
+          "hat_cone5",
+          "hat_cone6",
+          "hat_tip",
+          "hat_tip2"
         ],
         "faces": "sides"
       },
-      "color": "r1",
-      "width": 1,
-      "sides": [
-        "bottom"
-      ]
-    },
-    {
-      "op": "border",
-      "target": {
-        "cubes": [
-          "hat_cone*",
-          "hat_tip*"
-        ],
-        "faces": "sides"
-      },
-      "color": "r3",
-      "width": 1,
-      "sides": [
-        "top"
-      ]
+      "color": "r3"
     },
     {
       "op": "fill",
@@ -137,59 +284,26 @@
     {
       "op": "pixels",
       "target": {
-        "cubes": "hat_cone2",
-        "faces": [
-          "north"
-        ]
+        "cubes": [
+          "hat_cone5",
+          "hat_cone6"
+        ],
+        "faces": "sides"
       },
       "points": [
         [
-          1,
-          0
-        ],
-        [
-          5,
+          0,
           1
         ]
       ],
-      "color": "r4"
+      "color": "r2"
     },
     {
-      "op": "pixels",
+      "op": "fill",
       "target": {
-        "cubes": "hat_cone3",
-        "faces": [
-          "east"
-        ]
+        "cubes": "hat_tip2"
       },
-      "points": [
-        [
-          2,
-          0
-        ]
-      ],
-      "color": "r4"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "hat_cone1",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          2,
-          1
-        ],
-        [
-          6,
-          1
-        ]
-      ],
-      "color": "r1"
+      "color": "t1"
     },
     {
       "op": "pixels",
@@ -200,10 +314,42 @@
       "points": [
         [
           0,
-          1
+          0
         ]
       ],
-      "color": "t1"
+      "color": "t2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hat_cone1",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        ".s.",
+        "sSs",
+        ".s."
+      ],
+      "key": {
+        "s": "v1",
+        "S": "t3"
+      },
+      "x": 2,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "hat_crown",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "r3"
     },
     {
       "op": "fill",
@@ -226,16 +372,26 @@
       ]
     },
     {
-      "op": "border",
+      "op": "pixels",
       "target": {
         "cubes": "hat_band",
         "faces": "sides"
       },
-      "color": "t0",
-      "width": 1,
-      "sides": [
-        "bottom"
-      ]
+      "points": [
+        [
+          1,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          7,
+          1
+        ]
+      ],
+      "color": "t0"
     },
     {
       "op": "fill",
@@ -248,26 +404,36 @@
       "color": "t2"
     },
     {
-      "op": "pattern",
+      "op": "pixels",
       "target": {
         "cubes": "hat_band",
         "faces": [
           "north"
         ]
       },
-      "rows": [
-        "ab",
-        "bc"
+      "points": [
+        [
+          2,
+          0
+        ]
       ],
-      "key": {
-        "a": "g2",
-        "b": "g1",
-        "c": "g0"
+      "color": "g2"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "hat_band",
+        "faces": [
+          "north"
+        ]
       },
-      "x": 6,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
+      "points": [
+        [
+          2,
+          1
+        ]
+      ],
+      "color": "g1"
     },
     {
       "op": "fill",
@@ -410,6 +576,17 @@
       ]
     },
     {
+      "op": "border",
+      "target": {
+        "cubes": "hat_brim",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "r4",
+      "width": 1
+    },
+    {
       "op": "pixels",
       "target": {
         "cubes": "hat_brim_n",
@@ -423,7 +600,7 @@
           1
         ],
         [
-          10,
+          9,
           1
         ]
       ],
@@ -439,11 +616,11 @@
       },
       "points": [
         [
-          5,
+          4,
           0
         ],
         [
-          11,
+          10,
           0
         ]
       ],
@@ -460,14 +637,14 @@
       "points": [
         [
           0,
-          4
+          3
         ],
         [
           0,
-          9
+          8
         ]
       ],
-      "color": "r4"
+      "color": "r2"
     },
     {
       "op": "pixels",
@@ -480,28 +657,32 @@
       "points": [
         [
           1,
-          3
+          4
         ],
         [
           1,
-          10
+          9
         ]
       ],
-      "color": "r2"
+      "color": "r4"
     },
     {
-      "op": "rect",
+      "op": "pixels",
       "target": {
-        "cubes": "hat_brim",
-        "faces": [
-          "up"
-        ]
+        "cubes": "hat_brim*",
+        "faces": "sides"
       },
-      "x": 1,
-      "y": 1,
-      "w": 10,
-      "h": 10,
-      "color": "r2"
+      "points": [
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          0
+        ]
+      ],
+      "color": "t2"
     },
     {
       "op": "fill",
@@ -547,18 +728,6 @@
       ]
     },
     {
-      "op": "border",
-      "target": {
-        "cubes": "collar",
-        "faces": "sides"
-      },
-      "color": "t0",
-      "width": 1,
-      "sides": [
-        "bottom"
-      ]
-    },
-    {
       "op": "pixels",
       "target": {
         "cubes": "collar",
@@ -576,7 +745,28 @@
           1
         ]
       ],
-      "color": "r1"
+      "color": "t0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "collar",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          1,
+          1
+        ],
+        [
+          8,
+          1
+        ]
+      ],
+      "color": "t0"
     },
     {
       "op": "pattern",
@@ -593,15 +783,18 @@
         "..TdddT..",
         "...TdT...",
         "....T....",
-        ".......s.",
-        "......sHs",
-        ".......s."
+        "....T....",
+        "....T..s.",
+        "....T.sHs",
+        "....T..s.",
+        "....T....",
+        "....T...."
       ],
       "key": {
-        "r": "r2",
+        "r": "r3",
         "T": "t1",
-        "d": "r1",
-        "s": "t1",
+        "d": "r0",
+        "s": "v1",
         "H": "t3"
       },
       "x": 0,
@@ -610,20 +803,26 @@
       "anchor": "top-left"
     },
     {
-      "op": "line",
+      "op": "pixels",
       "target": {
         "cubes": "torso",
         "faces": [
           "north"
         ]
       },
-      "from": [
-        4,
-        6
-      ],
-      "to": [
-        4,
-        9
+      "points": [
+        [
+          2,
+          7
+        ],
+        [
+          2,
+          8
+        ],
+        [
+          6,
+          4
+        ]
       ],
       "color": "r1"
     },
@@ -637,12 +836,12 @@
       },
       "points": [
         [
-          2,
+          1,
           6
         ],
         [
-          2,
-          7
+          7,
+          5
         ]
       ],
       "color": "r3"
@@ -663,6 +862,24 @@
       "to": [
         2,
         9
+      ],
+      "color": "r1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "torso",
+        "faces": [
+          "south"
+        ]
+      },
+      "from": [
+        4,
+        7
+      ],
+      "to": [
+        4,
+        11
       ],
       "color": "r1"
     },
@@ -758,6 +975,20 @@
     {
       "op": "border",
       "target": {
+        "cubes": "hood",
+        "faces": [
+          "south"
+        ]
+      },
+      "color": "r1",
+      "width": 1,
+      "sides": [
+        "bottom"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
         "cubes": "peplum",
         "faces": "sides"
       },
@@ -782,7 +1013,7 @@
           2
         ],
         [
-          7,
+          8,
           2
         ],
         [
@@ -790,7 +1021,7 @@
           3
         ],
         [
-          7,
+          8,
           3
         ]
       ],
@@ -807,15 +1038,53 @@
       },
       "points": [
         [
-          3,
+          1,
           1
         ],
         [
-          8,
+          9,
           1
         ]
       ],
       "color": "r3"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "peplum",
+        "faces": [
+          "north"
+        ]
+      },
+      "from": [
+        5,
+        0
+      ],
+      "to": [
+        5,
+        3
+      ],
+      "color": "t1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "peplum",
+        "faces": [
+          "north"
+        ]
+      },
+      "points": [
+        [
+          4,
+          1
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "color": "r1"
     },
     {
       "op": "fill",
@@ -863,6 +1132,28 @@
       "sides": [
         "bottom"
       ]
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "belt",
+        "faces": "sides"
+      },
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          9,
+          0
+        ]
+      ],
+      "color": "l2"
     },
     {
       "op": "fill",
@@ -951,16 +1242,6 @@
       "color": "l3"
     },
     {
-      "op": "fill",
-      "target": {
-        "cubes": "pouch",
-        "faces": [
-          "north"
-        ]
-      },
-      "color": "l2"
-    },
-    {
       "op": "pixels",
       "target": {
         "cubes": "pouch",
@@ -979,22 +1260,6 @@
         ]
       ],
       "color": "l1"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "pouch",
-        "faces": [
-          "north"
-        ]
-      },
-      "points": [
-        [
-          0,
-          0
-        ]
-      ],
-      "color": "l3"
     },
     {
       "op": "border",
@@ -1120,7 +1385,7 @@
       "target": {
         "cubes": "scroll_tie"
       },
-      "color": "l3"
+      "color": "v0"
     },
     {
       "op": "border",
@@ -1128,21 +1393,11 @@
         "cubes": "scroll_tie",
         "faces": "sides"
       },
-      "color": "l2",
+      "color": "v1",
       "width": 1,
       "sides": [
-        "bottom"
+        "top"
       ]
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "shoulder_r",
-        "faces": [
-          "up"
-        ]
-      },
-      "color": "r3"
     },
     {
       "op": "border",
@@ -1184,6 +1439,20 @@
       ]
     },
     {
+      "op": "pixels",
+      "target": {
+        "cubes": "shoulder_r",
+        "faces": "sides"
+      },
+      "points": [
+        [
+          2,
+          3
+        ]
+      ],
+      "color": "t1"
+    },
+    {
       "op": "fill",
       "target": {
         "cubes": "shoulder_r",
@@ -1192,6 +1461,18 @@
         ]
       },
       "color": "r0"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "sleeve_r",
+        "faces": "sides"
+      },
+      "color": "r1",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
     },
     {
       "op": "line",
@@ -1209,7 +1490,7 @@
       ],
       "to": [
         2,
-        5
+        3
       ],
       "color": "r1"
     },
@@ -1227,10 +1508,6 @@
         [
           3,
           1
-        ],
-        [
-          3,
-          2
         ]
       ],
       "color": "r3"
@@ -1251,7 +1528,7 @@
       ],
       "to": [
         1,
-        3
+        2
       ],
       "color": "r1"
     },
@@ -1271,18 +1548,30 @@
       ],
       "to": [
         4,
-        3
+        2
       ],
       "color": "r1"
     },
     {
-      "op": "fill",
+      "op": "pixels",
       "target": {
         "cubes": "sleeve_mid_r",
         "faces": [
-          "up"
+          "east",
+          "north",
+          "south"
         ]
       },
+      "points": [
+        [
+          2,
+          0
+        ],
+        [
+          5,
+          0
+        ]
+      ],
       "color": "r3"
     },
     {
@@ -1336,16 +1625,6 @@
       "color": "t2"
     },
     {
-      "op": "fill",
-      "target": {
-        "cubes": "sleeve_bell_r",
-        "faces": [
-          "up"
-        ]
-      },
-      "color": "r3"
-    },
-    {
       "op": "border",
       "target": {
         "cubes": "sleeve_bell_r",
@@ -1390,6 +1669,18 @@
       ]
     },
     {
+      "op": "border",
+      "target": {
+        "cubes": "sleeve_drape_r",
+        "faces": "sides"
+      },
+      "color": "r1",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
       "op": "fill",
       "target": {
         "cubes": "sleeve_drape_r",
@@ -1412,14 +1703,36 @@
       "points": [
         [
           1,
-          0
+          1
         ],
         [
           1,
+          2
+        ],
+        [
+          4,
           1
         ]
       ],
       "color": "r1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "sleeve_drape_r",
+        "faces": [
+          "east",
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          2,
+          1
+        ]
+      ],
+      "color": "r3"
     },
     {
       "op": "line",
@@ -1464,7 +1777,42 @@
       "target": {
         "cubes": "robe_leg_r",
         "faces": [
-          "north",
+          "north"
+        ]
+      },
+      "from": [
+        4,
+        0
+      ],
+      "to": [
+        4,
+        7
+      ],
+      "color": "t1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "robe_leg_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "from": [
+        3,
+        0
+      ],
+      "to": [
+        3,
+        7
+      ],
+      "color": "r1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "robe_leg_r",
+        "faces": [
           "south"
         ]
       },
@@ -1529,24 +1877,28 @@
       ]
     },
     {
+      "op": "pixels",
+      "target": {
+        "cubes": "robe_leg_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "points": [
+        [
+          4,
+          0
+        ]
+      ],
+      "color": "t0"
+    },
+    {
       "op": "fill",
       "target": {
         "cubes": "robe_hem_r",
         "faces": "sides"
       },
       "color": "r2"
-    },
-    {
-      "op": "border",
-      "target": {
-        "cubes": "robe_hem_r",
-        "faces": "sides"
-      },
-      "color": "t1",
-      "width": 1,
-      "sides": [
-        "bottom"
-      ]
     },
     {
       "op": "rect",
@@ -1559,6 +1911,18 @@
       "w": 6,
       "h": 1,
       "color": "t2"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "robe_hem_r",
+        "faces": "sides"
+      },
+      "color": "t1",
+      "width": 1,
+      "sides": [
+        "bottom"
+      ]
     },
     {
       "op": "pixels",
@@ -1575,7 +1939,7 @@
           0
         ],
         [
-          5,
+          4,
           0
         ]
       ],
@@ -1595,10 +1959,6 @@
         [
           2,
           1
-        ],
-        [
-          3,
-          2
         ]
       ],
       "color": "t1"
@@ -1615,11 +1975,45 @@
       },
       "points": [
         [
-          4,
+          3,
           2
         ]
       ],
       "color": "t0"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "robe_hem_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "from": [
+        5,
+        0
+      ],
+      "to": [
+        5,
+        2
+      ],
+      "color": "t1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "robe_hem_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "points": [
+        [
+          5,
+          1
+        ]
+      ],
+      "color": "t3"
     },
     {
       "op": "fill",
@@ -1695,11 +2089,11 @@
       "points": [
         [
           1,
-          2
+          1
         ],
         [
           2,
-          2
+          1
         ]
       ],
       "color": "l2"
@@ -1712,7 +2106,7 @@
           "up"
         ]
       },
-      "color": "l3"
+      "color": "l2"
     },
     {
       "op": "border",
@@ -1727,16 +2121,20 @@
       ]
     },
     {
-      "op": "border",
+      "op": "pixels",
       "target": {
         "cubes": "toe_r",
-        "faces": "sides"
+        "faces": [
+          "north"
+        ]
       },
-      "color": "l2",
-      "width": 1,
-      "sides": [
-        "top"
-      ]
+      "points": [
+        [
+          1,
+          0
+        ]
+      ],
+      "color": "l3"
     },
     {
       "op": "fill",

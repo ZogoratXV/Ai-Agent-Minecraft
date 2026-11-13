@@ -1715,6 +1715,87 @@
         ]
       ],
       "color": "bz2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "blade_edge"
+      },
+      "rows": [
+        "54321124"
+      ],
+      "key": {
+        "1": "bz1",
+        "2": "bz2",
+        "3": "bz3",
+        "4": "bz4",
+        "5": "bz5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": true,
+      "anchor": "top-left"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "blade_edge"
+      },
+      "x": 0,
+      "y": 48,
+      "w": 1,
+      "h": 5,
+      "color": "bz3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "blade_edge"
+      },
+      "x": 7,
+      "y": 47,
+      "w": 1,
+      "h": 6,
+      "color": "bz2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "blade_tip"
+      },
+      "color": "bz3"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "blade_tip",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "bz5",
+      "width": 1,
+      "sides": [
+        "top",
+        "left"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "blade_tip",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "bz2",
+      "width": 1,
+      "sides": [
+        "bottom",
+        "right"
+      ]
     }
   ]
 }

@@ -19,7 +19,7 @@
         "cubes": "blade_edge"
       },
       "rows": [
-        "53333334"
+        "5333333334"
       ],
       "key": {
         "3": "nt3",
@@ -37,9 +37,9 @@
         "cubes": "blade_edge"
       },
       "x": 0,
-      "y": 52,
+      "y": 56,
       "w": 1,
-      "h": 8,
+      "h": 3,
       "color": "nt4"
     },
     {
@@ -47,10 +47,10 @@
       "target": {
         "cubes": "blade_edge"
       },
-      "x": 7,
-      "y": 52,
+      "x": 9,
+      "y": 56,
       "w": 1,
-      "h": 8,
+      "h": 3,
       "color": "nt2"
     },
     {
@@ -63,12 +63,11 @@
         ]
       },
       "rows": [
-        "433332"
+        "33333332"
       ],
       "key": {
         "2": "nt2",
-        "3": "nt3",
-        "4": "nt4"
+        "3": "nt3"
       },
       "x": 0,
       "y": 0,
@@ -85,10 +84,10 @@
         ]
       },
       "x": 0,
-      "y": 50,
+      "y": 55,
       "w": 1,
-      "h": 8,
-      "color": "nt3"
+      "h": 3,
+      "color": "nt2"
     },
     {
       "op": "rect",
@@ -99,10 +98,10 @@
           "south"
         ]
       },
-      "x": 5,
-      "y": 50,
+      "x": 7,
+      "y": 55,
       "w": 1,
-      "h": 8,
+      "h": 3,
       "color": "nt1"
     },
     {
@@ -126,7 +125,7 @@
       "color": "nt2"
     },
     {
-      "op": "rect",
+      "op": "fill",
       "target": {
         "cubes": "blade_core",
         "faces": [
@@ -134,29 +133,10 @@
           "south"
         ]
       },
-      "x": 0,
-      "y": 0,
-      "w": 2,
-      "h": 12,
-      "color": "nt3"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "x": 2,
-      "y": 0,
-      "w": 2,
-      "h": 12,
       "color": "nt2"
     },
     {
-      "op": "rect",
+      "op": "flow",
       "target": {
         "cubes": "blade_core",
         "faces": [
@@ -164,157 +144,16 @@
           "south"
         ]
       },
-      "x": 0,
-      "y": 12,
-      "w": 1,
-      "h": 40,
-      "color": "nt3"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "x": 1,
-      "y": 12,
-      "w": 1,
-      "h": 40,
-      "color": "nt0"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "x": 2,
-      "y": 12,
-      "w": 1,
-      "h": 40,
-      "color": "nt1"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "x": 3,
-      "y": 12,
-      "w": 1,
-      "h": 40,
-      "color": "nt3"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          1,
-          10
-        ],
-        [
-          2,
-          10
-        ]
+      "colors": [
+        "nt4",
+        "nt5"
       ],
-      "color": "nt2"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          1,
-          11
-        ],
-        [
-          2,
-          11
-        ]
-      ],
-      "color": "nt1"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          0,
-          7
-        ],
-        [
-          2,
-          5
-        ]
-      ],
-      "color": "nt4"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          1,
-          6
-        ]
-      ],
-      "color": "nt5"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          3,
-          24
-        ],
-        [
-          3,
-          25
-        ]
-      ],
-      "color": "nt4"
+      "direction": "vertical",
+      "spacing": 3,
+      "amplitude": 1,
+      "wavelength": 24,
+      "margin": 0,
+      "seed": 2
     },
     {
       "op": "rect",
@@ -326,25 +165,10 @@
         ]
       },
       "x": 0,
-      "y": 52,
-      "w": 4,
-      "h": 8,
+      "y": 56,
+      "w": 6,
+      "h": 2,
       "color": "nt1"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "x": 1,
-      "y": 52,
-      "w": 2,
-      "h": 8,
-      "color": "nt0"
     },
     {
       "op": "fill",
@@ -370,7 +194,7 @@
       ],
       "to": [
         0,
-        59
+        57
       ],
       "color": "nt4"
     },
@@ -398,7 +222,7 @@
       ],
       "to": [
         3,
-        59
+        57
       ],
       "color": "nt1"
     },
@@ -1108,52 +932,6 @@
       "y": 0,
       "tile": false,
       "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "grip"
-      },
-      "rows": [
-        "DabT",
-        "aXTc",
-        "bTDa",
-        "TcaX"
-      ],
-      "key": {
-        "T": "nt3",
-        "D": "nt1",
-        "X": "nt4",
-        "a": "pv2",
-        "b": "pv1",
-        "c": "pv3"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": true,
-      "anchor": "top-left"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "grip"
-      },
-      "x": 0,
-      "y": 0,
-      "w": 4,
-      "h": 1,
-      "color": "nt0"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "grip"
-      },
-      "x": 0,
-      "y": 13,
-      "w": 4,
-      "h": 1,
-      "color": "pv1"
     },
     {
       "op": "fill",

@@ -1,0 +1,1792 @@
+{
+  "palette": {
+    "s0": "#473d57",
+    "s1": "#696480",
+    "s2": "#8690b2",
+    "s3": "#bbc0d1",
+    "s4": "#eef0f2",
+    "g0": "#7a4234",
+    "g1": "#965224",
+    "g2": "#e39b2e",
+    "g3": "#f6ba46",
+    "g4": "#fdd87a",
+    "l0": "#473042",
+    "l1": "#6a3f50",
+    "l2": "#8a4450",
+    "l3": "#a15155",
+    "c0": "#1f5a7a",
+    "c1": "#24aed6",
+    "c2": "#62dff0",
+    "c3": "#dcfcff"
+  },
+  "ramps": {},
+  "ops": [
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "s2"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 1,
+      "w": 11,
+      "h": 5,
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 15,
+      "w": 11,
+      "h": 5,
+      "color": "s1"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "s4",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          7,
+          6
+        ],
+        [
+          8,
+          6
+        ],
+        [
+          9,
+          6
+        ],
+        [
+          10,
+          6
+        ]
+      ],
+      "color": "s3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          0,
+          14
+        ],
+        [
+          2,
+          14
+        ],
+        [
+          4,
+          14
+        ],
+        [
+          6,
+          14
+        ],
+        [
+          8,
+          14
+        ],
+        [
+          10,
+          14
+        ]
+      ],
+      "color": "s1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "north"
+        ]
+      },
+      "x": 8,
+      "y": 1,
+      "w": 1,
+      "h": 19,
+      "color": "s1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "north"
+        ]
+      },
+      "x": 9,
+      "y": 1,
+      "w": 2,
+      "h": 14,
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "north"
+        ]
+      },
+      "x": 9,
+      "y": 15,
+      "w": 2,
+      "h": 5,
+      "color": "s2"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "south"
+        ]
+      },
+      "x": 2,
+      "y": 1,
+      "w": 1,
+      "h": 19,
+      "color": "s1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 1,
+      "w": 2,
+      "h": 14,
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 15,
+      "w": 2,
+      "h": 5,
+      "color": "s2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        " gG ",
+        "gGGg",
+        " gG ",
+        " gh ",
+        " gh ",
+        " gh ",
+        "  h "
+      ],
+      "key": {
+        "g": "g3",
+        "G": "g4",
+        "h": "g1"
+      },
+      "x": 3,
+      "y": 5,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": [
+          "face_l"
+        ],
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        " gG ",
+        "gGGg",
+        " gG ",
+        " gh ",
+        " gh ",
+        " gh ",
+        "  h "
+      ],
+      "key": {
+        "g": "g3",
+        "G": "g4",
+        "h": "g1"
+      },
+      "x": 4,
+      "y": 5,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "up"
+        ]
+      },
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 16,
+      "color": "s4"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "up"
+        ]
+      },
+      "x": 2,
+      "y": 0,
+      "w": 1,
+      "h": 16,
+      "color": "s2"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "up"
+        ]
+      },
+      "points": [
+        [
+          4,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          11
+        ]
+      ],
+      "color": "s4"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "s1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "down"
+        ]
+      },
+      "x": 2,
+      "y": 0,
+      "w": 1,
+      "h": 16,
+      "color": "s0"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "color": "s2"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 14,
+      "h": 18,
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 14,
+      "h": 2,
+      "color": "s4"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "x": 1,
+      "y": 15,
+      "w": 14,
+      "h": 4,
+      "color": "s2"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "color": "s4",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "rows": [
+        "  gG  ",
+        "  gG  ",
+        "ggGGgg",
+        "hgggGh",
+        "  gG  ",
+        "  gh  ",
+        "  gh  ",
+        "  gh  ",
+        "  hh  "
+      ],
+      "key": {
+        "g": "g3",
+        "G": "g4",
+        "h": "g1"
+      },
+      "x": 5,
+      "y": 4,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "s2"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 1,
+      "w": 14,
+      "h": 4,
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 12,
+      "w": 14,
+      "h": 4,
+      "color": "s1"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "s4",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "s3"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "s1"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "band_l"
+      },
+      "color": "g2"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "band_l",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 1,
+      "w": 18,
+      "h": 5,
+      "color": "g3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "band_l",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 17,
+      "w": 18,
+      "h": 5,
+      "color": "g1"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "band_l",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "color": "g4",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "band_l",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          14
+        ]
+      ],
+      "color": "g4"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "band_l",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          1,
+          9
+        ],
+        [
+          1,
+          15
+        ]
+      ],
+      "color": "g1"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "band_l",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "g4"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "band_l",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "g1"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": [
+          "grip_low",
+          "grip_up"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "3311",
+        "2233",
+        "2222",
+        "1122"
+      ],
+      "key": {
+        "1": "l1",
+        "2": "l2",
+        "3": "l3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": true,
+      "anchor": "top-left"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "grip_low",
+          "grip_up"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 0,
+      "w": 4,
+      "h": 1,
+      "color": "l0"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "color": "s2"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 6,
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 3,
+      "y": 0,
+      "w": 1,
+      "h": 6,
+      "color": "s1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 0,
+      "w": 4,
+      "h": 1,
+      "color": "s1"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "ring_mid",
+          "pommel_ring",
+          "collar",
+          "fin_l",
+          "crown",
+          "frame_n",
+          "frame_s",
+          "pommel_knob"
+        ]
+      },
+      "color": "g2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "ring_mid",
+          "pommel_ring",
+          "collar",
+          "crown",
+          "frame_n",
+          "frame_s",
+          "fin_l"
+        ],
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "g3"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "ring_mid",
+          "pommel_ring",
+          "collar",
+          "crown",
+          "frame_n",
+          "frame_s",
+          "fin_l"
+        ],
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "g1"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": [
+          "ring_mid",
+          "pommel_ring",
+          "collar",
+          "crown",
+          "fin_l"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "color": "g4",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": [
+          "ring_mid",
+          "pommel_ring",
+          "collar",
+          "fin_l"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "color": "g1",
+      "width": 1,
+      "sides": [
+        "bottom"
+      ]
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "pommel_ring",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 2,
+      "w": 6,
+      "h": 1,
+      "color": "g1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "collar",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "points": [
+        [
+          1,
+          2
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "color": "g0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "collar",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "points": [
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "color": "g4"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "frame_n",
+          "frame_s"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 8,
+      "h": 10,
+      "color": "g0"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": [
+          "frame_n",
+          "frame_s"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "g4",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": [
+          "frame_n",
+          "frame_s"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "g3",
+      "width": 1,
+      "sides": [
+        "left"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": [
+          "frame_n",
+          "frame_s"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "g1",
+      "width": 1,
+      "sides": [
+        "bottom",
+        "right"
+      ]
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "frame_n",
+          "frame_s"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          4,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          6
+        ]
+      ],
+      "color": "g3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "frame_n",
+          "frame_s"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          4,
+          10
+        ],
+        [
+          5,
+          10
+        ],
+        [
+          8,
+          5
+        ],
+        [
+          8,
+          6
+        ]
+      ],
+      "color": "g2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "frame_n",
+          "frame_s"
+        ],
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "color": "g1"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "gem_n"
+      },
+      "color": "c0"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "gem_n",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "color": "c1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "gem_n",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 4,
+      "h": 4,
+      "color": "c2"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "gem_n",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "color": "c3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "gem_n",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          5,
+          5
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ]
+      ],
+      "color": "c0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "gem_n",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          3,
+          3
+        ]
+      ],
+      "color": "c1"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "gem_n",
+        "faces": [
+          "up",
+          "east"
+        ]
+      },
+      "color": "c1"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "pommel_knob"
+      },
+      "color": "g4",
+      "width": 1,
+      "sides": [
+        "top",
+        "left"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "pommel_knob"
+      },
+      "color": "g1",
+      "width": 1,
+      "sides": [
+        "bottom",
+        "right"
+      ]
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "pommel_knob",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 2,
+      "y": 2,
+      "w": 2,
+      "h": 2,
+      "color": "c2"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "pommel_knob",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          2,
+          2
+        ]
+      ],
+      "color": "c3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "pommel_knob",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          3,
+          3
+        ]
+      ],
+      "color": "c1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "crown",
+        "faces": [
+          "up"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 6,
+      "h": 6,
+      "color": "g2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "spike"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "spike"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 6,
+      "color": "s4"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "spike"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 3,
+      "y": 0,
+      "w": 1,
+      "h": 6,
+      "color": "s2"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "spike"
+        ],
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "x": 0,
+      "y": 5,
+      "w": 4,
+      "h": 1,
+      "color": "s2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "spike"
+        ],
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "s4"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "spike_tip"
+        ]
+      },
+      "color": "s4"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "spike_tip"
+        ]
+      },
+      "points": [
+        [
+          1,
+          1
+        ]
+      ],
+      "color": "s3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "face_l",
+          "head_center"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 19,
+      "w": 14,
+      "h": 1,
+      "color": "s0"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "head_center"
+        ],
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "x": 0,
+      "y": 15,
+      "w": 14,
+      "h": 1,
+      "color": "s0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "north"
+        ]
+      },
+      "points": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "color": "s4"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "south"
+        ]
+      },
+      "points": [
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          8,
+          3
+        ],
+        [
+          9,
+          2
+        ]
+      ],
+      "color": "s4"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "north"
+        ]
+      },
+      "points": [
+        [
+          1,
+          9
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          6,
+          12
+        ],
+        [
+          7,
+          13
+        ],
+        [
+          1,
+          16
+        ],
+        [
+          5,
+          17
+        ]
+      ],
+      "color": "s1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "south"
+        ]
+      },
+      "points": [
+        [
+          9,
+          9
+        ],
+        [
+          8,
+          10
+        ],
+        [
+          4,
+          12
+        ],
+        [
+          3,
+          13
+        ],
+        [
+          9,
+          16
+        ],
+        [
+          5,
+          17
+        ]
+      ],
+      "color": "s1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          3,
+          17
+        ],
+        [
+          7,
+          16
+        ]
+      ],
+      "color": "s0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "points": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          13,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ],
+      "color": "s4"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "face_l",
+        "faces": [
+          "west"
+        ]
+      },
+      "points": [
+        [
+          12,
+          6
+        ],
+        [
+          11,
+          7
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          12,
+          16
+        ],
+        [
+          2,
+          16
+        ]
+      ],
+      "color": "s1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          0,
+          3
+        ],
+        [
+          13,
+          3
+        ],
+        [
+          0,
+          11
+        ],
+        [
+          13,
+          11
+        ]
+      ],
+      "color": "g3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          1,
+          3
+        ],
+        [
+          12,
+          3
+        ],
+        [
+          1,
+          11
+        ],
+        [
+          12,
+          11
+        ]
+      ],
+      "color": "g1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "head_center",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          0,
+          4
+        ],
+        [
+          13,
+          4
+        ],
+        [
+          0,
+          12
+        ],
+        [
+          13,
+          12
+        ]
+      ],
+      "color": "g1"
+    }
+  ]
+}

@@ -213,7 +213,7 @@ function eulerXYZ([x, y, z]: Vec3): Mat4 {
 }
 
 /** Punto della mano destra del giocatore di riferimento (fondo del braccio, leggermente in avanti). */
-export const HAND_POINT: Vec3 = [6, 11, -1];
+export const HAND_POINT: Vec3 = [6, 11, -3.5];
 
 /**
  * Mostra l'item tenuto in mano destra (terza persona) da un giocatore 1:1, applicando

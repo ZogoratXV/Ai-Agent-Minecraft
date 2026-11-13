@@ -1,0 +1,418 @@
+{
+  "name": "spada_bronzo",
+  "format": "java_block",
+  "pixelsPerUnit": 2,
+  "texture": {
+    "width": 128,
+    "height": 128
+  },
+  "bones": [],
+  "cubes": [
+    {
+      "name": "pommel_core",
+      "from": [
+        6.5,
+        -10,
+        6.5
+      ],
+      "to": [
+        9.5,
+        -7,
+        9.5
+      ]
+    },
+    {
+      "name": "pommel_x",
+      "from": [
+        6,
+        -9.5,
+        7
+      ],
+      "to": [
+        10,
+        -7.5,
+        9
+      ],
+      "hideFaces": [
+        "north",
+        "south"
+      ]
+    },
+    {
+      "name": "pommel_z",
+      "from": [
+        7,
+        -9,
+        6
+      ],
+      "to": [
+        9,
+        -8,
+        10
+      ],
+      "hideFaces": [
+        "east",
+        "west"
+      ]
+    },
+    {
+      "name": "pommel_nub",
+      "from": [
+        7.5,
+        -10.5,
+        7.5
+      ],
+      "to": [
+        8.5,
+        -10,
+        8.5
+      ],
+      "hideFaces": [
+        "up"
+      ]
+    },
+    {
+      "name": "collar_bot",
+      "from": [
+        6.75,
+        -7,
+        6.75
+      ],
+      "to": [
+        9.25,
+        -6,
+        9.25
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "grip",
+      "from": [
+        7,
+        -6,
+        7
+      ],
+      "to": [
+        9,
+        0,
+        9
+      ],
+      "hideFaces": [
+        "up",
+        "down"
+      ]
+    },
+    {
+      "name": "collar_top",
+      "from": [
+        6.75,
+        0,
+        6.75
+      ],
+      "to": [
+        9.25,
+        1,
+        9.25
+      ],
+      "hideFaces": [
+        "up"
+      ]
+    },
+    {
+      "name": "guard_center",
+      "from": [
+        6,
+        1,
+        6
+      ],
+      "to": [
+        10,
+        4,
+        10
+      ]
+    },
+    {
+      "name": "guard_bar_l",
+      "from": [
+        3,
+        1.5,
+        6.5
+      ],
+      "to": [
+        6,
+        3.5,
+        9.5
+      ],
+      "hideFaces": [
+        "east",
+        "west"
+      ]
+    },
+    {
+      "name": "guard_bar_r",
+      "from": [
+        10,
+        1.5,
+        6.5
+      ],
+      "to": [
+        13,
+        3.5,
+        9.5
+      ],
+      "hideFaces": [
+        "east",
+        "west"
+      ]
+    },
+    {
+      "name": "guard_tip_l",
+      "from": [
+        1.5,
+        1,
+        6.25
+      ],
+      "to": [
+        3,
+        4,
+        9.75
+      ]
+    },
+    {
+      "name": "guard_tip_r",
+      "from": [
+        13,
+        1,
+        6.25
+      ],
+      "to": [
+        14.5,
+        4,
+        9.75
+      ]
+    },
+    {
+      "name": "blade_base",
+      "from": [
+        6,
+        4,
+        6.75
+      ],
+      "to": [
+        10,
+        5,
+        9.25
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "blade",
+      "from": [
+        4.5,
+        4,
+        8
+      ],
+      "to": [
+        11.5,
+        31.5,
+        8
+      ],
+      "hideFaces": [
+        "east",
+        "west",
+        "up",
+        "down"
+      ]
+    },
+    {
+      "name": "blade_core",
+      "from": [
+        6.5,
+        5,
+        7.25
+      ],
+      "to": [
+        9.5,
+        25,
+        8.75
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "blade_core_tip",
+      "from": [
+        7,
+        25,
+        7.25
+      ],
+      "to": [
+        9,
+        27.5,
+        8.75
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "blade_core_point",
+      "from": [
+        7.5,
+        27.5,
+        7.5
+      ],
+      "to": [
+        8.5,
+        29.5,
+        8.5
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        0
+      ],
+      "translation": [
+        0,
+        8.8,
+        1
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+        0,
+        8.8,
+        1
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
+      ],
+      "translation": [
+        1.13,
+        7,
+        0.8
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
+      ],
+      "translation": [
+        1.13,
+        7,
+        0.8
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.46,
+        0.46,
+        0.46
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "head": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        12,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  }
+}

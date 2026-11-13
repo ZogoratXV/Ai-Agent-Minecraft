@@ -102,7 +102,7 @@ function findReferences(refDir: string): { file: string; kind: "model" | "image"
   for (const f of models.filter((f) => f.endsWith(".json")))
     try {
       const j = JSON.parse(fs.readFileSync(f, "utf8"));
-      for (const v of Object.values(j.textures ?? {})) javaTextureNames.add(String(v).split("/").pop() + ".png");
+      for (const v of Object.values(j.textures ?? {})) javaTextureNames.add(String(v).split(/[/:]/).pop() + ".png");
     } catch { /* ignora */ }
   const images = files.filter((f) => /\.png$/i.test(f) && !javaTextureNames.has(path.basename(f)));
   return [...models.map((file) => ({ file, kind: "model" as const })), ...images.map((file) => ({ file, kind: "image" as const }))];

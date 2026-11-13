@@ -197,3 +197,22 @@ describe("stile + strumenti dell'agente", () => {
     expect(readProfile("demo")).not.toBeNull();
   }, 120000);
 });
+
+describe("formati GeckoLib", () => {
+  it("usa la risoluzione del progetto come spazio UV e ignora i cubi non esportati", async () => {
+    const { Img } = await import("../src/core/image");
+    const png = new Img(4, 4);
+    const m = readBBModel({
+      meta: { format_version: "5.0", model_format: "geckolib_model" },
+      resolution: { width: 64, height: 64 },
+      elements: [
+        { name: "ref", type: "cube", uuid: "r", export: false, from: [0, 0, 0], to: [8, 8, 8], faces: { north: { uv: [0, 0, 8, 8], texture: 0 } } },
+        { name: "plate", type: "cube", uuid: "p", from: [0, 0, 0], to: [4, 4, 1], faces: { north: { uv: [0, 0, 4, 4], texture: 0 } } },
+      ],
+      outliner: ["r", "p"],
+      textures: [{ name: "t.png", uv_width: 256, uv_height: 256, source: png.toDataUri() }],
+    });
+    expect(allCubes(m.outline).map((c) => c.name)).toEqual(["plate"]);
+    expect(m.textures[0].uvWidth).toBe(64);
+  });
+});

@@ -1,6 +1,6 @@
 {
   "style": "rpg_vfx",
-  "builtAt": "2026-11-13T08:37:52.271Z",
+  "builtAt": "2026-11-13T08:45:37.707Z",
   "references": 62,
   "images": 35,
   "categories": {
@@ -11,10 +11,10 @@
     "free": 62
   },
   "texelDensity": {
-    "median": 1.97,
-    "p10": 1,
-    "p90": 2.48,
-    "consistency": 0.38
+    "median": 2.11,
+    "p10": 0.87,
+    "p90": 19.86,
+    "consistency": 0.37
   },
   "textureSizes": {
     "256x256": 9,
@@ -159,44 +159,44 @@
       }
     ],
     "uniqueColorsPerModel": {
-      "median": 7,
-      "p10": 3.1,
+      "median": 6.5,
+      "p10": 1,
       "p90": 161
     },
     "saturation": {
-      "median": 0.41,
-      "p10": 0.13,
+      "median": 0.43,
+      "p10": 0.01,
       "p90": 0.86
     },
     "value": {
-      "median": 0.92,
-      "p10": 0.4,
-      "p90": 0.99
+      "median": 0.87,
+      "p10": 0.13,
+      "p90": 0.98
     },
     "contrast": {
-      "median": 0.31,
-      "p10": 0.12,
-      "p90": 0.63
+      "median": 0.3,
+      "p10": 0,
+      "p90": 0.58
     },
     "noise": {
-      "median": 0.03,
-      "p10": 0.01,
+      "median": 0.02,
+      "p10": 0,
       "p90": 0.05
     },
     "hueShift": {
-      "median": 8.7,
+      "median": 8.1,
       "p10": 0,
       "p90": 17.3
     },
     "edgeDarkening": {
       "median": 0,
       "p10": 0,
-      "p90": 0.5
+      "p90": 0.32
     },
     "transparency": {
-      "median": 0.8,
-      "p10": 0.02,
-      "p90": 0.98
+      "median": 0.84,
+      "p10": 0,
+      "p90": 0.99
     }
   }
 }

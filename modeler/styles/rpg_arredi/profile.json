@@ -1,0 +1,124 @@
+{
+  "style": "rpg_arredi",
+  "builtAt": "2026-11-13T08:45:50.489Z",
+  "references": 21,
+  "images": 0,
+  "categories": {
+    "trofei": 21
+  },
+  "formats": {
+    "java_block": 21
+  },
+  "texelDensity": {
+    "median": 1,
+    "p10": 1,
+    "p90": 1,
+    "consistency": 0.98
+  },
+  "textureSizes": {
+    "128x128": 21
+  },
+  "cubesPerModel": {
+    "median": 17,
+    "p10": 15,
+    "p90": 21
+  },
+  "cubesPerCategory": {
+    "trofei": {
+      "median": 17,
+      "p10": 15,
+      "p90": 21
+    }
+  },
+  "rotatedModelsShare": 1,
+  "offGridRotationShare": 0,
+  "inflateUsageShare": 0,
+  "colors": {
+    "palette": [
+      {
+        "hex": "#763c3b",
+        "share": 0.232
+      },
+      {
+        "hex": "#e4dce5",
+        "share": 0.149
+      },
+      {
+        "hex": "#af5b2d",
+        "share": 0.139
+      },
+      {
+        "hex": "#ea9927",
+        "share": 0.126
+      },
+      {
+        "hex": "#88584b",
+        "share": 0.111
+      },
+      {
+        "hex": "#6d8896",
+        "share": 0.08
+      },
+      {
+        "hex": "#b3a5bf",
+        "share": 0.078
+      },
+      {
+        "hex": "#9ab2b7",
+        "share": 0.042
+      },
+      {
+        "hex": "#ffb963",
+        "share": 0.02
+      },
+      {
+        "hex": "#fff351",
+        "share": 0.02
+      },
+      {
+        "hex": "#fedeb6",
+        "share": 0.003
+      }
+    ],
+    "uniqueColorsPerModel": {
+      "median": 76,
+      "p10": 71,
+      "p90": 78
+    },
+    "saturation": {
+      "median": 0.5,
+      "p10": 0.29,
+      "p90": 0.56
+    },
+    "value": {
+      "median": 0.7,
+      "p10": 0.63,
+      "p90": 0.73
+    },
+    "contrast": {
+      "median": 0.57,
+      "p10": 0.54,
+      "p90": 0.65
+    },
+    "noise": {
+      "median": 0.05,
+      "p10": 0.04,
+      "p90": 0.05
+    },
+    "hueShift": {
+      "median": 4,
+      "p10": -15.7,
+      "p90": 5.1
+    },
+    "edgeDarkening": {
+      "median": 0,
+      "p10": 0,
+      "p90": 0.1
+    },
+    "transparency": {
+      "median": 0.36,
+      "p10": 0.3,
+      "p90": 0.41
+    }
+  }
+}

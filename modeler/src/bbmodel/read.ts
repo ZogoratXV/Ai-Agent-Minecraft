@@ -27,7 +27,7 @@ function boxUv(from: Vec3, to: Vec3, off: [number, number], mirror: boolean): Pa
   };
 }
 
-function loadTexture(t: any, baseDir: string, res: { width: number; height: number }, i: number): Texture | null {
+function loadTexture(t: any, baseDir: string, res: { width: number; height: number }, i: number, perTextureUv: boolean): Texture | null {
   let img: Img | null = null;
   try {
     if (typeof t.source === "string" && t.source.startsWith("data:image/png")) img = Img.fromDataUri(t.source);
@@ -46,8 +46,9 @@ function loadTexture(t: any, baseDir: string, res: { width: number; height: numb
     name: t.name ?? `texture_${i}`,
     uuid: t.uuid ?? uuid(),
     img,
-    uvWidth: t.uv_width ?? res.width,
-    uvHeight: t.uv_height ?? res.height,
+    // Solo il formato java_block ha UV per-texture; negli altri le UV delle facce sono nella risoluzione del progetto
+    uvWidth: perTextureUv ? (t.uv_width ?? res.width) : res.width,
+    uvHeight: perTextureUv ? (t.uv_height ?? res.height) : res.height,
   };
 }
 
@@ -56,8 +57,9 @@ export function readBBModel(json: any, baseDir = "."): Model {
   const res = { width: json.resolution?.width ?? 16, height: json.resolution?.height ?? 16 };
   const textures: Texture[] = [];
   const texIndex = new Map<number, number>();
+  const perTextureUv = (json.meta?.model_format ?? "free") === "java_block";
   (json.textures ?? []).forEach((t: any, i: number) => {
-    const tex = loadTexture(t, baseDir, res, i);
+    const tex = loadTexture(t, baseDir, res, i, perTextureUv);
     if (tex) {
       texIndex.set(i, textures.length);
       textures.push(tex);
@@ -71,6 +73,8 @@ export function readBBModel(json: any, baseDir = "."): Model {
       unsupported++;
       continue;
     }
+    // cubi di riferimento non esportati/nascosti (es. corpo del giocatore nei modelli di armatura)
+    if (e.export === false || e.visibility === false) continue;
     const from = v3(e.from), to = v3(e.to);
     let faces: Partial<Record<FaceDir, Face>> = {};
     const hasFaceUv = e.faces && FACE_DIRS.some((d) => Array.isArray(e.faces[d]?.uv));

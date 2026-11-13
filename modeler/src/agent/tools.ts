@@ -3,6 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 import { tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
 import { ModelSpec, PaintOp, RampSpec } from "../bbmodel/spec";
+import type { OutlineNode } from "../bbmodel/model";
 import { listStyles, loadReference, readIndex, readProfile, styleDir } from "../analyze/style";
 import { validate } from "../analyze/validate";
 import { buildProject, describeModel, exportProject, loadPaint, loadSpec, projectDir, savePaint, saveSpec } from "../project";
@@ -137,11 +138,33 @@ export function artistTools() {
 
     tool(
       "render",
-      "Renderizza il progetto: 8 viste (fronte=nord, lati, retro, 3/4, alto) con shading Minecraft, la texture con le isole UV e, per gli item java_block, una vista approssimata IN MANO a un giocatore 1:1 (alto 2 blocchi) con la scala/traslazione di display.thirdperson_righthand: usala per giudicare proporzioni e se la mano cade sull'impugnatura. GUARDA le immagini con occhio critico dopo ogni modifica importante.",
-      { project: z.string(), texture: z.boolean().default(true) },
-      async ({ project, texture }) => {
+      "Renderizza il progetto: 8 viste (fronte=nord, lati, retro, 3/4, alto) con shading Minecraft, la texture con le isole UV e, per gli item java_block, una vista approssimata IN MANO a un giocatore 1:1 (alto 2 blocchi) con la scala/traslazione di display.thirdperson_righthand: usala per giudicare proporzioni e se la mano cade sull'impugnatura. GUARDA le immagini con occhio critico dopo ogni modifica importante. Con zoomAboveY/zoomBelowY ingrandisce una parte (punta, guardia, pomolo): controlla sempre la punta da vicino.",
+      {
+        project: z.string(),
+        texture: z.boolean().default(true),
+        zoomAboveY: z.number().optional().describe("ingrandimento: mostra solo i cubi che arrivano sopra questa quota (es. la punta della lama)"),
+        zoomBelowY: z.number().optional().describe("ingrandimento: mostra solo i cubi che scendono sotto questa quota (es. impugnatura e pomolo)"),
+      },
+      async ({ project, texture, zoomAboveY, zoomBelowY }) => {
         try {
           const st = buildProject(project);
+          if (zoomAboveY !== undefined || zoomBelowY !== undefined) {
+            const keep = (c: { from: number[]; to: number[] }) =>
+              (zoomAboveY === undefined || Math.max(c.from[1], c.to[1]) > zoomAboveY) && (zoomBelowY === undefined || Math.min(c.from[1], c.to[1]) < zoomBelowY);
+            const filter = (ns: OutlineNode[]): OutlineNode[] =>
+              ns.flatMap((n): OutlineNode[] => (n.kind === "group" ? [{ ...n, children: filter(n.children) }] : keep(n.cube) ? [n] : []));
+            const zoomed = { ...st.model, outline: filter(st.model.outline) };
+            const buf = await renderViews(zoomed, {
+              views: [
+                { label: "zoom fronte", dir: [0, 0, -1] },
+                { label: "zoom lato", dir: [1, 0, 0] },
+                { label: "zoom 3/4", dir: [-1, 0.4, -1] },
+              ],
+              cols: 3,
+              cell: 420,
+            });
+            return { content: [img(buf)] };
+          }
           const views = await renderViews(st.model);
           const dir = path.join(projectDir(project), "renders");
           fs.mkdirSync(dir, { recursive: true });

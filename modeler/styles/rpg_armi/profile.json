@@ -1,0 +1,211 @@
+{
+  "style": "rpg_armi",
+  "builtAt": "2026-11-13T08:36:12.827Z",
+  "references": 6,
+  "images": 0,
+  "categories": {
+    "armi": 5,
+    "armi_paladin": 1
+  },
+  "formats": {
+    "java_block": 6
+  },
+  "texelDensity": {
+    "median": 1.27,
+    "p10": 1.08,
+    "p90": 1.74,
+    "consistency": 1
+  },
+  "textureSizes": {
+    "128x128": 7,
+    "64x64": 1
+  },
+  "cubesPerModel": {
+    "median": 16.5,
+    "p10": 10,
+    "p90": 29
+  },
+  "cubesPerCategory": {
+    "armi": {
+      "median": 17,
+      "p10": 9.8,
+      "p90": 30.8
+    },
+    "armi_paladin": {
+      "median": 16,
+      "p10": 16,
+      "p90": 16
+    }
+  },
+  "rotatedModelsShare": 0.83,
+  "offGridRotationShare": 0,
+  "inflateUsageShare": 0.17,
+  "colors": {
+    "palette": [
+      {
+        "hex": "#222134",
+        "share": 0.117
+      },
+      {
+        "hex": "#afccce",
+        "share": 0.084
+      },
+      {
+        "hex": "#473d57",
+        "share": 0.07
+      },
+      {
+        "hex": "#884935",
+        "share": 0.064
+      },
+      {
+        "hex": "#514670",
+        "share": 0.056
+      },
+      {
+        "hex": "#eaae48",
+        "share": 0.05
+      },
+      {
+        "hex": "#c67369",
+        "share": 0.049
+      },
+      {
+        "hex": "#6d6e6c",
+        "share": 0.044
+      },
+      {
+        "hex": "#6e758c",
+        "share": 0.043
+      },
+      {
+        "hex": "#a15155",
+        "share": 0.039
+      },
+      {
+        "hex": "#cde0e1",
+        "share": 0.038
+      },
+      {
+        "hex": "#bd7342",
+        "share": 0.036
+      },
+      {
+        "hex": "#394b5c",
+        "share": 0.035
+      },
+      {
+        "hex": "#6a3f50",
+        "share": 0.031
+      },
+      {
+        "hex": "#473042",
+        "share": 0.029
+      },
+      {
+        "hex": "#96c6b2",
+        "share": 0.029
+      },
+      {
+        "hex": "#5e677c",
+        "share": 0.025
+      },
+      {
+        "hex": "#92a29f",
+        "share": 0.025
+      },
+      {
+        "hex": "#556c7f",
+        "share": 0.024
+      },
+      {
+        "hex": "#984270",
+        "share": 0.021
+      },
+      {
+        "hex": "#f4dc85",
+        "share": 0.02
+      },
+      {
+        "hex": "#69bd9f",
+        "share": 0.017
+      },
+      {
+        "hex": "#867f99",
+        "share": 0.017
+      },
+      {
+        "hex": "#d2c18f",
+        "share": 0.01
+      },
+      {
+        "hex": "#b95031",
+        "share": 0.01
+      },
+      {
+        "hex": "#4d454d",
+        "share": 0.007
+      },
+      {
+        "hex": "#698596",
+        "share": 0.005
+      },
+      {
+        "hex": "#6ab9b1",
+        "share": 0.002
+      },
+      {
+        "hex": "#6bc249",
+        "share": 0.001
+      },
+      {
+        "hex": "#335154",
+        "share": 0
+      },
+      {
+        "hex": "#319d24",
+        "share": 0
+      }
+    ],
+    "uniqueColorsPerModel": {
+      "median": 14,
+      "p10": 11.5,
+      "p90": 19
+    },
+    "saturation": {
+      "median": 0.4,
+      "p10": 0.28,
+      "p90": 0.46
+    },
+    "value": {
+      "median": 0.51,
+      "p10": 0.33,
+      "p90": 0.74
+    },
+    "contrast": {
+      "median": 0.64,
+      "p10": 0.31,
+      "p90": 0.76
+    },
+    "noise": {
+      "median": 0.07,
+      "p10": 0.04,
+      "p90": 0.09
+    },
+    "hueShift": {
+      "median": 11.7,
+      "p10": 1.7,
+      "p90": 17.5
+    },
+    "edgeDarkening": {
+      "median": 0.09,
+      "p10": 0,
+      "p90": 0.2
+    },
+    "transparency": {
+      "median": 0.16,
+      "p10": 0.08,
+      "p90": 0.46
+    }
+  }
+}

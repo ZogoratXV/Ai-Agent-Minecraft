@@ -58,13 +58,25 @@ export function medianCut(px: RGBA[], k: number): { color: RGBA; count: number }
     const mid = b.length >> 1;
     boxes.splice(bi, 1, b.slice(0, mid), b.slice(mid));
   }
-  return boxes
-    .map((b) => {
-      const s = [0, 0, 0];
-      for (const p of b) for (let i = 0; i < 3; i++) s[i] += p[i];
-      return { color: [s[0] / b.length, s[1] / b.length, s[2] / b.length, 255].map(Math.round) as RGBA, count: b.length };
-    })
-    .sort((a, b) => b.count - a.count);
+  // centroidi unici, poi ogni pixel viene assegnato al più vicino: le quote riflettono la frequenza reale
+  // (il median cut da solo divide sempre in gruppi di uguale numerosità)
+  const centers: RGBA[] = [];
+  for (const b of boxes) {
+    const s = [0, 0, 0];
+    for (const p of b) for (let i = 0; i < 3; i++) s[i] += p[i];
+    const c = [s[0] / b.length, s[1] / b.length, s[2] / b.length, 255].map(Math.round) as RGBA;
+    if (!centers.some((o) => Math.abs(o[0] - c[0]) + Math.abs(o[1] - c[1]) + Math.abs(o[2] - c[2]) < 6)) centers.push(c);
+  }
+  const counts = new Array(centers.length).fill(0);
+  for (const p of px) {
+    let best = 0, bd = Infinity;
+    for (let i = 0; i < centers.length; i++) {
+      const d = (p[0] - centers[i][0]) ** 2 + (p[1] - centers[i][1]) ** 2 + (p[2] - centers[i][2]) ** 2;
+      if (d < bd) { bd = d; best = i; }
+    }
+    counts[best]++;
+  }
+  return centers.map((color, i) => ({ color, count: counts[i] })).filter((c) => c.count > 0).sort((a, b) => b.count - a.count);
 }
 
 export function colorMetrics(m: Model): ColorMetrics {

@@ -1,3 +1,6 @@
 node_modules/
 projects/*/renders/
 styles/*/previews/
+# riferimenti acquistati/di terzi: restano solo in locale
+styles/*/references/
+styles/*/index.json

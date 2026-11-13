@@ -1,6 +1,6 @@
 {
   "style": "rpg_vfx",
-  "builtAt": "2026-11-13T08:45:37.707Z",
+  "builtAt": "2026-11-13T10:08:52.653Z",
   "references": 62,
   "images": 35,
   "categories": {
@@ -13,19 +13,15 @@
   "texelDensity": {
     "median": 2.11,
     "p10": 0.87,
-    "p90": 19.86,
-    "consistency": 0.37
+    "p90": 19.2,
+    "consistency": 0.44
   },
   "textureSizes": {
-    "256x256": 9,
-    "128x128": 61,
+    "256x256": 10,
+    "128x128": 73,
     "64x64": 7,
-    "256x2560": 1,
     "512x512": 7,
-    "128x1152": 5,
     "16x16": 9,
-    "128x768": 3,
-    "128x1280": 4,
     "32x32": 1
   },
   "cubesPerModel": {
@@ -47,124 +43,120 @@
     "palette": [
       {
         "hex": "#c48e6c",
-        "share": 0.174
+        "share": 0.199
       },
       {
         "hex": "#a26b4d",
-        "share": 0.097
+        "share": 0.123
       },
       {
-        "hex": "#efdb75",
-        "share": 0.093
+        "hex": "#f2c24e",
+        "share": 0.118
       },
       {
-        "hex": "#f9ab2d",
-        "share": 0.082
+        "hex": "#f5f3cd",
+        "share": 0.105
       },
       {
-        "hex": "#f2f1d5",
-        "share": 0.074
+        "hex": "#150906",
+        "share": 0.067
       },
       {
-        "hex": "#f86515",
-        "share": 0.063
+        "hex": "#f44a19",
+        "share": 0.037
       },
       {
-        "hex": "#160b09",
-        "share": 0.06
+        "hex": "#bcf6ff",
+        "share": 0.036
       },
       {
-        "hex": "#6f4e3a",
-        "share": 0.043
+        "hex": "#961707",
+        "share": 0.032
       },
       {
-        "hex": "#4a1d0d",
-        "share": 0.035
+        "hex": "#d1975f",
+        "share": 0.032
       },
       {
-        "hex": "#bdf9ff",
-        "share": 0.03
+        "hex": "#df883f",
+        "share": 0.032
       },
       {
-        "hex": "#911b0a",
-        "share": 0.03
+        "hex": "#76bbf4",
+        "share": 0.031
       },
       {
-        "hex": "#cc9665",
-        "share": 0.03
-      },
-      {
-        "hex": "#fdc631",
+        "hex": "#4a180a",
         "share": 0.029
       },
       {
-        "hex": "#77bbf4",
+        "hex": "#daa585",
+        "share": 0.029
+      },
+      {
+        "hex": "#805440",
         "share": 0.028
       },
       {
-        "hex": "#dca587",
-        "share": 0.025
+        "hex": "#90d7f8",
+        "share": 0.027
       },
       {
-        "hex": "#8dd3f8",
-        "share": 0.022
+        "hex": "#4b392a",
+        "share": 0.021
       },
       {
-        "hex": "#b6835b",
-        "share": 0.018
+        "hex": "#6d4f41",
+        "share": 0.012
       },
       {
-        "hex": "#828e98",
-        "share": 0.017
+        "hex": "#828f9d",
+        "share": 0.009
       },
       {
-        "hex": "#aca6b5",
-        "share": 0.015
+        "hex": "#b0adbd",
+        "share": 0.007
       },
       {
-        "hex": "#a1573e",
-        "share": 0.015
+        "hex": "#acb78b",
+        "share": 0.006
       },
       {
-        "hex": "#836355",
+        "hex": "#625a62",
         "share": 0.005
       },
       {
-        "hex": "#394061",
+        "hex": "#984f38",
         "share": 0.004
       },
       {
-        "hex": "#ace7f8",
+        "hex": "#aa7850",
         "share": 0.003
       },
       {
-        "hex": "#b9e493",
+        "hex": "#2d3465",
         "share": 0.003
       },
       {
-        "hex": "#6a4dbb",
+        "hex": "#6d4ec1",
         "share": 0.002
       },
       {
-        "hex": "#1935ba",
+        "hex": "#1b38c3",
         "share": 0.002
       },
       {
-        "hex": "#be9273",
-        "share": 0.001
-      },
-      {
-        "hex": "#cb9574",
+        "hex": "#ce9877",
         "share": 0
       }
     ],
     "uniqueColorsPerModel": {
-      "median": 6.5,
+      "median": 6,
       "p10": 1,
       "p90": 161
     },
     "saturation": {
-      "median": 0.43,
+      "median": 0.46,
       "p10": 0.01,
       "p90": 0.86
     },
@@ -174,7 +166,7 @@
       "p90": 0.98
     },
     "contrast": {
-      "median": 0.3,
+      "median": 0.29,
       "p10": 0,
       "p90": 0.58
     },

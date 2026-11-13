@@ -1,34 +1,41 @@
 {
   "style": "rpg_armature",
-  "builtAt": "2026-11-13T08:43:43.411Z",
-  "references": 5,
+  "builtAt": "2026-11-13T10:07:17.872Z",
+  "references": 6,
   "images": 0,
   "categories": {
-    "armature": 5
+    "armature": 5,
+    "armature_paladin": 1
   },
   "formats": {
-    "geckolib_model": 5
+    "geckolib_model": 5,
+    "free": 1
   },
   "texelDensity": {
     "median": 1,
-    "p10": 1,
+    "p10": 0.99,
     "p90": 1,
     "consistency": 0.93
   },
   "textureSizes": {
-    "256x256": 4,
+    "256x256": 8,
     "128x128": 1
   },
   "cubesPerModel": {
-    "median": 189,
-    "p10": 175,
-    "p90": 201.4
+    "median": 191,
+    "p10": 175.5,
+    "p90": 212.5
   },
   "cubesPerCategory": {
     "armature": {
       "median": 189,
       "p10": 175,
       "p90": 201.4
+    },
+    "armature_paladin": {
+      "median": 218,
+      "p10": 218,
+      "p90": 218
     }
   },
   "rotatedModelsShare": 1,
@@ -37,149 +44,161 @@
   "colors": {
     "palette": [
       {
-        "hex": "#47496b",
-        "share": 0.12
+        "hex": "#4b496e",
+        "share": 0.099
       },
       {
-        "hex": "#1d1b28",
-        "share": 0.101
+        "hex": "#58698d",
+        "share": 0.087
       },
       {
-        "hex": "#3b2a45",
-        "share": 0.093
+        "hex": "#3e324f",
+        "share": 0.084
       },
       {
-        "hex": "#793031",
-        "share": 0.076
+        "hex": "#27273b",
+        "share": 0.074
       },
       {
-        "hex": "#53638a",
-        "share": 0.052
+        "hex": "#16131d",
+        "share": 0.064
       },
       {
-        "hex": "#461e26",
-        "share": 0.051
+        "hex": "#7d322f",
+        "share": 0.058
       },
       {
-        "hex": "#78a5e3",
-        "share": 0.048
+        "hex": "#c2602c",
+        "share": 0.045
       },
       {
-        "hex": "#f5c47c",
-        "share": 0.048
+        "hex": "#88add4",
+        "share": 0.045
       },
       {
-        "hex": "#5d77b3",
-        "share": 0.047
+        "hex": "#eac873",
+        "share": 0.043
       },
       {
-        "hex": "#da8960",
-        "share": 0.037
+        "hex": "#7e99a6",
+        "share": 0.04
       },
       {
-        "hex": "#f4eaa9",
+        "hex": "#6078ba",
+        "share": 0.039
+      },
+      {
+        "hex": "#412536",
+        "share": 0.035
+      },
+      {
+        "hex": "#e9a743",
         "share": 0.034
       },
       {
-        "hex": "#8e3d40",
-        "share": 0.034
+        "hex": "#eee8a0",
+        "share": 0.031
       },
       {
-        "hex": "#c46637",
-        "share": 0.033
+        "hex": "#abc0c3",
+        "share": 0.03
       },
       {
-        "hex": "#778e9c",
-        "share": 0.032
-      },
-      {
-        "hex": "#e4ede2",
-        "share": 0.029
-      },
-      {
-        "hex": "#b3c2ca",
-        "share": 0.027
-      },
-      {
-        "hex": "#79a0b0",
+        "hex": "#ab4332",
         "share": 0.026
       },
       {
-        "hex": "#a9d7e9",
-        "share": 0.021
+        "hex": "#cc7075",
+        "share": 0.023
       },
       {
-        "hex": "#a3bbbc",
-        "share": 0.021
+        "hex": "#3e1214",
+        "share": 0.022
       },
       {
-        "hex": "#efb95c",
-        "share": 0.021
-      },
-      {
-        "hex": "#be552a",
+        "hex": "#a7dbea",
         "share": 0.02
       },
       {
-        "hex": "#a7393a",
-        "share": 0.011
+        "hex": "#8c778f",
+        "share": 0.02
       },
       {
-        "hex": "#f3d084",
+        "hex": "#f1f6db",
+        "share": 0.019
+      },
+      {
+        "hex": "#f8be5a",
+        "share": 0.015
+      },
+      {
+        "hex": "#b8c8cb",
+        "share": 0.014
+      },
+      {
+        "hex": "#e08f69",
+        "share": 0.013
+      },
+      {
+        "hex": "#b3c2ca",
+        "share": 0.008
+      },
+      {
+        "hex": "#f6eba8",
         "share": 0.007
       },
       {
-        "hex": "#a8c0c0",
-        "share": 0.006
+        "hex": "#cad9d7",
+        "share": 0.005
       },
       {
-        "hex": "#8a8c9f",
-        "share": 0.004
+        "hex": "#f4d483",
+        "share": 0.001
       },
       {
-        "hex": "#97afb4",
+        "hex": "#db8d41",
         "share": 0
       }
     ],
     "uniqueColorsPerModel": {
-      "median": 25,
-      "p10": 17.6,
-      "p90": 27.2
+      "median": 22.5,
+      "p10": 14,
+      "p90": 27
     },
     "saturation": {
-      "median": 0.4,
-      "p10": 0.35,
-      "p90": 0.56
+      "median": 0.39,
+      "p10": 0.32,
+      "p90": 0.55
     },
     "value": {
-      "median": 0.57,
+      "median": 0.56,
       "p10": 0.54,
       "p90": 0.61
     },
     "contrast": {
-      "median": 0.76,
-      "p10": 0.6,
+      "median": 0.75,
+      "p10": 0.62,
       "p90": 0.8
     },
     "noise": {
       "median": 0.07,
-      "p10": 0.06,
+      "p10": 0.05,
       "p90": 0.08
     },
     "hueShift": {
-      "median": 9.4,
-      "p10": -1.8,
-      "p90": 13.64
+      "median": 5.9,
+      "p10": -1.3,
+      "p90": 13.5
     },
     "edgeDarkening": {
-      "median": 0.05,
-      "p10": 0.01,
+      "median": 0.09,
+      "p10": 0.02,
       "p90": 0.16
     },
     "transparency": {
-      "median": 0.46,
-      "p10": 0.42,
-      "p90": 0.5
+      "median": 0.48,
+      "p10": 0.43,
+      "p90": 0.52
     }
   }
 }

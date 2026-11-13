@@ -1,29 +1,35 @@
 {
   "style": "rpg_armi",
-  "builtAt": "2026-11-13T08:43:54.675Z",
-  "references": 6,
+  "builtAt": "2026-11-13T10:07:05.310Z",
+  "references": 23,
   "images": 0,
   "categories": {
     "armi": 5,
-    "armi_paladin": 1
+    "armi_fantasy": 5,
+    "armi_paladin": 1,
+    "armi_paladin2": 3,
+    "armi_sketch": 4,
+    "spadoni": 5
   },
   "formats": {
-    "java_block": 6
+    "java_block": 23
   },
   "texelDensity": {
-    "median": 1.27,
-    "p10": 1.08,
-    "p90": 1.74,
-    "consistency": 1
+    "median": 1.87,
+    "p10": 1,
+    "p90": 2,
+    "consistency": 0.93
   },
   "textureSizes": {
-    "128x128": 7,
-    "64x64": 1
+    "128x128": 15,
+    "64x64": 12,
+    "16x16": 1,
+    "32x32": 4
   },
   "cubesPerModel": {
-    "median": 16.5,
-    "p10": 10,
-    "p90": 29
+    "median": 38,
+    "p10": 16,
+    "p90": 78.2
   },
   "cubesPerCategory": {
     "armi": {
@@ -31,181 +37,201 @@
       "p10": 9.8,
       "p90": 30.8
     },
+    "armi_fantasy": {
+      "median": 27,
+      "p10": 20,
+      "p90": 35.2
+    },
     "armi_paladin": {
       "median": 16,
       "p10": 16,
       "p90": 16
+    },
+    "armi_paladin2": {
+      "median": 44,
+      "p10": 36,
+      "p90": 65.6
+    },
+    "armi_sketch": {
+      "median": 45.5,
+      "p10": 38.6,
+      "p90": 61.5
+    },
+    "spadoni": {
+      "median": 80,
+      "p10": 69.8,
+      "p90": 93
     }
   },
-  "rotatedModelsShare": 0.83,
+  "rotatedModelsShare": 0.96,
   "offGridRotationShare": 0,
-  "inflateUsageShare": 0.17,
+  "inflateUsageShare": 0.3,
   "colors": {
     "palette": [
       {
-        "hex": "#222134",
-        "share": 0.117
+        "hex": "#37242d",
+        "share": 0.071
       },
       {
-        "hex": "#afccce",
-        "share": 0.084
-      },
-      {
-        "hex": "#473d57",
+        "hex": "#abbfc1",
         "share": 0.07
       },
       {
-        "hex": "#884935",
-        "share": 0.064
+        "hex": "#433a60",
+        "share": 0.06
       },
       {
-        "hex": "#514670",
+        "hex": "#151823",
+        "share": 0.057
+      },
+      {
+        "hex": "#cbddb8",
         "share": 0.056
       },
       {
-        "hex": "#eaae48",
-        "share": 0.05
+        "hex": "#853b31",
+        "share": 0.055
       },
       {
-        "hex": "#c67369",
-        "share": 0.049
+        "hex": "#f0d256",
+        "share": 0.055
       },
       {
-        "hex": "#6d6e6c",
-        "share": 0.044
+        "hex": "#af5559",
+        "share": 0.051
       },
       {
-        "hex": "#6e758c",
-        "share": 0.043
+        "hex": "#536187",
+        "share": 0.047
       },
       {
-        "hex": "#a15155",
+        "hex": "#b3e1df",
+        "share": 0.041
+      },
+      {
+        "hex": "#e9a132",
+        "share": 0.041
+      },
+      {
+        "hex": "#7c94a1",
+        "share": 0.04
+      },
+      {
+        "hex": "#3f304e",
         "share": 0.039
       },
       {
-        "hex": "#cde0e1",
+        "hex": "#56696e",
         "share": 0.038
       },
       {
-        "hex": "#bd7342",
-        "share": 0.036
+        "hex": "#6d6289",
+        "share": 0.034
       },
       {
-        "hex": "#394b5c",
-        "share": 0.035
+        "hex": "#eaf1e0",
+        "share": 0.028
       },
       {
-        "hex": "#6a3f50",
-        "share": 0.031
-      },
-      {
-        "hex": "#473042",
-        "share": 0.029
-      },
-      {
-        "hex": "#96c6b2",
-        "share": 0.029
-      },
-      {
-        "hex": "#5e677c",
+        "hex": "#4b4962",
         "share": 0.025
       },
       {
-        "hex": "#92a29f",
+        "hex": "#4d8aa9",
         "share": 0.025
       },
       {
-        "hex": "#556c7f",
-        "share": 0.024
+        "hex": "#c99a65",
+        "share": 0.023
       },
       {
-        "hex": "#984270",
-        "share": 0.021
+        "hex": "#b04927",
+        "share": 0.022
       },
       {
-        "hex": "#f4dc85",
+        "hex": "#60bdc9",
         "share": 0.02
       },
       {
-        "hex": "#69bd9f",
-        "share": 0.017
+        "hex": "#5d3683",
+        "share": 0.02
       },
       {
-        "hex": "#867f99",
-        "share": 0.017
+        "hex": "#5e6f97",
+        "share": 0.018
       },
       {
-        "hex": "#d2c18f",
-        "share": 0.01
+        "hex": "#4e346b",
+        "share": 0.016
       },
       {
-        "hex": "#b95031",
-        "share": 0.01
+        "hex": "#b77f32",
+        "share": 0.013
       },
       {
-        "hex": "#4d454d",
+        "hex": "#838ea8",
+        "share": 0.009
+      },
+      {
+        "hex": "#8ea5a5",
         "share": 0.007
       },
       {
-        "hex": "#698596",
-        "share": 0.005
+        "hex": "#b1a7ac",
+        "share": 0.006
       },
       {
-        "hex": "#6ab9b1",
+        "hex": "#4fc1a3",
+        "share": 0.006
+      },
+      {
+        "hex": "#974aa3",
+        "share": 0.003
+      },
+      {
+        "hex": "#aa77c8",
         "share": 0.002
-      },
-      {
-        "hex": "#6bc249",
-        "share": 0.001
-      },
-      {
-        "hex": "#335154",
-        "share": 0
-      },
-      {
-        "hex": "#319d24",
-        "share": 0
       }
     ],
     "uniqueColorsPerModel": {
-      "median": 14,
-      "p10": 11.5,
-      "p90": 19
+      "median": 16,
+      "p10": 11,
+      "p90": 23
     },
     "saturation": {
-      "median": 0.4,
-      "p10": 0.28,
-      "p90": 0.46
+      "median": 0.41,
+      "p10": 0.29,
+      "p90": 0.6
     },
     "value": {
-      "median": 0.51,
-      "p10": 0.33,
-      "p90": 0.74
+      "median": 0.58,
+      "p10": 0.51,
+      "p90": 0.79
     },
     "contrast": {
-      "median": 0.64,
-      "p10": 0.31,
-      "p90": 0.76
+      "median": 0.71,
+      "p10": 0.59,
+      "p90": 0.86
     },
     "noise": {
       "median": 0.07,
-      "p10": 0.04,
-      "p90": 0.09
+      "p10": 0.05,
+      "p90": 0.1
     },
     "hueShift": {
-      "median": 11.7,
-      "p10": 1.7,
-      "p90": 17.5
+      "median": 10.3,
+      "p10": 4.84,
+      "p90": 15.72
     },
     "edgeDarkening": {
-      "median": 0.09,
+      "median": 0,
       "p10": 0,
-      "p90": 0.2
+      "p90": 0.18
     },
     "transparency": {
-      "median": 0.16,
-      "p10": 0.08,
-      "p90": 0.46
+      "median": 0.29,
+      "p10": 0.15,
+      "p90": 0.43
     }
   }
 }

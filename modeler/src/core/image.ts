@@ -29,6 +29,23 @@ export class Img {
     return "data:image/png;base64," + this.toPng().toString("base64");
   }
 
+  /** Ritaglia il rettangolo (x, y, w, h). */
+  crop(x: number, y: number, w: number, h: number): Img {
+    const out = new Img(w, h);
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) if (this.inside(x + i, y + j)) out.set(i, j, this.get(x + i, y + j));
+    return out;
+  }
+
+  /**
+   * Texture animate (strisce di fotogrammi impilati in verticale): restituisce il primo fotogramma,
+   * cioè quello che il gioco mostra con le UV, se l'immagine è `frames` volte più alta del rapporto atteso.
+   */
+  firstFrame(expectedAspect = 1): Img {
+    const frameH = Math.round(this.width * expectedAspect);
+    if (frameH > 0 && this.height > frameH && this.height % frameH === 0) return this.crop(0, 0, this.width, frameH);
+    return this;
+  }
+
   clone(): Img {
     return new Img(this.width, this.height, new Uint8ClampedArray(this.data));
   }

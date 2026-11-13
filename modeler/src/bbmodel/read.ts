@@ -42,6 +42,9 @@ function loadTexture(t: any, baseDir: string, res: { width: number; height: numb
     img = null;
   }
   if (!img) return null;
+  const uvW = perTextureUv ? (t.uv_width ?? res.width) : res.width;
+  const uvH = perTextureUv ? (t.uv_height ?? res.height) : res.height;
+  img = img.firstFrame(uvH / uvW);
   return {
     name: t.name ?? `texture_${i}`,
     uuid: t.uuid ?? uuid(),
@@ -150,7 +153,8 @@ export function readJavaModel(json: any, name: string, textureDirs: string[]): M
         break;
       }
       if (fs.existsSync(p)) {
-        const img = Img.fromPng(fs.readFileSync(p));
+        // nei modelli Java lo spazio UV è sempre quadrato: le texture animate vanno ridotte al primo fotogramma
+        const img = Img.fromPng(fs.readFileSync(p)).firstFrame(1);
         keyToIndex.set(k, textures.length);
         textures.push({ name: base, uuid: uuid(), img, uvWidth: 16, uvHeight: 16 });
         break;

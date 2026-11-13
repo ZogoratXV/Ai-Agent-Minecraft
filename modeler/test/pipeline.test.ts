@@ -216,3 +216,16 @@ describe("formati GeckoLib", () => {
     expect(m.textures[0].uvWidth).toBe(64);
   });
 });
+
+describe("texture animate", () => {
+  it("usa il primo fotogramma delle strisce animate nei modelli Java", async () => {
+    const { Img } = await import("../src/core/image");
+    const dir = fs.mkdtempSync(path.join(HOME, "anim-"));
+    const strip = new Img(16, 64);
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 16; x++) strip.set(x, y, y < 16 ? [255, 0, 0, 255] : [0, 0, 255, 255]);
+    fs.writeFileSync(path.join(dir, "glow.png"), strip.toPng());
+    const m = readJavaModel({ textures: { "0": "ns:item/glow" }, elements: [{ from: [0, 0, 0], to: [16, 16, 16], faces: { north: { uv: [0, 0, 16, 16], texture: "#0" } } }] }, "glow", [dir]);
+    expect([m.textures[0].img.width, m.textures[0].img.height]).toEqual([16, 16]);
+    expect(m.textures[0].img.get(0, 15)).toEqual([255, 0, 0, 255]);
+  });
+});

@@ -47,6 +47,14 @@ stile specifico (`styles/<stile>/notes.md`) hanno sempre la precedenza su queste
 - Le facce che si vedono di più (fronte, alto) meritano più dettaglio; quelle nascoste o il fondo meno.
 - Leggibilità a distanza: guarda il render piccolo; se i dettagli diventano poltiglia, semplifica.
 
+## Item tenuti in mano
+- Il gioco tiene l'item per il **centro del blocco (8,8,8)**: l'impugnatura va costruita lì (x=8, z=8, y intorno a 8)
+  oppure spostata con `display.thirdperson_righthand.translation`. Una mano che stringe la testa del bastone o il
+  vuoto è l'errore più visibile in gioco.
+- La grandezza in mano si decide con `display` (scala), non solo con le misure del modello: confrontala con il
+  giocatore (2 blocchi) e con l'altezza in mano dei riferimenti dello stile.
+- Imposta sempre almeno `thirdperson_righthand`, `firstperson_righthand`, `gui` e `ground`.
+
 ## Formati e destinazioni
 - `java_block`: blocchi e item del resource pack (Java Edition). Coordinate -16..32, niente bone animabili,
   niente inflate. Esporta JSON + PNG.

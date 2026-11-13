@@ -1,6 +1,6 @@
 {
   "style": "rpg_arredi",
-  "builtAt": "2026-11-13T10:07:30.145Z",
+  "builtAt": "2026-11-13T10:34:56.094Z",
   "references": 21,
   "images": 0,
   "categories": {
@@ -33,6 +33,19 @@
   "rotatedModelsShare": 1,
   "offGridRotationShare": 0,
   "inflateUsageShare": 0,
+  "inHand": {
+    "scale": {
+      "median": 0.38,
+      "p10": 0.38,
+      "p90": 0.38
+    },
+    "heightBlocks": {
+      "median": 0.61,
+      "p10": 0.51,
+      "p90": 0.72
+    },
+    "withDisplay": 21
+  },
   "colors": {
     "palette": [
       {

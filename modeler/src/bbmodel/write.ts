@@ -55,6 +55,7 @@ export function writeBBModel(m: Model): any {
     meta: { format_version: "4.10", model_format: m.format, box_uv: false },
     name: m.name,
     model_identifier: m.format === "bedrock" ? m.name : "",
+    ...(m.display ? { display: m.display } : {}),
     visible_box: [1, 1, 0],
     variable_placeholders: "",
     variable_placeholder_buttons: [],
@@ -103,6 +104,7 @@ export function writeJavaModel(m: Model, textureRef: string): any {
     credit: "Made with Blockbench (blockbench-artist)",
     ...(m.resolution.width !== 16 || m.resolution.height !== 16 ? { texture_size: [m.resolution.width, m.resolution.height] } : {}),
     textures: { "0": textureRef, particle: textureRef },
+    ...(m.display ? { display: m.display } : {}),
     elements: allCubes(m.outline).map((c) => {
       const ax = c.rotation.findIndex((r) => r !== 0);
       const faces: any = {};

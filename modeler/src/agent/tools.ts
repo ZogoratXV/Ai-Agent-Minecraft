@@ -6,7 +6,7 @@ import { ModelSpec, PaintOp, RampSpec } from "../bbmodel/spec";
 import { listStyles, loadReference, readIndex, readProfile, styleDir } from "../analyze/style";
 import { validate } from "../analyze/validate";
 import { buildProject, describeModel, exportProject, loadPaint, loadSpec, projectDir, savePaint, saveSpec } from "../project";
-import { renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
+import { renderInHand, renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
 
 type Content = { type: "text"; text: string } | { type: "image"; data: string; mimeType: string };
 const text = (t: string): { content: Content[] } => ({ content: [{ type: "text", text: t }] });
@@ -137,7 +137,7 @@ export function artistTools() {
 
     tool(
       "render",
-      "Renderizza il progetto: 8 viste (fronte=nord, lati, retro, 3/4, alto) con shading Minecraft e la texture con le isole UV. GUARDA le immagini con occhio critico dopo ogni modifica importante.",
+      "Renderizza il progetto: 8 viste (fronte=nord, lati, retro, 3/4, alto) con shading Minecraft, la texture con le isole UV e, per gli item java_block, una vista approssimata IN MANO a un giocatore 1:1 (alto 2 blocchi) con la scala/traslazione di display.thirdperson_righthand: usala per giudicare proporzioni e se la mano cade sull'impugnatura. GUARDA le immagini con occhio critico dopo ogni modifica importante.",
       { project: z.string(), texture: z.boolean().default(true) },
       async ({ project, texture }) => {
         try {
@@ -147,6 +147,11 @@ export function artistTools() {
           fs.mkdirSync(dir, { recursive: true });
           fs.writeFileSync(path.join(dir, "views.png"), views);
           const content: Content[] = [img(views)];
+          if (st.model.format === "java_block") {
+            const hand = await renderInHand(st.model);
+            fs.writeFileSync(path.join(dir, "inhand.png"), hand);
+            content.push(img(hand));
+          }
           if (texture !== false) {
             const t = await renderTexture(st.model);
             if (t) {

@@ -22,6 +22,8 @@ export interface ModelMetrics {
   uvCoverage: number;
   overlappingUvFaces: number;
   colors: ColorMetrics;
+  /** solo item con display: scala in terza persona e altezza risultante in mano (blocchi) */
+  inHand?: { scale: number; heightBlocks: number };
 }
 
 export interface ColorMetrics {
@@ -212,7 +214,15 @@ export function modelMetrics(m: Model): ModelMetrics {
     uvCoverage: round(texArea ? covered / texArea : 0),
     overlappingUvFaces: overlaps,
     colors: colorMetrics(m),
+    ...inHandMetrics(m, max[1] - min[1]),
   };
+}
+
+function inHandMetrics(m: Model, height: number): { inHand?: ModelMetrics["inHand"] } {
+  const s = m.display?.thirdperson_righthand?.scale;
+  if (m.format !== "java_block" || !isFinite(height)) return {};
+  const scale = s ? Math.max(...s) : 1;
+  return { inHand: { scale: round(scale), heightBlocks: round((height * scale) / 16) } };
 }
 
 /** Quanta parte dei pixel del modello è vicina (ΔE) alla palette dello stile. */

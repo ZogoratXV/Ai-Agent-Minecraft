@@ -186,7 +186,7 @@ describe("stile + strumenti dell'agente", () => {
     await call("paint", { project: "test_lantern", mode: "replace", ...lanternPaint() });
 
     const rend = await call("render", { project: "test_lantern" });
-    expect(rend.content.filter((c) => c.type === "image")).toHaveLength(2);
+    expect(rend.content.filter((c) => c.type === "image")).toHaveLength(3); // viste, texture, in mano
     const val = await call("validate", { project: "test_lantern", style: "demo" });
     expect(val.content[0].text).toMatch(/Punteggio 100\/100/);
     const exp = await call("export", { project: "test_lantern" });

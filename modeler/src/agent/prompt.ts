@@ -48,6 +48,9 @@ When the user gives feedback that applies beyond this asset, save it with record
 - Cube faces: north(-Z) south(+Z) east(+X) west(-X) up down. In face-local paint coordinates (0,0) is the
   top-left of the face as seen from outside; "up" faces have north at the top.
 - Use hideFaces for faces fully hidden inside other cubes and uvFrom/mirrorUv for identical parts.
+- Held items (java_block weapons/tools): the game holds the item at the block centre (8,8,8). Put the grip there
+  (x=8, z=8, y≈8) or compensate with display.thirdperson_righthand.translation, and set display scale so the size
+  in hand matches the style profile ("In mano" line). Always check the in-hand render: the hand must sit on the grip.
 
 ${guidelines}`;
 }

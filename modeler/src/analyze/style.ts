@@ -46,6 +46,7 @@ export interface StyleProfile {
   rotatedModelsShare: number;
   offGridRotationShare: number;
   inflateUsageShare: number;
+  inHand?: { scale: Range; heightBlocks: Range; withDisplay: number };
   colors: {
     palette: { hex: string; share: number }[];
     uniqueColorsPerModel: Range;
@@ -222,6 +223,15 @@ export async function buildStyle(style: string, opts: { previews?: boolean; log?
     rotatedModelsShare: round(ms.filter((m) => m.rotation.rotatedCubes > 0).length / Math.max(1, ms.length)),
     offGridRotationShare: round(ms.filter((m) => m.rotation.offGrid > 0).length / Math.max(1, ms.length)),
     inflateUsageShare: round(ms.filter((m) => m.inflatedCubes > 0).length / Math.max(1, ms.length)),
+    ...(ms.some((m) => m.inHand)
+      ? {
+          inHand: {
+            scale: rng(ms.filter((m) => m.inHand).map((m) => m.inHand!.scale)),
+            heightBlocks: rng(ms.filter((m) => m.inHand).map((m) => m.inHand!.heightBlocks)),
+            withDisplay: index.filter((e) => e.metrics?.inHand).length,
+          },
+        }
+      : {}),
     colors: {
       palette: medianCut(sample, 32).map((p) => ({ hex: toHex(p.color), share: round(p.count / Math.max(1, sample.length), 3) })),
       uniqueColorsPerModel: rng(ms.map((m) => m.colors.uniqueColors)),
@@ -258,7 +268,8 @@ _Generato da ${p.references} modelli e ${p.images} immagini di riferimento (${p.
 - **Texture tipiche**: ${sizes || "n/d"}
 - **Cubi per modello**: ${r(p.cubesPerModel, 0)}${Object.keys(p.cubesPerCategory).length > 1 ? "\n" + Object.entries(p.cubesPerCategory).map(([k, v]) => `  - ${k}: ${r(v, 0)}`).join("\n") : ""}
 - **Rotazioni**: ${Math.round(p.rotatedModelsShare * 100)}% dei modelli usa cubi ruotati; ${Math.round(p.offGridRotationShare * 100)}% usa angoli non multipli di 22.5°.
-- **Inflate**: usato nel ${Math.round(p.inflateUsageShare * 100)}% dei modelli.
+- **Inflate**: usato nel ${Math.round(p.inflateUsageShare * 100)}% dei modelli.${p.inHand ? `
+- **In mano (terza persona)**: scala display ${r(p.inHand.scale)}; altezza risultante ${r(p.inHand.heightBlocks)} blocchi (il giocatore è alto 2 blocchi). Imposta \`display\` e controlla il render "in mano".` : ""}
 
 ## Colore e texture
 - **Colori unici per modello**: ${r(c.uniqueColorsPerModel, 0)} → ${describe(c.uniqueColorsPerModel.median, [[24, "palette molto ristretta, rampe corte"], [64, "palette contenuta"], [160, "palette ricca"]], "molti colori (texture dipinte/rumorose)")}.

@@ -15,6 +15,7 @@ _Generato da 23 modelli e 0 immagini di riferimento (2026-11-13). Le regole scri
   - spadoni: 80 (p10–p90: 70–93)
 - **Rotazioni**: 96% dei modelli usa cubi ruotati; 0% usa angoli non multipli di 22.5°.
 - **Inflate**: usato nel 30% dei modelli.
+- **In mano (terza persona)**: scala display 1 (p10–p90: 0.86–1.68); altezza risultante 2.81 (p10–p90: 2.27–3.23) blocchi (il giocatore è alto 2 blocchi). Imposta `display` e controlla il render "in mano".
 
 ## Colore e texture
 - **Colori unici per modello**: 16 (p10–p90: 11–23) → palette molto ristretta, rampe corte.

@@ -33,6 +33,15 @@ export const ModelSpec = z.object({
     .describe("dimensione minima della texture; viene ingrandita (potenze di 2) se le UV non ci stanno"),
   bones: z.array(BoneSpec).default([]),
   cubes: z.array(CubeSpec).min(1),
+  display: z
+    .record(
+      z.enum(["thirdperson_righthand", "thirdperson_lefthand", "firstperson_righthand", "firstperson_lefthand", "gui", "ground", "fixed", "head"]),
+      z.object({ rotation: vec3.optional(), translation: vec3.optional(), scale: vec3.optional() }),
+    )
+    .optional()
+    .describe(
+      "solo item (java_block): come appare in mano/GUI/a terra. Il gioco ruota/scala attorno al centro del blocco (8,8,8) e lo mette nella mano: l'impugnatura va centrata su x=8,z=8 vicino a y=8, oppure compensata con translation. Controlla sempre il render 'in mano'.",
+    ),
 });
 
 export type ModelSpec = z.infer<typeof ModelSpec>;

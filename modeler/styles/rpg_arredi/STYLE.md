@@ -9,6 +9,7 @@ _Generato da 21 modelli e 0 immagini di riferimento (2026-11-13). Le regole scri
 - **Cubi per modello**: 17 (p10–p90: 15–21)
 - **Rotazioni**: 100% dei modelli usa cubi ruotati; 0% usa angoli non multipli di 22.5°.
 - **Inflate**: usato nel 0% dei modelli.
+- **In mano (terza persona)**: scala display 0.38 (p10–p90: 0.38–0.38); altezza risultante 0.61 (p10–p90: 0.51–0.72) blocchi (il giocatore è alto 2 blocchi). Imposta `display` e controlla il render "in mano".
 
 ## Colore e texture
 - **Colori unici per modello**: 76 (p10–p90: 71–78) → palette ricca.

@@ -133,6 +133,7 @@ export function readBBModel(json: any, baseDir = "."): Model {
     outline,
     textures,
     unsupportedElements: unsupported,
+    ...(json.display && typeof json.display === "object" ? { display: json.display } : {}),
   };
 }
 
@@ -202,7 +203,15 @@ export function readJavaModel(json: any, name: string, textureDirs: string[]): M
       cube: { name: e.name ?? `element_${i}`, uuid: uuid(), from, to, origin, rotation, inflate: 0, faces },
     });
   });
-  return { name, format: "java_block", resolution: { width: 16, height: 16 }, outline, textures, unsupportedElements: 0 };
+  return {
+    name,
+    format: "java_block",
+    resolution: { width: 16, height: 16 },
+    outline,
+    textures,
+    unsupportedElements: 0,
+    ...(json.display && typeof json.display === "object" ? { display: json.display } : {}),
+  };
 }
 
 /** Carica un file modello in base all'estensione. */

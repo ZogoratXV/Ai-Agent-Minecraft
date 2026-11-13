@@ -52,6 +52,14 @@ export interface Model {
   textures: Texture[];
   /** elementi non-cubo (mesh, locator...) presenti ma non gestiti. */
   unsupportedElements: number;
+  /** impostazioni di visualizzazione degli item (mano, GUI, terra...), formato Java/Blockbench */
+  display?: Record<string, DisplayTransform>;
+}
+
+export interface DisplayTransform {
+  rotation?: [number, number, number];
+  translation?: [number, number, number];
+  scale?: [number, number, number];
 }
 
 export function allCubes(nodes: OutlineNode[], out: Cube[] = []): Cube[] {

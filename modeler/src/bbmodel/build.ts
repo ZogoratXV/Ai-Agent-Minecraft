@@ -169,6 +169,7 @@ export function buildModel(spec: ModelSpec): BuildResult {
       outline: root,
       textures: [{ name: `${spec.name}.png`, uuid: uuid(), img, uvWidth: W, uvHeight: H }],
       unsupportedElements: 0,
+      ...(spec.display ? { display: spec.display as Model["display"] } : {}),
     },
     layout,
     texture: { width: W, height: H },

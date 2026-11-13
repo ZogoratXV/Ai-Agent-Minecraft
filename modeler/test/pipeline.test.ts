@@ -246,3 +246,18 @@ describe("sovrapposizioni", () => {
     expect(validate(b.model, null).errors.join()).toMatch(/Z-fighting.*blade\.north \/ tip\.north/);
   });
 });
+
+describe("operazione flow", () => {
+  it("disegna linee continue dentro i margini", () => {
+    const b = buildModel(ModelSpec.parse({ name: "f", format: "free", cubes: [{ name: "p", from: [0, 0, 0], to: [8, 24, 1] }] }));
+    const img = b.model.textures[0].img;
+    paint(img, b.layout, PaintProgram.parse({ ops: [{ op: "fill", target: { cubes: "p" }, color: "#202020" }, { op: "flow", target: { cubes: "p", faces: ["north"] }, colors: ["#c0c0c0"], spacing: 3, amplitude: 1, wavelength: 12, margin: 1 }] }));
+    const r = b.layout.p.north!;
+    let rowsWithLine = 0;
+    for (let y = 0; y < r.h; y++) {
+      if (img.get(r.x, r.y + y)[0] !== 0x20 || img.get(r.x + r.w - 1, r.y + y)[0] !== 0x20) throw new Error("margine non rispettato");
+      for (let x = 1; x < r.w - 1; x++) if (img.get(r.x + x, r.y + y)[0] === 0xc0) { rowsWithLine++; break; }
+    }
+    expect(rowsWithLine).toBe(r.h);
+  });
+});

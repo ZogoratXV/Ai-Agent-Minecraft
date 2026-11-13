@@ -43,6 +43,10 @@ stile specifico (`styles/<stile>/notes.md`) hanno sempre la precedenza su queste
   superficie con forme intenzionali (cluster, crepe, venature) e rispetta il valore `noise` del profilo.
 - **Bordi**: un highlight di 1px sul bordo in luce e/o un'ombra sul bordo opposto definiscono il volume;
   segui lo stile.
+- **Acciaio damascato / al crogiolo / venature**: usa l'operazione `flow` (linee continue di 1 px, ondulate e
+  sfasate tra loro) su una base scura, con 2 toni chiari vicini. Serve una faccia larga almeno 6 px: su facce più
+  strette qualsiasi motivo diventa rumore, quindi allarga la parte che lo porta (es. l'anima della lama). Lascia
+  pulito il filo (margin o listelli separati). Mai macchie, "occhi" o pixel sparsi disegnati a mano.
 - Evita il **banding** (strisce parallele di gradiente uguali) e i pixel isolati rumorosi ("orfani").
 - Le facce che si vedono di più (fronte, alto) meritano più dettaglio; quelle nascoste o il fondo meno.
 - Leggibilità a distanza: guarda il render piccolo; se i dettagli diventano poltiglia, semplifica.

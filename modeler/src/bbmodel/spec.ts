@@ -103,6 +103,17 @@ export const PaintOp = z.discriminatedUnion("op", [
     tile: z.boolean().default(false).describe("ripeti il pattern su tutta la faccia"),
     anchor: z.enum(["top-left", "center", "bottom-left", "top-right", "bottom-right"]).default("top-left"),
   }),
+  z.object({
+    op: z.literal("flow"),
+    target,
+    colors: z.array(color).min(1).describe("toni delle linee, usati a rotazione (2-3 toni vicini per un damasco elegante)"),
+    direction: z.enum(["vertical", "horizontal"]).default("vertical").describe("direzione in cui scorrono le linee (lungo la lama)"),
+    spacing: z.number().min(2).max(8).default(3).describe("distanza tra le linee in pixel"),
+    amplitude: z.number().min(0).max(4).default(1.2).describe("ampiezza dell'ondulazione in pixel"),
+    wavelength: z.number().min(4).max(60).default(14).describe("lunghezza d'onda in pixel"),
+    margin: z.number().int().min(0).default(1).describe("pixel lasciati puliti ai bordi della faccia (per il filo)"),
+    seed: z.number().int().default(1),
+  }).describe("linee sottili ondulate quasi parallele (acciaio damascato/al crogiolo, venature): continue, 1px, senza macchie"),
   z.object({ op: z.literal("erase"), target, x: z.number().int().optional(), y: z.number().int().optional(), w: z.number().int().optional(), h: z.number().int().optional() }),
 ]);
 export type PaintOp = z.infer<typeof PaintOp>;

@@ -185,6 +185,39 @@ export function paint(img: Img, layout: UvLayout, program: PaintProgram): PaintR
           else stamp(ox, oy);
           break;
         }
+        case "flow": {
+          const cs = op.colors.map(col);
+          const vert = op.direction === "vertical";
+          const along = vert ? r.h : r.w, across = vert ? r.w : r.h;
+          const ph = (op.seed * 2.399963) % (Math.PI * 2);
+          const lo = op.margin, hi = across - op.margin - 1;
+          if (hi < lo) break;
+          // ogni linea k ha un'ondulazione propria (fase sfasata): le linee si avvicinano e si allontanano
+          // come nell'acciaio damascato, senza muoversi tutte insieme. Linee sempre continue, larghe 1 px.
+          const pos = (k: number, a: number) =>
+            k * op.spacing +
+            op.amplitude * Math.sin((2 * Math.PI * a) / op.wavelength + ph + k * 1.13) +
+            op.amplitude * 0.45 * Math.sin((2 * Math.PI * a) / (op.wavelength * 2.37) + ph * 1.7 + k * 0.61);
+          const kMin = Math.floor((lo - 2 * op.amplitude) / op.spacing) - 1, kMax = Math.ceil((hi + 2 * op.amplitude) / op.spacing) + 1;
+          const set = (c: number, a: number, color: RGBA) => {
+            if (c < lo || c > hi) return;
+            vert ? put(c, a, color) : put(a, c, color);
+          };
+          for (let k = kMin; k <= kMax; k++) {
+            const color = cs[((k % cs.length) + cs.length) % cs.length];
+            let prev = Math.round(pos(k, 0));
+            for (let a = 0; a < along; a++) {
+              const c = Math.round(pos(k, a + 0.5));
+              // riempi i salti per tenere la linea continua
+              const from = Math.min(prev, c), to = Math.max(prev, c);
+              if (a === 0) set(c, a, color);
+              else for (let x = from; x <= to; x++) set(x, x === prev ? a - 1 : a, color);
+              set(c, a, color);
+              prev = c;
+            }
+          }
+          break;
+        }
         case "erase": {
           const x0 = op.x ?? 0, y0 = op.y ?? 0, w = op.w ?? r.w, h = op.h ?? r.h;
           for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) put(x, y, [0, 0, 0, 0]);

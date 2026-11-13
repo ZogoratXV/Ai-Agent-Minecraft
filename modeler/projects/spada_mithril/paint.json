@@ -1238,6 +1238,66 @@
         ]
       },
       "color": "ml6"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "tipE_apex"
+      },
+      "color": "ml5"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "tipE_apex",
+        "faces": [
+          "north",
+          "south",
+          "up",
+          "west"
+        ]
+      },
+      "color": "ml6"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "tipM_apex"
+      },
+      "color": "aq3"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "tipM_apex",
+        "faces": [
+          "north",
+          "south",
+          "up",
+          "west"
+        ]
+      },
+      "color": "aq4"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "tipC_apex"
+      },
+      "color": "ml4"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "tipC_apex",
+        "faces": [
+          "north",
+          "south",
+          "up",
+          "west"
+        ]
+      },
+      "color": "ml5"
     }
   ]
 }

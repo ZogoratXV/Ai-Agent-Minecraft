@@ -36,7 +36,7 @@ window.__render = async (job) => {
   }
   const [min, max] = [job.min, job.max];
   const center = new THREE.Vector3((min[0]+max[0])/2, (min[1]+max[1])/2, (min[2]+max[2])/2);
-  const radius = Math.max(0.5, Math.hypot(max[0]-min[0], max[1]-min[1], max[2]-min[2]) / 2);
+  const radius = job.radius ?? Math.max(0.5, Math.hypot(max[0]-min[0], max[1]-min[1], max[2]-min[2]) / 2);
   const cell = job.cell, cols = job.cols, rows = Math.ceil(job.views.length / cols);
   const out = document.createElement("canvas"); out.width = cell * cols; out.height = cell * rows + (job.texturePanel ? 0 : 0);
   const ctx = out.getContext("2d"); ctx.imageSmoothingEnabled = false;
@@ -125,7 +125,7 @@ export const STANDARD_VIEWS: View[] = [
 
 const fromDataUrl = (s: string) => Buffer.from(s.split(",")[1], "base64");
 
-export async function renderViews(m: Model, opts: { views?: View[]; cell?: number; cols?: number; background?: string } = {}): Promise<Buffer> {
+export async function renderViews(m: Model, opts: { views?: View[]; cell?: number; cols?: number; background?: string; radius?: number } = {}): Promise<Buffer> {
   const { meshes, min, max } = buildMeshes(m);
   return renderMeshes(meshes, m.textures.map((t) => t.img.toDataUri()), min, max, opts);
 }
@@ -135,7 +135,7 @@ async function renderMeshes(
   textures: string[],
   min: number[],
   max: number[],
-  opts: { views?: View[]; cell?: number; cols?: number; background?: string } = {},
+  opts: { views?: View[]; cell?: number; cols?: number; background?: string; radius?: number } = {},
 ): Promise<Buffer> {
   const p = await getPage();
   const views = opts.views ?? STANDARD_VIEWS;
@@ -148,6 +148,7 @@ async function renderMeshes(
     cell: opts.cell ?? 320,
     cols: opts.cols ?? 4,
     background: opts.background ?? "#6e7480",
+    radius: opts.radius,
   };
   const url = await p.evaluate((j) => (window as unknown as { __render: (j: unknown) => Promise<string> }).__render(j), job);
   return fromDataUrl(url);
@@ -254,4 +255,40 @@ export async function renderInHand(m: Model): Promise<Buffer> {
     cols: 3,
     cell: 360,
   });
+}
+
+
+/* ---------- confronto alla stessa scala ---------- */
+
+/**
+ * Mette affiancati più modelli (es. il lavoro in corso e i riferimenti più simili) ALLA STESSA SCALA,
+ * con le stesse viste: fronte, lato e 3/4. Una colonna per modello.
+ */
+export async function renderCompare(items: { model: Model; label: string }[], cell = 300): Promise<Buffer> {
+  let radius = 0.5;
+  for (const it of items) {
+    const { min, max } = buildMeshes(it.model);
+    radius = Math.max(radius, Math.hypot(max[0] - min[0], max[1] - min[1], max[2] - min[2]) / 2);
+  }
+  const cols: Img[] = [];
+  for (const it of items)
+    cols.push(
+      Img.fromPng(
+        await renderViews(it.model, {
+          views: [
+            { label: it.label, dir: [0, 0, -1] },
+            { label: "lato", dir: [1, 0, 0] },
+            { label: "3/4", dir: [-1, 0.8, -1] },
+          ],
+          cols: 1,
+          cell,
+          radius,
+        }),
+      ),
+    );
+  const out = new Img(cell * cols.length, cols[0]?.height ?? cell);
+  cols.forEach((c, i) => {
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) out.set(i * cell + x, y, c.get(x, y));
+  });
+  return out.toPng();
 }

@@ -6,7 +6,7 @@ import { ModelSpec, PaintOp, RampSpec } from "../bbmodel/spec";
 import { listStyles, loadReference, readIndex, readProfile, styleDir } from "../analyze/style";
 import { validate } from "../analyze/validate";
 import { buildProject, describeModel, exportProject, loadPaint, loadSpec, projectDir, savePaint, saveSpec } from "../project";
-import { renderInHand, renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
+import { renderCompare, renderInHand, renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
 
 type Content = { type: "text"; text: string } | { type: "image"; data: string; mimeType: string };
 const text = (t: string): { content: Content[] } => ({ content: [{ type: "text", text: t }] });
@@ -188,6 +188,28 @@ export function artistTools() {
       },
     ),
 
+    tool(
+      "compare_with_references",
+      "Mette il tuo modello accanto a 1-4 riferimenti dello stile ALLA STESSA SCALA (fronte, lato e 3/4). Usalo dopo il blockout e dopo ogni passata di texture: proporzioni, spessori, sfaccettature, schema dei colori e contrasto tra materiali devono sembrare dello stesso autore. Elenca le differenze che vedi e correggile.",
+      { project: z.string(), style: z.string(), ids: z.array(z.string()).min(1).max(4) },
+      async ({ project, style, ids }) => {
+        try {
+          const st = buildProject(project);
+          const items = [{ model: st.model, label: `TUO: ${project}` }];
+          for (const id of ids) {
+            const { model } = loadReference(style, id);
+            if (model) items.push({ model, label: id.replace(/^.*__/, "") });
+          }
+          const buf = await renderCompare(items);
+          fs.mkdirSync(path.join(projectDir(project), "renders"), { recursive: true });
+          fs.writeFileSync(path.join(projectDir(project), "renders", "compare.png"), buf);
+          return { content: [img(buf)] };
+        } catch (e) {
+          return fail(e);
+        }
+      },
+    ),
+
     tool("show_project", "Mostra spec.json e paint.json correnti del progetto.", { project: z.string() }, async ({ project }) =>
       text(`spec.json:\n${JSON.stringify(loadSpec(project))}\n\npaint.json:\n${JSON.stringify(loadPaint(project))}`),
     ),
@@ -219,6 +241,6 @@ export function artistTools() {
   ];
 }
 
-export const TOOL_NAMES = ["list_styles", "get_style", "list_references", "view_reference", "set_model", "paint", "render", "validate", "show_project", "export", "record_lesson"];
+export const TOOL_NAMES = ["list_styles", "get_style", "list_references", "view_reference", "set_model", "paint", "render", "validate", "compare_with_references", "show_project", "export", "record_lesson"];
 
 export const createArtistServer = () => createSdkMcpServer({ name: "artist", version: "1.0.0", tools: artistTools() });

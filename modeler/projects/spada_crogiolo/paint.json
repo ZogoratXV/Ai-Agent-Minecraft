@@ -6,26 +6,10 @@
     "nt3": "#4a4442",
     "nt4": "#7a726b",
     "nt5": "#b3ada5",
-    "ib0": "#2c241b",
-    "ib1": "#5a4a2e",
-    "ib2": "#97793f",
-    "cr2": "#4d6688",
-    "cr3": "#7d97b4",
-    "cr4": "#b4cde0",
-    "cr5": "#f4fbff",
-    "bn0": "#100e1a",
-    "bn1": "#1f1c31",
-    "bn2": "#35304f",
-    "bn3": "#55507a",
-    "br1": "#7a4a1c",
-    "br2": "#c48a2c",
-    "br3": "#f2cb55",
-    "lt1": "#2a1820",
-    "lt2": "#45272b",
-    "lt3": "#643c37",
-    "tl1": "#0f6066",
-    "tl2": "#1fa598",
-    "tl3": "#6ae6cc"
+    "nt6": "#d2ccc3",
+    "pv1": "#2a1b28",
+    "pv2": "#4a2f43",
+    "pv3": "#6b4a60"
   },
   "ramps": {},
   "ops": [
@@ -312,107 +296,6 @@
       "color": "nt5"
     },
     {
-      "op": "rect",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "x": 1,
-      "y": 14,
-      "w": 1,
-      "h": 36,
-      "color": "ib0"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          1,
-          15
-        ],
-        [
-          1,
-          17
-        ],
-        [
-          1,
-          23
-        ],
-        [
-          1,
-          25
-        ],
-        [
-          1,
-          31
-        ],
-        [
-          1,
-          33
-        ],
-        [
-          1,
-          39
-        ],
-        [
-          1,
-          41
-        ],
-        [
-          1,
-          47
-        ],
-        [
-          1,
-          49
-        ]
-      ],
-      "color": "ib1"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "blade_core",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "points": [
-        [
-          1,
-          16
-        ],
-        [
-          1,
-          24
-        ],
-        [
-          1,
-          32
-        ],
-        [
-          1,
-          40
-        ],
-        [
-          1,
-          48
-        ]
-      ],
-      "color": "ib2"
-    },
-    {
       "op": "pixels",
       "target": {
         "cubes": "blade_core",
@@ -665,7 +548,7 @@
           "ferrule_bot"
         ]
       },
-      "color": "bn2"
+      "color": "nt3"
     },
     {
       "op": "fill",
@@ -682,7 +565,7 @@
           "up"
         ]
       },
-      "color": "bn3"
+      "color": "nt4"
     },
     {
       "op": "fill",
@@ -699,7 +582,7 @@
           "down"
         ]
       },
-      "color": "bn1"
+      "color": "nt1"
     },
     {
       "op": "pattern",
@@ -719,12 +602,12 @@
         "cddddd"
       ],
       "key": {
-        "a": "bn3",
-        "c": "bn1",
-        "d": "bn0",
-        "S": "cr4",
-        "T": "cr2",
-        "n": "bn1"
+        "a": "nt4",
+        "c": "nt2",
+        "d": "nt0",
+        "S": "nt5",
+        "T": "nt2",
+        "n": "nt1"
       },
       "x": 0,
       "y": 0,
@@ -740,7 +623,7 @@
           "west"
         ]
       },
-      "color": "bn3",
+      "color": "nt4",
       "width": 1,
       "sides": [
         "top"
@@ -755,7 +638,7 @@
           "west"
         ]
       },
-      "color": "bn0",
+      "color": "nt0",
       "width": 1,
       "sides": [
         "bottom"
@@ -766,14 +649,14 @@
       "target": {
         "cubes": "guard_medal"
       },
-      "color": "br2"
+      "color": "nt5"
     },
     {
       "op": "border",
       "target": {
         "cubes": "guard_medal"
       },
-      "color": "br3",
+      "color": "nt6",
       "width": 1,
       "sides": [
         "top",
@@ -785,7 +668,7 @@
       "target": {
         "cubes": "guard_medal"
       },
-      "color": "br1",
+      "color": "nt3",
       "width": 1,
       "sides": [
         "bottom",
@@ -809,9 +692,9 @@
         "ac"
       ],
       "key": {
-        "a": "bn3",
-        "c": "bn1",
-        "s": "cr3"
+        "a": "nt4",
+        "c": "nt1",
+        "s": "nt5"
       },
       "x": 0,
       "y": 0,
@@ -834,7 +717,7 @@
       "y": 2,
       "w": 1,
       "h": 6,
-      "color": "bn3"
+      "color": "nt4"
     },
     {
       "op": "rect",
@@ -852,7 +735,7 @@
       "y": 2,
       "w": 1,
       "h": 6,
-      "color": "bn1"
+      "color": "nt1"
     },
     {
       "op": "border",
@@ -866,7 +749,7 @@
           "west"
         ]
       },
-      "color": "bn3",
+      "color": "nt4",
       "width": 1,
       "sides": [
         "left"
@@ -884,7 +767,7 @@
           "west"
         ]
       },
-      "color": "bn1",
+      "color": "nt1",
       "width": 1,
       "sides": [
         "right"
@@ -902,7 +785,7 @@
           "west"
         ]
       },
-      "color": "cr3",
+      "color": "nt5",
       "width": 1,
       "sides": [
         "top"
@@ -919,7 +802,7 @@
           "up"
         ]
       },
-      "color": "cr3"
+      "color": "nt5"
     },
     {
       "op": "pattern",
@@ -939,11 +822,11 @@
         "dddddd"
       ],
       "key": {
-        "a": "bn3",
-        "b": "bn2",
-        "d": "bn0",
-        "s": "cr3",
-        "g": "br2"
+        "a": "nt4",
+        "b": "nt3",
+        "d": "nt0",
+        "s": "nt5",
+        "g": "nt4"
       },
       "x": 0,
       "y": 0,
@@ -968,9 +851,9 @@
         "dddd"
       ],
       "key": {
-        "a": "bn3",
-        "b": "bn2",
-        "d": "bn0"
+        "a": "nt4",
+        "b": "nt3",
+        "d": "nt0"
       },
       "x": 0,
       "y": 0,
@@ -995,11 +878,11 @@
         "dddddd"
       ],
       "key": {
-        "a": "bn3",
-        "b": "bn2",
-        "d": "bn0",
-        "s": "cr3",
-        "S": "cr4"
+        "a": "nt4",
+        "b": "nt3",
+        "d": "nt0",
+        "s": "nt5",
+        "S": "nt6"
       },
       "x": 0,
       "y": 0,
@@ -1024,9 +907,9 @@
         "ddd"
       ],
       "key": {
-        "a": "bn3",
-        "b": "bn2",
-        "d": "bn0"
+        "a": "nt4",
+        "b": "nt3",
+        "d": "nt0"
       },
       "x": 0,
       "y": 0,
@@ -1042,7 +925,7 @@
         ],
         "faces": "sides"
       },
-      "color": "bn3",
+      "color": "nt4",
       "width": 1,
       "sides": [
         "left"
@@ -1057,7 +940,7 @@
         ],
         "faces": "sides"
       },
-      "color": "bn1",
+      "color": "nt1",
       "width": 1,
       "sides": [
         "right"
@@ -1082,7 +965,7 @@
           1
         ]
       ],
-      "color": "cr4"
+      "color": "nt5"
     },
     {
       "op": "pixels",
@@ -1099,7 +982,7 @@
           0
         ]
       ],
-      "color": "cr3"
+      "color": "nt4"
     },
     {
       "op": "fill",
@@ -1111,7 +994,7 @@
           "pommel_neck"
         ]
       },
-      "color": "br2"
+      "color": "nt4"
     },
     {
       "op": "border",
@@ -1122,7 +1005,7 @@
           "pommel_cap"
         ]
       },
-      "color": "br3",
+      "color": "nt6",
       "width": 1,
       "sides": [
         "top",
@@ -1138,7 +1021,7 @@
           "pommel_cap"
         ]
       },
-      "color": "br1",
+      "color": "nt1",
       "width": 1,
       "sides": [
         "bottom",
@@ -1152,12 +1035,12 @@
         "faces": "sides"
       },
       "rows": [
-        "3221"
+        "5442"
       ],
       "key": {
-        "1": "br1",
-        "2": "br2",
-        "3": "br3"
+        "2": "nt2",
+        "4": "nt4",
+        "5": "nt5"
       },
       "x": 0,
       "y": 0,
@@ -1173,14 +1056,14 @@
       "rows": [
         "aaaaab",
         "bbbbbc",
-        "Gggggg"
+        "Gggggc"
       ],
       "key": {
-        "a": "bn3",
-        "b": "bn2",
-        "c": "bn1",
-        "g": "br2",
-        "G": "br3"
+        "a": "nt4",
+        "b": "nt3",
+        "c": "nt1",
+        "g": "nt5",
+        "G": "nt6"
       },
       "x": 0,
       "y": 0,
@@ -1195,7 +1078,7 @@
           "up"
         ]
       },
-      "color": "cr3",
+      "color": "nt5",
       "width": 1,
       "sides": [
         "top",
@@ -1209,17 +1092,17 @@
         "faces": "sides"
       },
       "rows": [
-        "Gggggg",
+        "Gggggc",
         "abbbbc",
         "cccccd"
       ],
       "key": {
-        "a": "bn3",
-        "b": "bn2",
-        "c": "bn1",
-        "d": "bn0",
-        "g": "br2",
-        "G": "br3"
+        "a": "nt4",
+        "b": "nt3",
+        "c": "nt1",
+        "d": "nt0",
+        "g": "nt5",
+        "G": "nt6"
       },
       "x": 0,
       "y": 0,
@@ -1238,12 +1121,12 @@
         "TcaX"
       ],
       "key": {
-        "T": "tl2",
-        "D": "tl1",
-        "X": "tl3",
-        "a": "lt2",
-        "b": "lt1",
-        "c": "lt3"
+        "T": "nt3",
+        "D": "nt1",
+        "X": "nt4",
+        "a": "pv2",
+        "b": "pv1",
+        "c": "pv3"
       },
       "x": 0,
       "y": 0,
@@ -1259,7 +1142,7 @@
       "y": 0,
       "w": 4,
       "h": 1,
-      "color": "bn0"
+      "color": "nt0"
     },
     {
       "op": "rect",
@@ -1270,14 +1153,14 @@
       "y": 13,
       "w": 4,
       "h": 1,
-      "color": "lt1"
+      "color": "pv1"
     },
     {
       "op": "fill",
       "target": {
         "cubes": "ring*"
       },
-      "color": "cr4"
+      "color": "nt5"
     },
     {
       "op": "pattern",
@@ -1286,13 +1169,13 @@
         "faces": "sides"
       },
       "rows": [
-        "54432"
+        "65542"
       ],
       "key": {
-        "2": "cr2",
-        "3": "cr3",
-        "4": "cr4",
-        "5": "cr5"
+        "2": "nt2",
+        "4": "nt4",
+        "5": "nt5",
+        "6": "nt6"
       },
       "x": 0,
       "y": 0,
@@ -1307,7 +1190,7 @@
           "down"
         ]
       },
-      "color": "cr2"
+      "color": "nt2"
     },
     {
       "op": "border",
@@ -1315,7 +1198,7 @@
         "cubes": "pommel_a",
         "faces": "sides"
       },
-      "color": "bn3",
+      "color": "nt4",
       "width": 1,
       "sides": [
         "top",
@@ -1328,7 +1211,7 @@
         "cubes": "pommel_a",
         "faces": "sides"
       },
-      "color": "bn0",
+      "color": "nt0",
       "width": 1,
       "sides": [
         "bottom",
@@ -1346,9 +1229,9 @@
         "tg"
       ],
       "key": {
-        "s": "cr4",
-        "t": "cr2",
-        "g": "br3"
+        "s": "nt5",
+        "t": "nt2",
+        "g": "nt6"
       },
       "x": 1,
       "y": 1,
@@ -1361,7 +1244,7 @@
         "cubes": "pommel_b",
         "faces": "sides"
       },
-      "color": "cr3",
+      "color": "nt5",
       "width": 1,
       "sides": [
         "left"
@@ -1373,7 +1256,7 @@
         "cubes": "pommel_b",
         "faces": "sides"
       },
-      "color": "bn3",
+      "color": "nt4",
       "width": 1,
       "sides": [
         "top"
@@ -1385,7 +1268,7 @@
         "cubes": "pommel_b",
         "faces": "sides"
       },
-      "color": "bn0",
+      "color": "nt0",
       "width": 1,
       "sides": [
         "bottom"
@@ -1400,7 +1283,7 @@
         ],
         "faces": "sides"
       },
-      "color": "bn3",
+      "color": "nt4",
       "width": 1,
       "sides": [
         "left"
@@ -1415,7 +1298,7 @@
         ],
         "faces": "sides"
       },
-      "color": "bn1",
+      "color": "nt1",
       "width": 1,
       "sides": [
         "right"
@@ -1436,7 +1319,7 @@
           0
         ]
       ],
-      "color": "cr4"
+      "color": "nt6"
     },
     {
       "op": "pixels",
@@ -1453,7 +1336,53 @@
           0
         ]
       ],
-      "color": "cr2"
+      "color": "nt2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "grip"
+      },
+      "rows": [
+        "DabT",
+        "aXTc",
+        "bTDa",
+        "TcaX"
+      ],
+      "key": {
+        "T": "nt3",
+        "D": "nt1",
+        "X": "nt5",
+        "a": "pv2",
+        "b": "pv1",
+        "c": "pv3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": true,
+      "anchor": "top-left"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "grip"
+      },
+      "x": 0,
+      "y": 0,
+      "w": 4,
+      "h": 1,
+      "color": "nt0"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "grip"
+      },
+      "x": 0,
+      "y": 13,
+      "w": 4,
+      "h": 1,
+      "color": "pv1"
     }
   ]
 }

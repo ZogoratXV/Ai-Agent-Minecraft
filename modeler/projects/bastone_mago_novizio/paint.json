@@ -1,0 +1,1253 @@
+{
+  "palette": {
+    "c_hi": "#f2fbf4",
+    "c_lt": "#b3e6e6",
+    "c_mid": "#8fbfe6",
+    "c_vi": "#aa86d6",
+    "c_dk": "#5d3f86",
+    "leaf_lt": "#a9c785"
+  },
+  "ramps": {
+    "wood": {
+      "base": "#c99a65",
+      "steps": 5,
+      "hueShift": 12,
+      "contrast": 0.17,
+      "saturationShift": 0.04
+    },
+    "cloth": {
+      "base": "#55639a",
+      "steps": 5,
+      "hueShift": 10,
+      "contrast": 0.13,
+      "saturationShift": 0.04
+    },
+    "leather": {
+      "base": "#8a5434",
+      "steps": 3,
+      "hueShift": 10,
+      "contrast": 0.15,
+      "saturationShift": 0.04
+    },
+    "iron": {
+      "base": "#8197a6",
+      "steps": 4,
+      "hueShift": 8,
+      "contrast": 0.15,
+      "saturationShift": 0.04
+    }
+  },
+  "ops": [
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "*"
+      },
+      "color": "wood2"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "from": [
+        0,
+        0
+      ],
+      "to": [
+        0,
+        23
+      ],
+      "color": "wood3"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "east",
+          "south"
+        ]
+      },
+      "from": [
+        3,
+        0
+      ],
+      "to": [
+        3,
+        23
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "shaft_low"
+        ],
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 20,
+      "w": 4,
+      "h": 2,
+      "color": "wood1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "from": [
+        2,
+        1
+      ],
+      "to": [
+        2,
+        5
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "from": [
+        1,
+        9
+      ],
+      "to": [
+        1,
+        12
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "from": [
+        2,
+        15
+      ],
+      "to": [
+        2,
+        19
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "points": [
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          17
+        ]
+      ],
+      "color": "wood0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "points": [
+        [
+          1,
+          14
+        ],
+        [
+          1,
+          7
+        ]
+      ],
+      "color": "wood3"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "east",
+          "south"
+        ]
+      },
+      "from": [
+        1,
+        4
+      ],
+      "to": [
+        1,
+        8
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "east",
+          "south"
+        ]
+      },
+      "from": [
+        2,
+        12
+      ],
+      "to": [
+        2,
+        16
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "shaft_low",
+          "shaft_mid"
+        ],
+        "faces": [
+          "east",
+          "south"
+        ]
+      },
+      "points": [
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          0,
+          19
+        ]
+      ],
+      "color": "wood0"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "shaft_mid"
+        ],
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 0,
+      "w": 4,
+      "h": 1,
+      "color": "wood1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "shaft_mid"
+        ],
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 23,
+      "w": 4,
+      "h": 1,
+      "color": "wood1"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": [
+          "knot_a",
+          "knot_b"
+        ],
+        "faces": "sides"
+      },
+      "rows": [
+        "333",
+        "201",
+        "111",
+        "000"
+      ],
+      "key": {
+        "0": "wood0",
+        "1": "wood1",
+        "2": "wood2",
+        "3": "wood3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "knot_a",
+          "knot_b"
+        ],
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "wood3"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "knot_a",
+          "knot_b"
+        ],
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "wood0"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "butt",
+        "faces": "sides"
+      },
+      "color": "wood1"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "butt",
+        "faces": "sides"
+      },
+      "color": "wood2",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "butt",
+        "faces": "sides"
+      },
+      "color": "wood0",
+      "width": 1,
+      "sides": [
+        "bottom"
+      ]
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "butt",
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "color": "wood2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "butt",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "wood0"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "butt",
+        "faces": [
+          "up"
+        ]
+      },
+      "rows": [
+        "33333",
+        "32223",
+        "32123",
+        "32223",
+        "33333"
+      ],
+      "key": {
+        "1": "wood1",
+        "2": "wood2",
+        "3": "wood3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "grip",
+        "faces": "sides"
+      },
+      "rows": [
+        "33222200",
+        "22220033",
+        "22003322",
+        "00332222"
+      ],
+      "key": {
+        "0": "cloth0",
+        "2": "cloth2",
+        "3": "cloth3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": true,
+      "anchor": "top-left"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "grip",
+        "faces": "sides"
+      },
+      "color": "leather2",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "grip",
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 1,
+      "w": 5,
+      "h": 1,
+      "color": "leather1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "grip",
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 2,
+      "w": 5,
+      "h": 1,
+      "color": "cloth0"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "grip",
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 14,
+      "w": 5,
+      "h": 1,
+      "color": "leather1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "grip",
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 15,
+      "w": 5,
+      "h": 1,
+      "color": "leather0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "grip",
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "points": [
+        [
+          1,
+          14
+        ],
+        [
+          0,
+          14
+        ]
+      ],
+      "color": "leather2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "grip",
+        "faces": [
+          "up",
+          "down"
+        ]
+      },
+      "color": "leather1"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "grip",
+        "faces": [
+          "up",
+          "down"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 3,
+      "h": 3,
+      "color": "wood1"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "lace"
+      },
+      "color": "leather1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "lace"
+      },
+      "from": [
+        0,
+        0
+      ],
+      "to": [
+        0,
+        6
+      ],
+      "color": "leather2"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "lace"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          1,
+          7
+        ]
+      ],
+      "color": "leather0"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "ring"
+      },
+      "color": "iron2"
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "ring",
+        "faces": "sides"
+      },
+      "color": "iron3",
+      "width": 1,
+      "sides": [
+        "top"
+      ]
+    },
+    {
+      "op": "border",
+      "target": {
+        "cubes": "ring",
+        "faces": "sides"
+      },
+      "color": "iron0",
+      "width": 1,
+      "sides": [
+        "bottom"
+      ]
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "ring",
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "color": "c_hi"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "ring",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "iron3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "ring",
+        "faces": [
+          "up"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 4,
+      "h": 4,
+      "color": "iron2"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "ring",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "iron0"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "east",
+          "south"
+        ]
+      },
+      "from": [
+        4,
+        0
+      ],
+      "to": [
+        4,
+        4
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "north",
+          "west"
+        ]
+      },
+      "from": [
+        0,
+        0
+      ],
+      "to": [
+        0,
+        4
+      ],
+      "color": "wood3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "neck",
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 4,
+      "w": 5,
+      "h": 1,
+      "color": "wood1"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "wood3"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "up"
+        ]
+      },
+      "x": 1,
+      "y": 1,
+      "w": 3,
+      "h": 3,
+      "color": "wood1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "neck",
+        "faces": [
+          "up"
+        ]
+      },
+      "points": [
+        [
+          2,
+          2
+        ]
+      ],
+      "color": "wood0"
+    },
+    {
+      "op": "gradient",
+      "target": {
+        "cubes": "root_*",
+        "faces": "sides"
+      },
+      "colors": [
+        "wood3",
+        "wood2",
+        "wood1"
+      ],
+      "direction": "vertical",
+      "dither": true
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "root_*",
+        "faces": "sides"
+      },
+      "from": [
+        1,
+        1
+      ],
+      "to": [
+        1,
+        7
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "root_*",
+        "faces": "sides"
+      },
+      "points": [
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          7
+        ]
+      ],
+      "color": "wood0"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "root_*",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "wood3"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "root_*",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "wood0"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": [
+          "root_e2",
+          "root_w2",
+          "root_s2",
+          "root_n2"
+        ],
+        "faces": "sides"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "color": "wood3"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "twig",
+        "faces": "sides"
+      },
+      "from": [
+        1,
+        0
+      ],
+      "to": [
+        1,
+        5
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "twig",
+        "faces": "sides"
+      },
+      "from": [
+        0,
+        0
+      ],
+      "to": [
+        0,
+        2
+      ],
+      "color": "wood3"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "twig",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "wood3"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "twig",
+        "faces": [
+          "up"
+        ]
+      },
+      "points": [
+        [
+          1,
+          1
+        ]
+      ],
+      "color": "wood1"
+    },
+    {
+      "op": "erase",
+      "target": {
+        "cubes": "leaf"
+      },
+      "x": 0,
+      "y": 0,
+      "w": 3,
+      "h": 3
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "leaf"
+      },
+      "rows": [
+        ".LL",
+        "LLL",
+        "D.."
+      ],
+      "key": {
+        "L": "leaf_lt",
+        "D": "wood1"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "gradient",
+      "target": {
+        "cubes": "crystal",
+        "faces": "sides"
+      },
+      "colors": [
+        "c_lt",
+        "c_mid",
+        "c_vi"
+      ],
+      "direction": "vertical",
+      "dither": true
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "crystal",
+        "faces": "sides"
+      },
+      "from": [
+        0,
+        0
+      ],
+      "to": [
+        0,
+        5
+      ],
+      "color": "c_hi"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "crystal",
+        "faces": "sides"
+      },
+      "from": [
+        4,
+        2
+      ],
+      "to": [
+        4,
+        7
+      ],
+      "color": "c_dk"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "crystal",
+        "faces": "sides"
+      },
+      "points": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "color": "c_hi"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "crystal",
+        "faces": "sides"
+      },
+      "points": [
+        [
+          3,
+          7
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "color": "c_dk"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "crystal",
+        "faces": "sides"
+      },
+      "points": [
+        [
+          0,
+          7
+        ]
+      ],
+      "color": "c_vi"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "crystal",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "c_lt"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "crystal",
+        "faces": [
+          "up"
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "color": "c_hi"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "crystal",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "c_dk"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "crystal_tip"
+      },
+      "color": "c_lt"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "crystal_tip",
+        "faces": "sides"
+      },
+      "from": [
+        0,
+        0
+      ],
+      "to": [
+        0,
+        3
+      ],
+      "color": "c_hi"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "crystal_tip",
+        "faces": "sides"
+      },
+      "from": [
+        2,
+        1
+      ],
+      "to": [
+        2,
+        3
+      ],
+      "color": "c_mid"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "crystal_tip",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "c_hi"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "crystal_base"
+      },
+      "color": "c_vi"
+    },
+    {
+      "op": "line",
+      "target": {
+        "cubes": "crystal_base",
+        "faces": "sides"
+      },
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        2,
+        3
+      ],
+      "color": "c_dk"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": "crystal_base",
+        "faces": "sides"
+      },
+      "x": 0,
+      "y": 3,
+      "w": 3,
+      "h": 1,
+      "color": "c_dk"
+    },
+    {
+      "op": "pixels",
+      "target": {
+        "cubes": "crystal_base",
+        "faces": "sides"
+      },
+      "points": [
+        [
+          0,
+          0
+        ]
+      ],
+      "color": "c_mid"
+    }
+  ]
+}

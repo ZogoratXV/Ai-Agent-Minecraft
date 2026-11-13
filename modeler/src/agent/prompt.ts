@@ -42,6 +42,8 @@ You may also use Read to open files inside the project folder.
 6. Polish loop: run validate and the self-critique checklist. Iterate until there are no errors, every warning
    is either fixed or consciously justified, and the model would sit next to the references unnoticed.
    Do at least two full critique iterations; stop when further changes no longer improve it.
+   validate must report 0 errors: no partial UV overlaps, no UVs off the pixel grid, no z-fighting (also between
+   rotated cubes, e.g. a rotated tip on the same plane as the blade), no unintended transparent pixels.
 7. export, then give the user a short delivery note: what you made, design decisions, format/usage notes
    (e.g. bones for animation, where to put files), any compromises and what you would improve with feedback.
 When the user gives feedback that applies beyond this asset, save it with record_lesson.

@@ -190,13 +190,18 @@ export function artistTools() {
 
     tool(
       "compare_with_references",
-      "Mette il tuo modello accanto a 1-4 riferimenti dello stile ALLA STESSA SCALA (fronte, lato e 3/4). Usalo dopo il blockout e dopo ogni passata di texture: proporzioni, spessori, sfaccettature, schema dei colori e contrasto tra materiali devono sembrare dello stesso autore. Elenca le differenze che vedi e correggile.",
+      "Mette il tuo modello accanto a 1-4 riferimenti dello stile (o a tuoi progetti precedenti con id 'project:<nome>', es. per i tier di uno stesso set) ALLA STESSA SCALA (fronte, lato e 3/4). Usalo dopo il blockout e dopo ogni passata di texture: proporzioni, spessori, sfaccettature, schema dei colori e contrasto tra materiali devono sembrare dello stesso autore. Elenca le differenze che vedi e correggile.",
       { project: z.string(), style: z.string(), ids: z.array(z.string()).min(1).max(4) },
       async ({ project, style, ids }) => {
         try {
           const st = buildProject(project);
           const items = [{ model: st.model, label: `TUO: ${project}` }];
           for (const id of ids) {
+            if (id.startsWith("project:")) {
+              const other = id.slice("project:".length);
+              items.push({ model: buildProject(other).model, label: other });
+              continue;
+            }
             const { model } = loadReference(style, id);
             if (model) items.push({ model, label: id.replace(/^.*__/, "") });
           }

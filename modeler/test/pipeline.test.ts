@@ -144,7 +144,7 @@ describe("validazione", () => {
     );
     paint(b.model.textures[0].img, b.layout, PaintProgram.parse({ ops: [{ op: "fill", target: { cubes: "*" }, color: "#808080" }] }));
     const r = validate(b.model, null);
-    expect(r.warnings.join()).toMatch(/Z-fighting/);
+    expect(r.errors.join()).toMatch(/Z-fighting/);
     expect(r.errors.join()).toMatch(/un solo asse/);
   });
 });
@@ -227,5 +227,22 @@ describe("texture animate", () => {
     const m = readJavaModel({ textures: { "0": "ns:item/glow" }, elements: [{ from: [0, 0, 0], to: [16, 16, 16], faces: { north: { uv: [0, 0, 16, 16], texture: "#0" } } }] }, "glow", [dir]);
     expect([m.textures[0].img.width, m.textures[0].img.height]).toEqual([16, 16]);
     expect(m.textures[0].img.get(0, 15)).toEqual([255, 0, 0, 255]);
+  });
+});
+
+describe("sovrapposizioni", () => {
+  it("rileva z-fighting tra un cubo ruotato e uno dritto sullo stesso piano", () => {
+    const b = buildModel(
+      ModelSpec.parse({
+        name: "tip",
+        format: "java_block",
+        cubes: [
+          { name: "blade", from: [6, 0, 7], to: [10, 20, 8] },
+          { name: "tip", from: [6.5, 18.5, 7], to: [9.5, 21.5, 8], rotation: [0, 0, 45] },
+        ],
+      }),
+    );
+    paint(b.model.textures[0].img, b.layout, PaintProgram.parse({ ops: [{ op: "fill", target: { cubes: "*" }, color: "#a0a0a0" }] }));
+    expect(validate(b.model, null).errors.join()).toMatch(/Z-fighting.*blade\.north \/ tip\.north/);
   });
 });

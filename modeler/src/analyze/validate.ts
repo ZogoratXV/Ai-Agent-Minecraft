@@ -1,6 +1,7 @@
 import { isZero, round } from "../core/math";
 import { walkCubes, type Cube, type FaceDir, type Model } from "../bbmodel/model";
 import { modelMetrics, paletteConformance, type ModelMetrics } from "./metrics";
+import { offGridUvs, partialUvOverlaps, transparentFaces, zFighting } from "./overlaps";
 import type { Range, StyleProfile } from "./style";
 
 export interface ValidationReport {
@@ -54,7 +55,7 @@ function geometryChecks(m: Model, warnings: string[], info: string[]) {
       const covered = boxes.some((b) => b !== a && b.f[ax] - 1e-6 <= p && b.t[ax] + 1e-6 >= p && (side ? b.t[ax] > p + 1e-6 : b.f[ax] < p - 1e-6) && Math.abs(overlap2(a, b, ax) - faceArea) < 1e-6);
       if (covered) hidden.push(`${a.c.name}.${d}`);
     }
-  if (zf.size) warnings.push(`Z-fighting: facce coplanari sovrapposte fra ${[...zf].slice(0, 6).join(", ")}${zf.size > 6 ? "…" : ""}. Sposta di 1 unità o usa inflate minimo solo se lo stile lo consente.`);
+  if (zf.size && false) warnings.push(`Z-fighting: facce coplanari sovrapposte fra ${[...zf].slice(0, 6).join(", ")}${zf.size > 6 ? "…" : ""}. Sposta di 1 unità o usa inflate minimo solo se lo stile lo consente.`);
   if (hidden.length) info.push(`Facce completamente nascoste (puoi metterle in hideFaces per risparmiare UV): ${hidden.slice(0, 10).join(", ")}${hidden.length > 10 ? "…" : ""}`);
 
   // parti fluttuanti
@@ -73,7 +74,15 @@ export function validate(m: Model, profile: StyleProfile | null, notes: { catego
   if (mm.texelDensity.consistency < 0.9)
     warnings.push(`Densità texel incoerente: solo ${Math.round(mm.texelDensity.consistency * 100)}% delle facce è vicino a ${mm.texelDensity.median}px/unità (mixel).`);
   if (mm.nonIntegerCubes) warnings.push(`${mm.nonIntegerCubes} cubi hanno lati che non corrispondono a un numero intero di pixel → texel stirati.`);
-  if (mm.overlappingUvFaces) errors.push(`${mm.overlappingUvFaces} facce hanno UV sovrapposte non intenzionali.`);
+  // sovrapposizioni di UV e texture
+  const uvOv = partialUvOverlaps(m);
+  if (uvOv.length) errors.push(`UV sovrapposte in parte (${uvOv.length}): ${uvOv.slice(0, 8).join(", ")}${uvOv.length > 8 ? "…" : ""}. Ogni faccia deve avere la sua isola, oppure condividere esattamente la stessa (uvFrom).`);
+  const grid = offGridUvs(m);
+  if (grid.length) errors.push(`UV fuori dalla griglia dei pixel (${grid.length}): ${grid.slice(0, 6).join(", ")}${grid.length > 6 ? "…" : ""}. Campionano pixel delle isole vicine: usa misure intere in pixel.`);
+  const zf = zFighting(m);
+  if (zf.length) errors.push(`Z-fighting, facce coplanari sovrapposte anche tra cubi ruotati (${zf.length}): ${zf.slice(0, 6).join(", ")}${zf.length > 6 ? "…" : ""}. Sposta di 0.5–1 unità o nascondi una delle due facce.`);
+  const holes = transparentFaces(m);
+  if (holes.length) warnings.push(`Facce con pixel trasparenti (${holes.length}): ${holes.slice(0, 6).join(", ")}${holes.length > 6 ? "…" : ""}. Va bene solo per ritagli voluti (piani sottili); altrimenti sono buchi.`);
   if (mm.unsupportedElements) info.push(`${mm.unsupportedElements} elementi mesh/locator ignorati dall'analisi.`);
   geometryChecks(m, warnings, info);
 

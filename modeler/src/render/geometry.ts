@@ -18,7 +18,7 @@ const NORMALS: Record<FaceDir, Vec3> = {
 };
 
 /** Angoli della faccia visti dall'esterno: TL, TR, BR, BL (convenzione UV Blockbench/Minecraft). */
-function corners(d: FaceDir, f: Vec3, t: Vec3): Vec3[] {
+export function corners(d: FaceDir, f: Vec3, t: Vec3): Vec3[] {
   switch (d) {
     case "north": return [[t[0], t[1], f[2]], [f[0], t[1], f[2]], [f[0], f[1], f[2]], [t[0], f[1], f[2]]];
     case "south": return [[f[0], t[1], t[2]], [t[0], t[1], t[2]], [t[0], f[1], t[2]], [f[0], f[1], t[2]]];

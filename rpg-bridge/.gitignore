@@ -10,3 +10,4 @@ run-hybrid/
 run-dist/
 dist/out/
 deps/
+run-dist.out

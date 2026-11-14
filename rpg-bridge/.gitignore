@@ -5,3 +5,4 @@ dumper/run/
 build/
 .gradle/
 *.class
+tools/build/

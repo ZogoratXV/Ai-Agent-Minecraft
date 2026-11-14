@@ -46,6 +46,9 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
   (MISSING, NOPOINT, ORDINAL, SHADOW, INVOKER, DESCRIPTOR). I `[also absent in vanilla]` sono spesso falsi
   positivi del matcher, ma non sempre (RWA `spawnProjectile`): verificare.
 - `dist/start.sh`: launcher per l'admin (paperclip patch-only, download Fabric Loader, classpath, avvio).
+  `dist/run.bat`: stesso launcher per Windows (librerie del loader 0.19.5 elencate a mano, classpath in un
+  argfile Java una riga per jar con `\` di continuazione: le variabili cmd sono limitate a 8191 caratteri).
+  Non provato su Windows reale. Il `.bat` deve restare con fine riga CRLF (`.gitattributes`).
 
 ## Ambiente di sviluppo (sessioni cloud)
 - Ambiente "Ai-Agent-Minecraft": host aperti per Purpur/Paper, Modrinth (api/cdn), maven.fabricmc.net,

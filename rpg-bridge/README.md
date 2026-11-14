@@ -18,12 +18,13 @@ I giocatori entrano con il loro client Fabric e le stesse mod, come su un server
 ## Installazione
 1. Server con **Java 25**.
 2. Nella cartella del server: `purpur.jar` (Purpur 26.2) e i file di `dist/out/`:
-   `start.sh`, `rpgbridge-loader.jar`, `rpgbridge-log4j2.xml`.
+   `start.sh` (Linux) o `run.bat` (Windows), `rpgbridge-loader.jar`, `rpgbridge-log4j2.xml`.
 3. In `mods/`: `rpgbridge-core.jar` + **le stesse mod dei giocatori** (versioni Fabric per 26.2):
    Fabric API, Spell Engine, Spell Power, Better Combat, Wizards, Paladins & Priests,
    Rogues & Warriors, Archers, Runes, Cloth Config, Player Animation Library,
    Armor Model API, Structure Pool API, Ranged Weapon API.
-4. Avvio: `./start.sh nogui` (variabili: `JAVA`, `MEMORY`, `JVM_ARGS`).
+4. Avvio: `./start.sh nogui` su Linux, `run.bat nogui` (o doppio clic su `run.bat`) su Windows
+   (variabili: `JAVA`, `MEMORY`, `JVM_ARGS`; su Windows serve `curl.exe`, incluso da Windows 10 1803).
    Il primo avvio fa applicare a paperclip le patch di Purpur e scarica Fabric Loader
    da `maven.fabricmc.net`. I plugin vanno in `plugins/` come sempre.
 

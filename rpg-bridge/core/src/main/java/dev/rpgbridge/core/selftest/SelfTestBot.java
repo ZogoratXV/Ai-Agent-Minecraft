@@ -261,7 +261,7 @@ public final class SelfTestBot {
 							.ifPresent(rune -> player.getInventory().add(new ItemStack(rune, 16)));
 					// Keep other mobs out of the cast test.
 					player.level().getServer().getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set day");
-					player.level().getServer().getCommands().performPrefixedCommand(server.createCommandSourceStack(), "kill @e[type=!player]");
+					player.level().getServer().getCommands().performPrefixedCommand(server.createCommandSourceStack(), "kill @e[type=!player,type=!painting,type=!item_frame,type=!glow_item_frame,type=!villager,type=!iron_golem,type=!item]");
 					player.containerMenu.broadcastChanges();
 				});
 			}

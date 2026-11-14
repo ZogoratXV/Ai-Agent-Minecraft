@@ -7,7 +7,7 @@ JAVA_HOME=${RPGB_JAVA_HOME:-/usr/lib/jvm/java-25-openjdk-amd64}
 B=..
 mkdir -p build/fapi
 (cd build/fapi && unzip -qo ../../$B/jars/fabric-api-*.jar 'META-INF/jars/*')
-CP=$(find "$B/deps/loader" "$B/deps/purpur/versions" "$B/deps/purpur/libraries" build/fapi "$B/jars" -name '*.jar' | grep -v '/org/ow2/asm/' | tr '\n' ':')
+CP=$(find "$B/deps/loader" "$B/deps/compile" "$B/deps/purpur/versions" "$B/deps/purpur/libraries" build/fapi "$B/jars" -name '*.jar' | grep -v '/org/ow2/asm/' | tr '\n' ':')
 rm -rf build/classes && mkdir -p build/classes
 "$JAVA_HOME/bin/javac" --release 25 -nowarn -Xlint:none -proc:none -cp "$CP" -d build/classes $(find src/main/java -name '*.java')
 cp -r src/main/resources/. build/classes/

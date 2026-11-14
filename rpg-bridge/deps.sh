@@ -2,6 +2,7 @@
 # Prepares everything needed to build and test RPG Bridge (nothing of this is committed):
 #   deps/purpur/   paperclip-patched Purpur 26.2 (versions/, libraries/) - compile classpath
 #   deps/loader/   Fabric Loader + its libraries                          - compile classpath, dev runs
+#   deps/compile/  MixinExtras (nested in Fabric Loader)                  - compile classpath only
 #   deps/tools/    gson for tools/MixinAudit.java
 #   jars/          the client modpack from Modrinth (Fabric API, RPG Series, Better Combat, libraries)
 # Needs: JDK 25 (RPGB_JAVA_HOME), curl, python3, network access to the hosts below.
@@ -30,6 +31,11 @@ for l in d["libraries"]["common"] + d["libraries"].get("server", []):
     print(f'{l["url"].rstrip("/")}/{g.replace(".", "/")}/{a}/{v}/{a}-{v}.jar')
 EOF
 } | while read -r url; do f="deps/loader/$(basename "$url")"; [ -s "$f" ] || curl -fsSLo "$f" "$url"; done
+
+# MixinExtras is nested in Fabric Loader (META-INF/jars); extract it for the compile classpath only
+# (at runtime the loader provides it, a second copy on the classpath would clash).
+mkdir -p deps/compile
+unzip -qjo "deps/loader/fabric-loader-$LOADER.jar" 'META-INF/jars/mixinextras-*.jar' -d deps/compile
 
 [ -s deps/tools/gson.jar ] || curl -fsSLo deps/tools/gson.jar https://repo1.maven.org/maven2/com/google/code/gson/gson/2.14.0/gson-2.14.0.jar
 

@@ -7,11 +7,19 @@
   "license": "GPL-3.0-only",
   "environment": "server",
   "entrypoints": {
-    "preLaunch": ["dev.rpgbridge.core.RpgBridgePreLaunch"]
+    "preLaunch": [
+      "dev.rpgbridge.core.RpgBridgePreLaunch"
+    ],
+    "main": [
+      "dev.rpgbridge.core.RpgBridgeMod"
+    ]
   },
-  "mixins": ["rpgbridge.mixins.json"],
+  "mixins": [
+    "rpgbridge.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.19.3",
-    "minecraft": "26.2"
+    "minecraft": "26.2",
+    "fabric-api": "*"
   }
 }

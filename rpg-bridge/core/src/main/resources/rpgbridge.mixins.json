@@ -12,7 +12,10 @@
     "replace.lifecycle.PaperPlayerListMixin",
     "replace.spellengine.PaperLivingEntityDamageMixin",
     "replace.spellengine.PaperRangedWeaponMixin",
-    "replace.rangedweapon.PaperRangedWeaponDamageMixin"
+    "replace.rangedweapon.PaperRangedWeaponDamageMixin",
+    "paper.EntityHardCollidingMixin",
+    "bukkit.CraftEntityTypeMixin",
+    "bukkit.CraftEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

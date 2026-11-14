@@ -67,6 +67,28 @@ public final class MixinPatcher {
 				String key = info.getClassName() + "#" + method.name;
 				if (!patches.containsKey(key)) continue;
 				String op = patches.get(key);
+				if (op.startsWith("method:")) {
+					// Paper overloaded the target and the name-only selector picks the wrong overload.
+					String selector = op.substring(7).split("\\|")[0].strip();
+					AnnotationNode inj = null;
+					if (method.visibleAnnotations != null) for (AnnotationNode a : method.visibleAnnotations) if (INJECTORS.contains(a.desc)) inj = a;
+					if (inj == null && method.invisibleAnnotations != null) for (AnnotationNode a : method.invisibleAnnotations) if (INJECTORS.contains(a.desc)) inj = a;
+					if (inj != null) {
+						setAnnotationValue(inj, "method", new java.util.ArrayList<>(List.of(selector)));
+						System.out.println("[RPGBridge] Retargeted mixin handler " + method.name + " to " + selector);
+						done.add(key);
+					}
+					continue;
+				}
+				if (op.startsWith("retype:")) {
+					String[] f = op.substring(7).split("\\|")[0].strip().split(":", 2);
+					String oldDesc = method.desc;
+					if (retypeUnusedParam(method, Integer.parseInt(f[0]), f[1])) {
+						updateClassInfo(node.name, "methods", method.name, oldDesc, method.desc);
+						done.add(key);
+					}
+					continue;
+				}
 				if (op.startsWith("args+:") || op.startsWith("args^:")) {
 					String oldDesc = method.desc;
 					String types = op.substring(6).split("\\|")[0].strip();
@@ -227,6 +249,37 @@ public final class MixinPatcher {
 			}
 		}
 		insertArgsAt(m, types, at);
+	}
+
+	/**
+	 * Paper sometimes changes the type of a target parameter (e.g. Main.main(String[]) -> main(OptionSet)).
+	 * When the handler never reads that parameter, only its declared type has to change. Refuses (and
+	 * leaves the handler as it is) if the parameter is read or the slot size differs.
+	 */
+	private static boolean retypeUnusedParam(MethodNode m, int index, String newType) {
+		org.objectweb.asm.Type[] params = org.objectweb.asm.Type.getArgumentTypes(m.desc);
+		org.objectweb.asm.Type nt = org.objectweb.asm.Type.getType(newType);
+		if (index < 0 || index >= params.length || params[index].getSize() != nt.getSize()) {
+			System.out.println("[RPGBridge] WARNING: cannot retype parameter " + index + " of " + m.name + m.desc);
+			return false;
+		}
+		int slot = (m.access & org.objectweb.asm.Opcodes.ACC_STATIC) != 0 ? 0 : 1;
+		for (int i = 0; i < index; i++) slot += params[i].getSize();
+		if (m.instructions != null) {
+			for (var insn : m.instructions) {
+				if ((insn instanceof org.objectweb.asm.tree.VarInsnNode v && v.var == slot)
+						|| (insn instanceof org.objectweb.asm.tree.IincInsnNode inc && inc.var == slot)) {
+					System.out.println("[RPGBridge] WARNING: parameter " + index + " of " + m.name + " is used, not retyped");
+					return false;
+				}
+			}
+		}
+		params[index] = nt;
+		m.desc = org.objectweb.asm.Type.getMethodDescriptor(org.objectweb.asm.Type.getReturnType(m.desc), params);
+		m.signature = null;
+		if (m.localVariables != null) for (var lv : m.localVariables) if (lv.index == slot) { lv.desc = newType; lv.signature = null; }
+		System.out.println("[RPGBridge] Retyped parameter " + index + " of mixin handler " + m.name + " to " + newType);
+		return true;
 	}
 
 	/** Inserts parameter types at position {@code at} (0 = before the first captured argument). */

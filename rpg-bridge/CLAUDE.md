@@ -21,7 +21,10 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     e aggiorna il `ClassInfo` del mixin. Operazioni:
     - `rpgbridge-mixin-patches.properties`: `<mixin>#<handler>=<motivo>` → toglie l'annotazione
       dell'iniettore (o `@Invoker/@Accessor`); `=args+:<tipi>` / `=args^:<tipi>` aggiunge parametri
-      in coda/in testa all'handler (sposta i local, azzera la signature generica).
+      in coda/in testa all'handler (sposta i local, azzera la signature generica);
+      `=retype:<i>:<tipo>` cambia il tipo di un parametro che l'handler non legge (Yumi `Main.main(String[])`
+      → `main(OptionSet)`); `=method:<selettore>` riscrive il `method` dell'iniettore quando il selettore per
+      solo nome prende l'overload sbagliato (Yumi `bootStrap` → `bootStrap(Ljava/lang/Runnable;)V`).
     - automatico: `@Inject` per nome con overload esteso di Paper (stessi argomenti + parametri in coda)
       → retarget all'overload esteso + `args+`; se Paper ha dato un valore di ritorno: CI → CIR.
     - automatico: `@Shadow` di campo il cui tipo Paper ha ristretto (es. `LevelChunk.level`: ServerLevel).
@@ -63,6 +66,9 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
   lette, mai copiate. La decompilazione è stata bloccata dal classificatore: non serve.
 
 ## Stato (fine sessione 2)
+- Mod extra supportate oltre al modpack di `deps.sh`: Trinkets Updated 4.1.1 (con Yumi MC Foundation 1.1.1)
+  e Bundle API 4.0.0 (`deps/extra/`, non scaricate da `deps.sh`); con queste 68 mod self-test PASSED e sync
+  Trinkets (`trinkets:sync_slots/inventory`) verso il client.
 - Purpur 26.2 build 2633 parte con 63 mod; ricette/loot/tag/registri dinamici delle mod caricati nativamente.
 - Self-test: PASSED (handshake completi, `wizards:wand_arcane`, Arcane Bolt colpisce, attacco Better Combat
   con `C2S_AttackRequest` colpisce).

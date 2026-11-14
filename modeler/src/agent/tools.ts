@@ -7,7 +7,7 @@ import type { OutlineNode } from "../bbmodel/model";
 import { listStyles, loadReference, readIndex, readProfile, styleDir } from "../analyze/style";
 import { validate } from "../analyze/validate";
 import { buildProject, describeModel, exportProject, loadPaint, loadSpec, projectDir, savePaint, saveSpec } from "../project";
-import { renderCompare, renderInHand, renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
+import { renderCompare, renderInHand, renderOnHead, renderOnPlayer, renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
 
 type Content = { type: "text"; text: string } | { type: "image"; data: string; mimeType: string };
 const text = (t: string): { content: Content[] } => ({ content: [{ type: "text", text: t }] });
@@ -170,7 +170,16 @@ export function artistTools() {
           fs.mkdirSync(dir, { recursive: true });
           fs.writeFileSync(path.join(dir, "views.png"), views);
           const content: Content[] = [img(views)];
-          if (st.model.format === "java_block") {
+          const output = loadSpec(project)?.output ?? "model";
+          if (output === "armor_layer") {
+            const worn = await renderOnPlayer(st.model);
+            fs.writeFileSync(path.join(dir, "worn.png"), worn);
+            content.push(img(worn));
+          } else if (st.model.display?.head) {
+            const head = await renderOnHead(st.model);
+            fs.writeFileSync(path.join(dir, "onhead.png"), head);
+            content.push(img(head));
+          } else if (st.model.format === "java_block" && output === "model") {
             const hand = await renderInHand(st.model);
             fs.writeFileSync(path.join(dir, "inhand.png"), hand);
             content.push(img(hand));
@@ -196,7 +205,7 @@ export function artistTools() {
       async ({ project, style, category }) => {
         try {
           const st = buildProject(project);
-          const r = validate(st.model, style ? readProfile(style) : null, { category });
+          const r = validate(st.model, style ? readProfile(style) : null, { category, output: loadSpec(project)?.output });
           const m = r.metrics;
           return text(
             `Punteggio ${r.score}/100\n` +

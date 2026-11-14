@@ -78,6 +78,12 @@ export function buildModel(spec: ModelSpec): BuildResult {
   }
 
   // --- isole UV
+  const manual = spec.cubes.some((c) => c.uvOffset);
+  if (manual) {
+    const bad = spec.cubes.filter((c) => !c.uvOffset && !c.uvFrom).map((c) => c.name);
+    if (bad.length) throw new Error(`Con uvOffset tutti i cubi devono avere uvOffset o uvFrom (mancano: ${bad.join(", ")})`);
+    if (!spec.texture) throw new Error("Con uvOffset indica la dimensione esatta della texture (texture: {width, height})");
+  }
   const islands: Island[] = [];
   for (const c of spec.cubes) {
     if (c.uvFrom) continue;
@@ -86,11 +92,21 @@ export function buildModel(spec: ModelSpec): BuildResult {
       if (v > 0 && Math.abs(v - Math.round(v)) > 0.01)
         warnings.push(`${c.name}: lato ${"xyz"[i]} = ${snap(v)}px non intero → texel stirati (usa misure multiple di ${1 / ppu}).`);
     const [dx, dy, dz] = d.map((v) => (v > 0 ? Math.max(1, Math.round(v)) : 0));
-    islands.push(makeIsland(c.name, dx, dy, dz, new Set(c.hideFaces ?? [])));
+    // in modalità manuale la croce resta completa (layout vanilla), le facce nascoste vengono solo saltate
+    const is = makeIsland(c.name, dx, dy, dz, manual ? new Set() : new Set(c.hideFaces ?? []));
+    if (manual) for (const h of c.hideFaces ?? []) delete is.faces[h];
+    islands.push(is);
   }
 
   let W = spec.texture?.width ?? 16, H = spec.texture?.height ?? 16;
-  let pos = pack(islands, W, H, 0);
+  let pos = manual
+    ? new Map(spec.cubes.filter((c) => c.uvOffset).map((c) => [c.name, c.uvOffset as [number, number]]))
+    : pack(islands, W, H, 0);
+  if (manual)
+    for (const is of islands) {
+      const [ox, oy] = pos!.get(is.cube)!;
+      if (ox + is.w > W || oy + is.h > H) warnings.push(`${is.cube}: l'isola UV (${is.w}x${is.h} a ${ox},${oy}) esce dalla texture ${W}x${H}`);
+    }
   while (!pos) {
     if (W <= H) W *= 2;
     else H *= 2;
@@ -139,7 +155,11 @@ export function buildModel(spec: ModelSpec): BuildResult {
     const center: Vec3 = [0, 1, 2].map((i) => (c.from[i] + c.to[i]) / 2) as Vec3;
     const faces: Partial<Record<FaceDir, Face>> = {};
     for (const [d, r] of Object.entries(layout[c.name] ?? {}) as [FaceDir, Rect & { mirrored?: boolean }][]) {
-      faces[d] = { uv: r.mirrored ? [r.x + r.w, r.y, r.x, r.y + r.h] : [r.x, r.y, r.x + r.w, r.y + r.h], texture: 0 };
+      let uv: Face["uv"] = r.mirrored ? [r.x + r.w, r.y, r.x, r.y + r.h] : [r.x, r.y, r.x + r.w, r.y + r.h];
+      // box UV di Minecraft: la faccia superiore è ruotata di 180°, quella inferiore specchiata in x
+      if (manual && d === "up") uv = [uv[2], uv[3], uv[0], uv[1]];
+      if (manual && d === "down") uv = [uv[2], uv[1], uv[0], uv[3]];
+      faces[d] = { uv, texture: 0 };
     }
     const cube: Cube = {
       name: c.name,

@@ -4,6 +4,7 @@ import { CODE_ROOT } from "../analyze/style";
 
 export function systemPrompt(): string {
   const guidelines = fs.readFileSync(path.join(CODE_ROOT, "knowledge", "pro-guidelines.md"), "utf8");
+  const armor = fs.readFileSync(path.join(CODE_ROOT, "knowledge", "armature-2d.md"), "utf8");
   return `You are a senior Blockbench artist hired by a Minecraft server owner. You model and texture assets
 (items, blocks, furniture, mobs, NPCs, cosmetics) to a professional, shippable standard, and you follow the
 server's house style exactly. You never imitate or reproduce an existing third-party asset or brand: the
@@ -58,5 +59,7 @@ When the user gives feedback that applies beyond this asset, save it with record
   (x=8, z=8, y≈8) or compensate with display.thirdperson_righthand.translation, and set display scale so the size
   in hand matches the style profile ("In mano" line). Always check the in-hand render: the hand must sit on the grip.
 
-${guidelines}`;
+${guidelines}
+
+${armor}`;
 }

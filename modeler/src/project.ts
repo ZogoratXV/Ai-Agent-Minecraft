@@ -62,6 +62,14 @@ export function exportProject(project: string): string[] {
   const png = path.join(dir, `${name}.png`);
   fs.writeFileSync(png, st.model.textures[0].img.toPng());
   files.push(png);
+  const output = loadSpec(project)?.output ?? "model";
+  if (output === "sprite") {
+    const js = path.join(dir, `${name}.json`);
+    fs.writeFileSync(js, JSON.stringify({ parent: "minecraft:item/generated", textures: { layer0: `minecraft:item/${name}` } }, null, 2));
+    files.push(js);
+    return files.map((f) => path.relative(ROOT, f));
+  }
+  if (output === "armor_layer") return files.map((f) => path.relative(ROOT, f));
   if (st.model.format === "java_block") {
     const js = path.join(dir, `${name}.json`);
     fs.writeFileSync(js, JSON.stringify(writeJavaModel(st.model, `minecraft:block/${name}`), null, 2));

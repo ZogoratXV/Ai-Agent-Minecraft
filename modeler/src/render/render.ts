@@ -292,3 +292,59 @@ export async function renderCompare(items: { model: Model; label: string }[], ce
   });
   return out.toPng();
 }
+
+/* ---------- armature ---------- */
+
+function mergeWithPlayer(item: { meshes: MeshData[] }, m: Model) {
+  const player = buildMeshes(playerModel());
+  const offset = m.textures.length;
+  for (const mesh of player.meshes) mesh.texture += offset;
+  const meshes = [...item.meshes, ...player.meshes];
+  const min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
+  for (const mesh of meshes)
+    for (let i = 0; i < mesh.positions.length; i += 3)
+      for (let k = 0; k < 3; k++) { min[k] = Math.min(min[k], mesh.positions[i + k]); max[k] = Math.max(max[k], mesh.positions[i + k]); }
+  return { meshes, min, max, textures: [...m.textures.map((t) => t.img.toDataUri()), playerModel().textures[0].img.toDataUri()] };
+}
+
+const WEAR_VIEWS: View[] = [
+  { label: "indossata: fronte", dir: [0, 0.15, -1] },
+  { label: "indossata: lato", dir: [1, 0.15, 0] },
+  { label: "indossata: retro", dir: [0, 0.15, 1] },
+  { label: "indossata: 3/4", dir: [-1, 0.5, -1] },
+];
+
+/**
+ * Texture d'armatura 2D (layer vanilla): i cubi del modello sono già nelle coordinate del corpo del giocatore
+ * (testa, busto, braccia, gambe gonfiati), quindi basta mostrarli insieme al giocatore di riferimento.
+ */
+export async function renderOnPlayer(m: Model): Promise<Buffer> {
+  const s = mergeWithPlayer(buildMeshes(m), m);
+  return renderMeshes(s.meshes, s.textures, s.min, s.max, { views: WEAR_VIEWS, cols: 4, cell: 300 });
+}
+
+/**
+ * Elmo 3D: item java_block indossato in testa con display.head (approssimato: il gioco scala l'item del 62.5%
+ * e lo centra sulla testa; la traslazione è in pixel).
+ */
+export async function renderOnHead(m: Model): Promise<Buffer> {
+  const d = m.display?.head ?? {};
+  const S = d.scale ?? [1, 1, 1], T = d.translation ?? [0, 0, 0], R = eulerXYZ((d.rotation ?? [0, 0, 0]) as Vec3);
+  const item = buildMeshes(m);
+  const C: Vec3 = [0, 28, 0];
+  for (const mesh of item.meshes)
+    for (let i = 0; i < mesh.positions.length; i += 3) {
+      const q = apply(R, [(mesh.positions[i] - 8) * S[0], (mesh.positions[i + 1] - 8) * S[1], (mesh.positions[i + 2] - 8) * S[2]]);
+      for (let k = 0; k < 3; k++) mesh.positions[i + k] = C[k] + 0.625 * (q[k] + T[k]);
+    }
+  const s = mergeWithPlayer(item, m);
+  return renderMeshes(s.meshes, s.textures, s.min, s.max, {
+    views: [
+      { label: "in testa ≈ fronte", dir: [0, 0.1, -1] },
+      { label: "lato", dir: [1, 0.1, 0] },
+      { label: "3/4", dir: [-1, 0.5, -1] },
+    ],
+    cols: 3,
+    cell: 340,
+  });
+}

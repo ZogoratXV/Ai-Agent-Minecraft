@@ -66,7 +66,7 @@ function geometryChecks(m: Model, warnings: string[], info: string[]) {
   }
 }
 
-export function validate(m: Model, profile: StyleProfile | null, notes: { category?: string } = {}): ValidationReport {
+export function validate(m: Model, profile: StyleProfile | null, notes: { category?: string; output?: string } = {}): ValidationReport {
   const errors: string[] = [], warnings: string[] = [], info: string[] = [];
   const mm = modelMetrics(m);
 
@@ -82,7 +82,7 @@ export function validate(m: Model, profile: StyleProfile | null, notes: { catego
   const zf = zFighting(m);
   if (zf.length) errors.push(`Z-fighting, facce coplanari sovrapposte anche tra cubi ruotati (${zf.length}): ${zf.slice(0, 6).join(", ")}${zf.length > 6 ? "…" : ""}. Sposta di 0.5–1 unità o nascondi una delle due facce.`);
   const holes = transparentFaces(m);
-  if (holes.length) warnings.push(`Facce con pixel trasparenti (${holes.length}): ${holes.slice(0, 6).join(", ")}${holes.length > 6 ? "…" : ""}. Va bene solo per ritagli voluti (piani sottili); altrimenti sono buchi.`);
+  if (holes.length && (notes.output ?? "model") === "model") warnings.push(`Facce con pixel trasparenti (${holes.length}): ${holes.slice(0, 6).join(", ")}${holes.length > 6 ? "…" : ""}. Va bene solo per ritagli voluti (piani sottili); altrimenti sono buchi.`);
   if (mm.unsupportedElements) info.push(`${mm.unsupportedElements} elementi mesh/locator ignorati dall'analisi.`);
   geometryChecks(m, warnings, info);
 

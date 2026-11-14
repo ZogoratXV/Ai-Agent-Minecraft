@@ -261,3 +261,22 @@ describe("operazione flow", () => {
     expect(rowsWithLine).toBe(r.h);
   });
 });
+
+describe("armature 2D", () => {
+  it("rispetta il layout vanilla dei layer con uvOffset", () => {
+    const b = buildModel(
+      ModelSpec.parse({
+        name: "l1", format: "free", output: "armor_layer", texture: { width: 64, height: 32 },
+        cubes: [
+          { name: "body", from: [-4, 12, -2], to: [4, 24, 2], inflate: 1, uvOffset: [16, 16] },
+          { name: "arm_r", from: [4, 12, -2], to: [8, 24, 2], inflate: 1, uvOffset: [40, 16] },
+          { name: "arm_l", from: [-8, 12, -2], to: [-4, 24, 2], inflate: 1, uvFrom: "arm_r", mirrorUv: true },
+        ],
+      }),
+    );
+    expect(b.texture).toEqual({ width: 64, height: 32 });
+    expect(b.layout.body.north).toMatchObject({ x: 20, y: 20, w: 8, h: 12 });
+    expect(b.layout.arm_r.north).toMatchObject({ x: 44, y: 20, w: 4, h: 12 });
+    expect(b.layout.arm_l.north).toMatchObject({ x: 44, y: 20, mirrored: true });
+  });
+});

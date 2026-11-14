@@ -21,10 +21,20 @@ export const CubeSpec = z.object({
   hideFaces: z.array(faceDir).optional().describe("facce non visibili da non texturizzare (risparmiano spazio UV)"),
   uvFrom: z.string().optional().describe("riusa le UV di un altro cubo della stessa dimensione (es. gamba sinistra = destra)"),
   mirrorUv: z.boolean().optional().describe("con uvFrom: specchia la texture orizzontalmente"),
+  uvOffset: z
+    .tuple([z.number().int(), z.number().int()])
+    .optional()
+    .describe("UV fisse in stile box UV di Minecraft (isola a croce con l'angolo in alto a sinistra qui). Se un cubo la usa, tutti i cubi devono usarla (o uvFrom) e texture va indicata esatta: serve per le texture standard del gioco come i layer delle armature"),
 });
 
 export const ModelSpec = z.object({
   name: z.string(),
+  output: z
+    .enum(["model", "sprite", "armor_layer"])
+    .default("model")
+    .describe(
+      "model: modello 3D (default). sprite: icona/oggetto 2D, un solo piano 16x16 (o 32x32) con la sola faccia north, esportato come PNG + item model 'generated'. armor_layer: texture d'armatura 2D in layout vanilla 64x32 costruita sui cubi del corpo del giocatore con uvOffset; esportata come PNG.",
+    ),
   format: z.enum(["java_block", "bedrock", "free"]).describe("java_block: blocchi/item resource pack; bedrock/free: entità con bone (ModelEngine, BetterModel, GeckoLib)"),
   pixelsPerUnit: z.number().positive().default(1).describe("densità texel: 1 = 16px per blocco (vanilla)"),
   texture: z

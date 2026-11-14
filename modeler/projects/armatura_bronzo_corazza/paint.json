@@ -1,0 +1,72 @@
+{
+  "palette": {
+    "bz1": "#8c3a2c",
+    "bz2": "#c4612f",
+    "bz3": "#e8933c",
+    "bz4": "#f8c164",
+    "bz5": "#fff2c0",
+    "gb0": "#26142a",
+    "gb2": "#6e3a38",
+    "gb3": "#9a5a40",
+    "gb4": "#c8844e",
+    "lt0": "#170f1c",
+    "lt1": "#2b1a26",
+    "lt2": "#43282e",
+    "lt3": "#5e3a36",
+    "rd1": "#9a1e34",
+    "rd2": "#d6343c",
+    "rd3": "#ff6a55"
+  },
+  "ramps": {},
+  "ops": [
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "icon",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "................",
+        ".ooooo....ooooo.",
+        "o43o44oooo32o43o",
+        "oabo54443332oabo",
+        "obgo44333322obgo",
+        ".ooo32233222ooo.",
+        "...o33333322o...",
+        "...o23333221o...",
+        "...o12222211o...",
+        "...ommm43mmmo...",
+        "...olll21lllo...",
+        "...oLdLRRLdLo...",
+        "...oLdLRHLdLo...",
+        "...oldlrrldlo...",
+        "...oooooooooo...",
+        "................"
+      ],
+      "key": {
+        "1": "bz1",
+        "2": "bz2",
+        "3": "bz3",
+        "4": "bz4",
+        "5": "bz5",
+        "o": "gb0",
+        "a": "gb4",
+        "b": "gb3",
+        "g": "gb2",
+        "m": "lt3",
+        "l": "lt1",
+        "L": "lt2",
+        "d": "lt0",
+        "R": "rd2",
+        "r": "rd1",
+        "H": "rd3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    }
+  ]
+}

@@ -79,7 +79,8 @@ export function validate(m: Model, profile: StyleProfile | null, notes: { catego
   if (uvOv.length) errors.push(`UV sovrapposte in parte (${uvOv.length}): ${uvOv.slice(0, 8).join(", ")}${uvOv.length > 8 ? "…" : ""}. Ogni faccia deve avere la sua isola, oppure condividere esattamente la stessa (uvFrom).`);
   const grid = offGridUvs(m);
   if (grid.length) errors.push(`UV fuori dalla griglia dei pixel (${grid.length}): ${grid.slice(0, 6).join(", ")}${grid.length > 6 ? "…" : ""}. Campionano pixel delle isole vicine: usa misure intere in pixel.`);
-  const zf = zFighting(m);
+  // nei layer d'armatura la geometria è quella fissa del gioco: le sovrapposizioni tra busto, braccia e gambe non dipendono dall'artista
+  const zf = notes.output === "armor_layer" ? [] : zFighting(m);
   if (zf.length) errors.push(`Z-fighting, facce coplanari sovrapposte anche tra cubi ruotati (${zf.length}): ${zf.slice(0, 6).join(", ")}${zf.length > 6 ? "…" : ""}. Sposta di 0.5–1 unità o nascondi una delle due facce.`);
   const holes = transparentFaces(m);
   if (holes.length && (notes.output ?? "model") === "model") warnings.push(`Facce con pixel trasparenti (${holes.length}): ${holes.slice(0, 6).join(", ")}${holes.length > 6 ? "…" : ""}. Va bene solo per ritagli voluti (piani sottili); altrimenti sono buchi.`);

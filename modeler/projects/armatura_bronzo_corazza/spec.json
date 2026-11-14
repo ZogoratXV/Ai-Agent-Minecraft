@@ -1,0 +1,29 @@
+{
+  "name": "armatura_bronzo_corazza",
+  "output": "sprite",
+  "format": "java_block",
+  "pixelsPerUnit": 1,
+  "texture": {
+    "width": 16,
+    "height": 16
+  },
+  "bones": [],
+  "cubes": [
+    {
+      "name": "icon",
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "hideFaces": [
+        "south"
+      ]
+    }
+  ]
+}

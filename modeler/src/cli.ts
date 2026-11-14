@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { buildStyle, initStyle, listStyles, readProfile, styleDir, ROOT } from "./analyze/style";
 import { validate } from "./analyze/validate";
-import { buildProject, exportProject, projectDir } from "./project";
+import { buildProject, exportProject, loadSpec, projectDir } from "./project";
 import { closeRenderer, renderTexture, renderViews } from "./render/render";
 
 const HELP = `blockbench-artist — agente artista Blockbench
@@ -88,7 +88,7 @@ async function main() {
     case "validate": {
       const style = flag(args, "style");
       const st = buildProject(args[0]);
-      const r = validate(st.model, style ? readProfile(style) : null);
+      const r = validate(st.model, style ? readProfile(style) : null, { output: loadSpec(args[0])?.output });
       console.log(JSON.stringify({ score: r.score, errors: r.errors, warnings: r.warnings, info: r.info }, null, 2));
       break;
     }

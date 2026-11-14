@@ -1,0 +1,146 @@
+{
+  "name": "armatura_bronzo_layer_1",
+  "output": "armor_layer",
+  "format": "free",
+  "pixelsPerUnit": 1,
+  "texture": {
+    "width": 64,
+    "height": 32
+  },
+  "bones": [],
+  "cubes": [
+    {
+      "name": "head",
+      "from": [
+        -4,
+        24,
+        -4
+      ],
+      "to": [
+        4,
+        32,
+        4
+      ],
+      "inflate": 1,
+      "hideFaces": [
+        "north",
+        "south",
+        "east",
+        "west",
+        "up",
+        "down"
+      ],
+      "uvOffset": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "body",
+      "from": [
+        -4,
+        12,
+        -2
+      ],
+      "to": [
+        4,
+        24,
+        2
+      ],
+      "inflate": 1,
+      "hideFaces": [
+        "east",
+        "west",
+        "up",
+        "down"
+      ],
+      "uvOffset": [
+        16,
+        16
+      ]
+    },
+    {
+      "name": "arm_r",
+      "from": [
+        4,
+        12,
+        -2
+      ],
+      "to": [
+        8,
+        24,
+        2
+      ],
+      "inflate": 1,
+      "hideFaces": [
+        "west"
+      ],
+      "uvOffset": [
+        40,
+        16
+      ]
+    },
+    {
+      "name": "arm_l",
+      "from": [
+        -8,
+        12,
+        -2
+      ],
+      "to": [
+        -4,
+        24,
+        2
+      ],
+      "inflate": 1,
+      "hideFaces": [
+        "east"
+      ],
+      "uvFrom": "arm_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "leg_r",
+      "from": [
+        0,
+        0,
+        -2
+      ],
+      "to": [
+        4,
+        12,
+        2
+      ],
+      "inflate": 1,
+      "hideFaces": [
+        "west",
+        "up"
+      ],
+      "uvOffset": [
+        0,
+        16
+      ]
+    },
+    {
+      "name": "leg_l",
+      "from": [
+        -4,
+        0,
+        -2
+      ],
+      "to": [
+        0,
+        12,
+        2
+      ],
+      "inflate": 1,
+      "hideFaces": [
+        "east",
+        "up",
+        "down"
+      ],
+      "uvFrom": "leg_r",
+      "mirrorUv": true
+    }
+  ]
+}

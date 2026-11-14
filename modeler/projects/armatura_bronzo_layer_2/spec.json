@@ -1,0 +1,74 @@
+{
+  "name": "armatura_bronzo_layer_2",
+  "output": "armor_layer",
+  "format": "free",
+  "pixelsPerUnit": 1,
+  "texture": {
+    "width": 64,
+    "height": 32
+  },
+  "bones": [],
+  "cubes": [
+    {
+      "name": "body",
+      "from": [
+        -4,
+        12,
+        -2
+      ],
+      "to": [
+        4,
+        24,
+        2
+      ],
+      "inflate": 0.5,
+      "uvOffset": [
+        16,
+        16
+      ]
+    },
+    {
+      "name": "leg_r",
+      "from": [
+        0,
+        0,
+        -2
+      ],
+      "to": [
+        4,
+        12,
+        2
+      ],
+      "inflate": 0.5,
+      "hideFaces": [
+        "west",
+        "up"
+      ],
+      "uvOffset": [
+        0,
+        16
+      ]
+    },
+    {
+      "name": "leg_l",
+      "from": [
+        -4,
+        0,
+        -2
+      ],
+      "to": [
+        0,
+        12,
+        2
+      ],
+      "inflate": 0.5,
+      "hideFaces": [
+        "east",
+        "up",
+        "down"
+      ],
+      "uvFrom": "leg_r",
+      "mirrorUv": true
+    }
+  ]
+}

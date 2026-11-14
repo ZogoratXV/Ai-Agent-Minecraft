@@ -10,7 +10,19 @@ rem Needs curl.exe (included in Windows 10 1803+ and Windows 11) for the first s
 setlocal EnableDelayedExpansion
 cd /d "%~dp0"
 
+rem Java 25+: JAVA if set, otherwise the first JDK/JRE 25+ found in the usual install folders, otherwise PATH.
+if not defined JAVA call :findjava
 if not defined JAVA set "JAVA=java"
+call :javamajor
+if !JMAJOR! LSS 25 (
+  echo.
+  echo Serve Java 25 o superiore, ma "%JAVA%" e' la versione !JVER!.
+  echo Installa Java 25, per esempio Temurin JDK 25: https://adoptium.net/temurin/releases/?version=25
+  echo Poi riavvia run.bat; se non lo trova, imposta il percorso prima dell'avvio, per esempio:
+  echo   set "JAVA=C:\Program Files\Eclipse Adoptium\jdk-25.0.1.8-hotspot\bin\java.exe"
+  goto :fail
+)
+echo Java !JVER!: %JAVA%
 if not defined MEMORY set "MEMORY=4G"
 if not defined PURPUR_JAR set "PURPUR_JAR=purpur.jar"
 set "LOADER_VERSION=0.19.5"
@@ -58,6 +70,24 @@ set "GAME_JAR=!GAME_JAR:\=/!"
 set "RC=%ERRORLEVEL%"
 pause
 exit /b %RC%
+
+:findjava
+for %%d in ("%ProgramFiles%\Eclipse Adoptium" "%ProgramFiles%\Java" "%ProgramFiles%\Microsoft" "%ProgramFiles%\Zulu" "%ProgramFiles%\Amazon Corretto" "%ProgramFiles%\BellSoft" "%LOCALAPPDATA%\Programs\Eclipse Adoptium") do (
+  if exist "%%~d" for /d %%j in ("%%~d\*") do if exist "%%~j\bin\java.exe" (
+    set "JAVA=%%~j\bin\java.exe"
+    call :javamajor
+    if !JMAJOR! GEQ 25 exit /b 0
+  )
+)
+set "JAVA="
+exit /b 0
+
+:javamajor
+rem Reads e.g. 'openjdk version "25.0.1" 2025-10-21' into JVER=25.0.1, JMAJOR=25 (Java 8 gives 1).
+set "JVER=?" & set "JMAJOR=0"
+for /f "tokens=3" %%v in ('call "%JAVA%" -version 2^>^&1 ^| findstr /i version') do if "!JVER!"=="?" set "JVER=%%~v"
+for /f "delims=.-+" %%m in ("!JVER!") do set /a "JMAJOR=%%m" 2>nul
+exit /b 0
 
 :cpadd
 set "E=%~1"

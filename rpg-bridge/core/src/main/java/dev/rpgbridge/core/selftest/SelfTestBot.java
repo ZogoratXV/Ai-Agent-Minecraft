@@ -340,7 +340,8 @@ public final class SelfTestBot {
 			report.accept("cast: projectile=" + projectile + " cooldown=" + cooldown + " zombie health " + zombieHealth + " -> " + now + " spawned=" + spawned);
 			if (z != null) z.discard();
 			if (projectile && now >= 0 && now < zombieHealth) {
-				done.complete("PASSED: Fabric handshakes, modded item, and wizards:arcane_bolt hit (zombie " + zombieHealth + " -> " + now + ")");
+				castResult = "wizards:arcane_bolt hit (zombie " + zombieHealth + " -> " + now + ")";
+				betterCombatAttack();
 			} else {
 				done.complete("FAILED: arcane bolt did not damage the target");
 			}
@@ -348,6 +349,44 @@ public final class SelfTestBot {
 	}
 
 	private final Set<String> spawned = Collections.synchronizedSet(new LinkedHashSet<>());
+	private volatile String castResult;
+
+	/** Better Combat: hold a sword and send an attack request for a zombie in reach. */
+	private void betterCombatAttack() {
+		server.execute(() -> {
+			var player = server.getPlayerList().getPlayerByName(name);
+			if (player == null) return;
+			var sword = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:iron_sword"));
+			int slot = player.getInventory().getSelectedSlot();
+			player.getInventory().setItem(slot, new ItemStack(sword));
+			player.containerMenu.broadcastChanges();
+			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:zombie"))
+					.create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+			if (!(created instanceof net.minecraft.world.entity.Mob z)) return;
+			var look = player.getLookAngle();
+			z.setPos(player.getX() + look.x * 2, player.getY(), player.getZ() + look.z * 2);
+			z.setNoAi(true);
+			player.level().addFreshEntity(z);
+			zombie = z;
+			zombieHealth = z.getHealth();
+			int id = z.getId();
+			java.util.concurrent.CompletableFuture.delayedExecutor(1500, TimeUnit.MILLISECONDS).execute(() -> {
+				send(new net.bettercombat.network.Packets.C2S_AttackRequest(0, false, slot, id, new int[] {id}));
+				events.add("bettercombat attack_request sent");
+				java.util.concurrent.CompletableFuture.delayedExecutor(1500, TimeUnit.MILLISECONDS).execute(() -> server.execute(() -> {
+					float now = z.isAlive() ? z.getHealth() : 0;
+					report.accept("bettercombat: zombie health " + zombieHealth + " -> " + now);
+					z.discard();
+					if (now < zombieHealth) {
+						done.complete("PASSED: Fabric handshakes, modded item, " + castResult
+								+ ", Better Combat attack hit (zombie " + zombieHealth + " -> " + now + ")");
+					} else {
+						done.complete("FAILED: Better Combat attack did not damage the target (" + castResult + ")");
+					}
+				}));
+			});
+		});
+	}
 
 	// ---------------------------------------------------------------- listener proxies
 

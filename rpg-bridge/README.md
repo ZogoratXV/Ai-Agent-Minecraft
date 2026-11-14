@@ -30,8 +30,8 @@ I giocatori entrano con il loro client Fabric e le stesse mod, come su un server
 ## Verifica
 Dalla console: `rpgbridge selftest`. Un client Fabric simulato entra nel server, completa tutti gli
 handshake (registry sync, Spell Engine, Better Combat, Fabric API), riceve una `wizards:wand_arcane`
-e lancia *Arcane Bolt* su uno zombie. Risultato atteso nel log:
-`[SelfTest] PASSED: Fabric handshakes, modded item, and wizards:arcane_bolt hit (...)`.
+lancia *Arcane Bolt* su uno zombie e ne colpisce un altro con un attacco Better Combat.
+Risultato atteso nel log: `[SelfTest] PASSED: Fabric handshakes, modded item, wizards:arcane_bolt hit (...), Better Combat attack hit (...)`.
 
 ## Limiti noti
 - Server pensato per client **modded**: un client vanilla non può entrare (riceverebbe contenuti

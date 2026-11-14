@@ -61,13 +61,14 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
 
 ## Stato (fine sessione 2)
 - Purpur 26.2 build 2633 parte con 63 mod; ricette/loot/tag/registri dinamici delle mod caricati nativamente.
-- Self-test: PASSED (handshake completi, `wizards:wand_arcane`, Arcane Bolt colpisce).
+- Self-test: PASSED (handshake completi, `wizards:wand_arcane`, Arcane Bolt colpisce, attacco Better Combat
+  con `C2S_AttackRequest` colpisce).
 - Verificati da console: entità modded (Spirit Wolf), blocchi + block entity (Spell Binding), effetti
   (Frozen), attributi (Spell Power).
 
 ## Prossimi passi
 - Test con un **client reale** (log client `.minecraft/logs/latest.log`).
-- Better Combat: self-test di `bettercombat:attack_request` (combo, danno).
+- Better Combat: combo multiple, armi a due mani/dual wield, attacco a più bersagli.
 - Self-test per le altre classi (Paladin heal, Rogue stealth, Archer bow) e per blocchi/menu
   (Spell Binding table, rune crafting): apertura menu e interazioni.
 - Material/ItemType di Bukkit per item modded: verificare eventi inventario con plugin comuni.

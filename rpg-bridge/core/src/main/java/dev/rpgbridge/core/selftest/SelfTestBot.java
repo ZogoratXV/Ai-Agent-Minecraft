@@ -92,6 +92,9 @@ public final class SelfTestBot {
 	private final List<String> items = Collections.synchronizedList(new ArrayList<>());
 	private final CompletableFuture<String> done = new CompletableFuture<>();
 	private volatile boolean sentChannels;
+	private volatile boolean castStarted;
+	private volatile float zombieHealth = -1;
+	private volatile net.minecraft.world.entity.LivingEntity zombie;
 
 	private SelfTestBot(MinecraftServer server, String name, Consumer<String> report) {
 		this.server = server;
@@ -253,6 +256,12 @@ public final class SelfTestBot {
 						return;
 					}
 					player.getInventory().add(new ItemStack(item.get()));
+					// Arcane spells consume arcane runes (spell cost item).
+					BuiltInRegistries.ITEM.getOptional(Identifier.parse("runes:arcane_stone"))
+							.ifPresent(rune -> player.getInventory().add(new ItemStack(rune, 16)));
+					// Keep other mobs out of the cast test.
+					player.level().getServer().getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set day");
+					player.level().getServer().getCommands().performPrefixedCommand(server.createCommandSourceStack(), "kill @e[type=!player]");
 					player.containerMenu.broadcastChanges();
 				});
 			}
@@ -262,6 +271,7 @@ public final class SelfTestBot {
 			case ClientboundPlayerPositionPacket p -> connection.send(new ServerboundAcceptTeleportationPacket(p.id()));
 			case ClientboundChunkBatchFinishedPacket p -> connection.send(new ServerboundChunkBatchReceivedPacket(20.0F));
 			case ClientboundContainerSetSlotPacket p -> onItem(p.getItem());
+			case net.minecraft.network.protocol.game.ClientboundAddEntityPacket p -> spawned.add(BuiltInRegistries.ENTITY_TYPE.getKey(p.getType()).toString());
 			case ClientboundContainerSetContentPacket p -> p.items().forEach(this::onItem);
 			case net.minecraft.network.protocol.common.ClientboundDisconnectPacket p ->
 					done.complete("FAILED: disconnected in game: " + p.reason().getString());
@@ -274,10 +284,70 @@ public final class SelfTestBot {
 		if (stack.isEmpty()) return;
 		String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 		items.add(id);
-		if (id.equals("wizards:wand_arcane")) {
-			done.complete("PASSED: joined as a Fabric client, configuration handshakes done, received " + id);
+		if (id.equals("wizards:wand_arcane") && !castStarted) {
+			castStarted = true;
+			events.add("received " + id);
+			castArcaneBolt();
 		}
 	}
+
+	/** Casts wizards:arcane_bolt at a zombie in front of the bot, like the Spell Engine client does. */
+	private void castArcaneBolt() {
+		server.execute(() -> {
+			var player = server.getPlayerList().getPlayerByName(name);
+			if (player == null) return;
+			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:zombie"))
+					.create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+			if (created instanceof net.minecraft.world.entity.Mob z) {
+				var look = player.getLookAngle();
+				z.setPos(player.getX() + look.x * 4, player.getY(), player.getZ() + look.z * 4);
+				z.setNoAi(true);
+				player.level().addFreshEntity(z);
+				zombie = z;
+				zombieHealth = z.getHealth();
+			}
+		});
+		var spell = Identifier.parse("wizards:arcane_bolt");
+		var delay = java.util.concurrent.CompletableFuture.delayedExecutor(500, TimeUnit.MILLISECONDS);
+		java.util.concurrent.CompletableFuture.runAsync(() -> {
+			var z = zombie;
+			var snapshot = new net.spell_engine.internals.casting.SpellCast.TargetSnapshot(z == null ? List.of() : List.of(z.getId()), null);
+			send(new net.spell_engine.network.Packets.CastRequest(spell, snapshot));
+			events.add("cast_request sent");
+			java.util.concurrent.CompletableFuture.delayedExecutor(300, TimeUnit.MILLISECONDS).execute(() -> server.execute(() -> {
+				var player = server.getPlayerList().getPlayerByName(name);
+				if (player == null) return;
+				var source = net.spell_engine.internals.container.SpellContainerSource.getFirstSourceOfSpell(spell, player);
+				var attempt = net.spell_engine.internals.casting.SpellCasting.attempt(player, player.getMainHandItem(), spell);
+				var process = ((net.spell_engine.internals.casting.SpellCaster.Player) player).getInteractor().process();
+				report.accept("cast diagnostics: mainHand=" + player.getMainHandItem() + " source=" + source
+						+ " attempt=" + attempt.result() + " process=" + (process == null ? null : process.id()));
+			}));
+			java.util.concurrent.CompletableFuture.delayedExecutor(1500, TimeUnit.MILLISECONDS).execute(() -> {
+				send(new net.spell_engine.network.Packets.CastInput(spell, snapshot));
+				events.add("cast_input sent");
+				java.util.concurrent.CompletableFuture.delayedExecutor(2500, TimeUnit.MILLISECONDS).execute(this::checkCast);
+			});
+		}, delay);
+	}
+
+	private void checkCast() {
+		server.execute(() -> {
+			var z = zombie;
+			float now = z == null ? -1 : (z.isAlive() ? z.getHealth() : 0);
+			boolean projectile = playPackets.containsKey("ClientboundAddEntityPacket") && spawned.contains("spell_engine:spell_projectile");
+			boolean cooldown = playPayloads.containsKey("spell_engine:spell_cooldown");
+			report.accept("cast: projectile=" + projectile + " cooldown=" + cooldown + " zombie health " + zombieHealth + " -> " + now + " spawned=" + spawned);
+			if (z != null) z.discard();
+			if (projectile && now >= 0 && now < zombieHealth) {
+				done.complete("PASSED: Fabric handshakes, modded item, and wizards:arcane_bolt hit (zombie " + zombieHealth + " -> " + now + ")");
+			} else {
+				done.complete("FAILED: arcane bolt did not damage the target");
+			}
+		});
+	}
+
+	private final Set<String> spawned = Collections.synchronizedSet(new LinkedHashSet<>());
 
 	// ---------------------------------------------------------------- listener proxies
 

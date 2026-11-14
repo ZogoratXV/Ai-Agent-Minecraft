@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.rpgbridge.core.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "access.BuiltInRegistriesInvoker",
+    "replace.registrysync.PaperBootstrapMixin",
+    "replace.registrysync.PaperMainMixin",
+    "replace.command.PaperCommandsMixin",
+    "replace.attachment.PaperEntityAttachmentMixin",
+    "replace.lifecycle.PaperPlayerListMixin",
+    "replace.spellengine.PaperLivingEntityDamageMixin",
+    "replace.spellengine.PaperRangedWeaponMixin",
+    "replace.rangedweapon.PaperRangedWeaponDamageMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

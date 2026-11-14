@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "rpgbridge",
+  "version": "0.2.0",
+  "name": "RPG Bridge",
+  "description": "Compatibility layer that runs Fabric API and the RPG Series mods on Purpur.",
+  "license": "GPL-3.0-only",
+  "environment": "server",
+  "entrypoints": {
+    "preLaunch": ["dev.rpgbridge.core.RpgBridgePreLaunch"]
+  },
+  "mixins": ["rpgbridge.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "26.2"
+  }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Logging for Purpur launched through Fabric Loader: Paper's default config needs jline/TerminalConsoleAppender
+     on the system class path, which Fabric Loader keeps in the game class loader. -->
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="[%d{HH:mm:ss} %level]: [%logger{1}] %msg%n%xEx"/>
+    </Console>
+    <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
+      <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: [%logger{1}] %msg%n%xEx"/>
+      <Policies><TimeBasedTriggeringPolicy/><OnStartupTriggeringPolicy/></Policies>
+    </RollingRandomAccessFile>
+  </Appenders>
+  <Loggers>
+    <Root level="info"><AppenderRef ref="Console"/><AppenderRef ref="File"/></Root>
+  </Loggers>
+</Configuration>

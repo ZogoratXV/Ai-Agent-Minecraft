@@ -149,7 +149,13 @@ public final class SelfTestBot {
 						proxy(ClientConfigurationPacketListener.class, ConnectionProtocol.CONFIGURATION, this::onConfiguration));
 				connection.send(ServerboundLoginAcknowledgedPacket.INSTANCE);
 				connection.setupOutboundProtocol(ConfigurationProtocols.SERVERBOUND);
-				connection.send(new ServerboundCustomPayloadPacket(new BrandPayload("fabric")));
+				// Paper keeps serverbound brand as raw bytes (plugin messaging): send it as a DiscardedPayload.
+				var brand = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+				brand.writeUtf("fabric");
+				byte[] brandBytes = new byte[brand.readableBytes()];
+				brand.readBytes(brandBytes);
+				connection.send(new ServerboundCustomPayloadPacket(new net.minecraft.network.protocol.common.custom.DiscardedPayload(
+						BrandPayload.TYPE.id(), brandBytes)));
 				connection.send(new ServerboundClientInformationPacket(ClientInformation.createDefault()));
 			}
 			case ClientboundLoginDisconnectPacket p -> done.complete("FAILED: disconnected during login: " + p.reason().getString());
@@ -197,6 +203,10 @@ public final class SelfTestBot {
 			case "c:register" -> send(new CommonRegisterPayload(1, CommonRegisterPayload.PLAY_PROTOCOL,
 					new LinkedHashSet<>(channels(PayloadTypeRegistryImpl.CLIENTBOUND_PLAY))));
 			case "fabric:registry/sync" -> send(SyncCompletePayload.INSTANCE);
+			case "fabric:custom_ingredient_sync" -> send(net.fabricmc.fabric.impl.recipe.ingredient.CustomIngredientSync.createResponsePayload(
+					((net.fabricmc.fabric.impl.recipe.ingredient.ClientboundCustomIngredientPayload) payload).protocolVersion()));
+			case "fabric:accepted_attachments_v1" -> send(new net.fabricmc.fabric.impl.attachment.sync.serverbound.ServerboundAcceptedAttachmentsPayload(
+					new java.util.HashSet<>(net.fabricmc.fabric.impl.attachment.AttachmentRegistryImpl.getSyncableAttachments())));
 			case "spell_engine:config_sync" -> send(new net.spell_engine.network.Packets.Ack("spell_engine:config"));
 			case "spell_engine:spell_registry_sync" -> send(new net.spell_engine.network.Packets.Ack("spell_engine:spell_registry"));
 			case "bettercombat:config_sync" -> send(new net.bettercombat.network.Packets.Ack("bettercombat:config"));
@@ -305,6 +315,7 @@ public final class SelfTestBot {
 			if (n.startsWith("handle") && args != null && args.length == 1 && args[0] instanceof Packet<?>) {
 				return handler.handle(n, args[0]);
 			}
+			if (method.isDefault()) return InvocationHandler.invokeDefault(proxy, method, args);
 			Class<?> r = method.getReturnType();
 			if (r == boolean.class) return false;
 			if (r.isPrimitive() && r != void.class) return 0;

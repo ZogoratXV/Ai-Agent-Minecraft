@@ -15,7 +15,9 @@
     "replace.rangedweapon.PaperRangedWeaponDamageMixin",
     "paper.EntityHardCollidingMixin",
     "bukkit.CraftEntityTypeMixin",
-    "bukkit.CraftEntityMixin"
+    "bukkit.CraftEntityMixin",
+    "paper.ConfigurationTaskThreadMixin",
+    "paper.ServerCommonPacketListenerImplAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

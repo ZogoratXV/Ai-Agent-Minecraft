@@ -96,7 +96,33 @@ Purpur non conosce questo registro: il bridge deve iniettare il pacchetto.
 - API utili: `AsyncPlayerConnectionConfigureEvent` (tiene aperta la configurazione finché il listener non ritorna),
   `io.papermc.paper.network.ChannelInitializeListenerHolder` (handler Netty per connessione).
 
-## Ostacolo principale
+## Decisione architetturale (sessione 2): iniezione nei registri di Purpur
+Invece di riscrivere ogni pacchetto a livello Netty, il plugin **aggiunge ai registri statici di Purpur** le voci
+modded con gli stessi raw id che il client riceve via `fabric:registry/sync` (dal dump). Verificato: in tutti i 13
+registri sincronizzati le voci vanilla sono contigue e precedono le modded, e coincidono con Purpur.
+Così Purpur codifica da solo gli id giusti (inventari, entità, comandi `/give wizards:wand_arcane`).
+Le voci server-side sono segnaposto senza comportamento: la logica va nel plugin.
+- Fatto: item (180). Da fare se servono: mob_effect, attribute, entity_type, sound_event, particle_type,
+  data_component_type, block (+ block state!), menu, ecc.
+- Conseguenza: i client vanilla vedrebbero raw id sconosciuti → server pensato per soli client modded
+  (eventuale traduzione per vanilla in futuro).
+- Rischio aperto: prototipo item server ≠ client (stack size, durabilità, componenti modded) → desync.
+  Soluzione prevista: estendere il dumper ai componenti di default degli item e replicarli.
+- Rischio aperto: Bukkit `Material` non esiste per gli item iniettati (eventi inventario?).
+
+## Stato tappa 1 (sessione 2)
+- `dumper/`: mod Fabric (javac, niente Loom) → `rpgbridge-dump/` con: `fabric_registry_sync.bin`, `registry_ids.json`,
+  payload Spell Engine/Better Combat, `registry_data/*.bin` (ClientboundRegistryDataPacket), `update_tags.bin`.
+  Funziona su server Fabric headless 26.2 (loader 0.19.5 montato a mano, `KnotServer`, `-Dfabric.gameJarPath=server.jar`).
+- `plugin/` (`load: STARTUP`): inietta gli item in `onLoad`; in `AsyncPlayerConnectionConfigureEvent`, se il client
+  ha registrato `fabric:registry/sync` + `spell_engine:config_sync`: `minecraft:register` → registry sync (attende
+  complete) → Spell Engine config + assegnazioni (attende ack) → Better Combat config + armi (attende ack) →
+  RegistryDataPacket per i registri assenti su Purpur → tag (registri nuovi + statici).
+  Handler Netty prima di `packet_handler` (via `ChannelInitializeListenerHolder`) intercetta register/ack.
+- Verificato sul server: avvio ok, 180 item iniettati, id verificati, registri extra = spell, equipment_set.
+- **Non verificato**: connessione di un client reale (nessun client disponibile in sessione cloud).
+
+## Ostacolo principale (analisi iniziale, superato per gli item dalla decisione sopra)
 Registri statici (item, effect, entity, block, menu type, attributi) non esistono su Purpur:
 qualsiasi pacchetto con ID modded va riscritto a livello Netty in entrambe le direzioni
 (stile ViaVersion), prima del decoder di Purpur. Idea: inviare in configurazione il pacchetto di
@@ -117,7 +143,9 @@ Tutta la logica di gioco (danni, proiettili, cooldown, rune, colpi Better Combat
 ## Prossimi passi
 - [x] Codec dei pacchetti di configurazione e formato di ServerConfig.
 - [x] Fabric API registry sync.
-- [ ] Mod dumper + server Fabric headless 26.2 con il modpack → `registry_map.json`.
-- [ ] Plugin tappa 1 (Java 25, compilato contro purpur-26.2.jar): handshake c:register, registry sync,
-      config Spell Engine/Better Combat, iniezione registro `minecraft:spell`.
+- [x] Mod dumper + server Fabric headless 26.2 con il modpack.
+- [x] Plugin tappa 1 (scheletro): iniezione item + handshake di configurazione.
+- [ ] Test con client reale; correggere ciò che emerge (log client in `.minecraft/logs/latest.log`).
+- [ ] Dumper: componenti di default degli item → replicarli sugli item segnaposto.
+- [ ] Gestire in play i canali C→S (cast_request ecc.) e registrarli (minecraft:register in play).
 - [ ] Spell Power: da analizzare (attributi modded, probabilmente in registro ATTRIBUTE).

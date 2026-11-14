@@ -1,0 +1,7 @@
+# Jar di terze parti (mod All Rights Reserved, server): mai committare/ridistribuire
+jars/
+run/
+dumper/run/
+build/
+.gradle/
+*.class

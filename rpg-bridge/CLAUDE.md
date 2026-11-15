@@ -54,6 +54,15 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     thread del server) i canali di `minecraft:register/unregister` che Fabric decodifica come `RegistrationPayload`
     e consuma, altrimenti `Player.sendPluginMessage` verso le mod client veniva scartato) +
     `PaperGameChannelRegistrationMixin` (stesso inoltro in gioco, priorità 900 prima di Fabric).
+  - `classlock/ClassLock` + `mixin/classlock/**`: blocco oggetti per classe MMOCore (classe via riflessione:
+    `PlayerData.get(UUID).getProfess().getId()/getName()`), regole in `config/rpgbridge/classi.yml` (YamlConfiguration
+    di Bukkit; chiavi italiane), oggetti identificati da id registro, `mmoitems:TIPO:ID` (custom_data
+    `MMOITEMS_ITEM_TYPE/ID`, classe richiesta `MMOITEMS_REQUIRED_CLASS`), `itemsadder:ns:id` (custom_data
+    `itemsadder{namespace,id}`, formato non provato: la licenza IA non si verifica nella sessione). Punti: `Player.attack`
+    (vanilla + Better Combat), `ItemStack.use/useOn/interactLivingEntity` → FAIL, Spell Engine
+    `ServerNetwork.handleCastRequest/CastInput/AttackPerform` (@Pseudo), `ServerPlayer.doTick` ogni 10 tick toglie
+    armature/mano secondaria bloccate (NON `tick()`: Paper non lo chiama per i giocatori). Bypass
+    `rpgbridge.classi.bypass` registrato con PermissionDefault.FALSE (niente bypass OP). `-Drpgbridge.debugClassLock=true`.
   - `selftest/SelfTestBot` + comando `rpgbridge selftest`: client nella JVM del server (usa i registri del
     server = quelli che il client ricostruisce col registry sync), fa da client Fabric (risponde a
     `minecraft:register`, `c:version`, `c:register`, `fabric:registry/sync`, `fabric:accepted_attachments_v1`,
@@ -63,6 +72,8 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     Velocity se attivo in `paper-global.yml` (segreto letto dalla config), riceve un `minecraft:register` grezzo,
     manda un payload su un canale plugin, verifica i canali noti a Bukkit e i plugin message nei due sensi (usa
     il primo plugin caricato). Il packet limiter di Paper è disattivato sulla connessione del bot (lato client).
+    Bersagli = husk (gli zombie bruciano al sole e il fuoco falsava i danni). Il bot è escluso dal blocco per classe
+    durante la prova di base. Limite noto: il bot non riceve i messaggi di sistema (anche `tellraw`): da indagare.
 - `tools/MixinAudit.java` (`tools/audit.sh`): confronta i mixin di tutte le mod con Purpur e vanilla
   (MISSING, NOPOINT, ORDINAL, SHADOW, INVOKER, DESCRIPTOR). I `[also absent in vanilla]` sono spesso falsi
   positivi del matcher, ma non sempre (RWA `spawnProjectile`): verificare.

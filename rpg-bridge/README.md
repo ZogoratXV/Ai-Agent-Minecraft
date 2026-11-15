@@ -28,12 +28,39 @@ I giocatori entrano con il loro client Fabric e le stesse mod, come su un server
    Il primo avvio fa applicare a paperclip le patch di Purpur e scarica Fabric Loader
    da `maven.fabricmc.net`. I plugin vanno in `plugins/` come sempre.
 
+## Blocco degli oggetti per classe (MMOCore)
+Con MMOCore installato, RPG Bridge può riservare oggetti a determinate classi. Un oggetto riservato a un'altra classe:
+- non attacca (attacco normale e Better Combat): il colpo non parte;
+- non si usa (tasto destro in aria, su blocchi ed entità: archi, scudi, bacchette, armature col tasto destro);
+- non lancia spell (Spell Engine);
+- non resta indossato né in mano secondaria: entro mezzo secondo torna nell'inventario (a terra se pieno).
+Il giocatore vede il motivo nella barra delle azioni. Tutti i controlli sono lato server.
+
+Configurazione: `config/rpgbridge/classi.yml` (creato al primo avvio, commentato). Esempio:
+```yaml
+attivo: true
+messaggio: "&cQuesto oggetto e' riservato a: &f{classi}"
+mmoitems-classe-richiesta: true      # usa anche la "Required Class" di MMOItems come blocco vero
+regole:                              # vale la PRIMA regola che corrisponde
+  - oggetti: ["wizards:*", "mmoitems:STAFF:*"]
+    classi: [MAGE, ARCANE_MAGE]
+  - oggetti: ["itemsadder:castigo:spada_drago"]
+    classi: [WARRIOR]
+```
+Oggetti: id del registro (`wizards:wand_arcane`, `wizards:*` per tutta la mod), `mmoitems:TIPO:ID`,
+`itemsadder:namespace:id`; `*` = qualsiasi testo. Classi: id o nome MMOCore, maiuscole/minuscole indifferenti.
+Comandi (console o OP): `rpgbridge classi ricarica` (rilegge il file), `rpgbridge classi controlla <giocatore>`
+(classe MMOCore e, per ogni slot, identificativi dell'oggetto e se è consentito).
+Permesso per ignorare il blocco: `rpgbridge.classi.bypass`, **default false anche per gli OP** (assegnarlo con
+LuckPerms). Senza MMOCore il blocco è inattivo. Gli accessori di Trinkets non sono controllati.
+
 ## Comandi di prova (console)
 - `rpgbridge selftest` — prova completa con un client simulato (vedi *Verifica*).
 - `rpgbridge selftest <nome> stay` — come sopra, ma il bot resta connesso: puoi dargli oggetti
   (`give`, `mi give ...`), cambiargli classe (`mmocore admin class <nome> <classe>`) e poi
   `rpgbridge bot attack <nome>` (attacco Better Combat con l'oggetto in mano, riporta il danno) o
   `rpgbridge bot attack <nome> vanilla` (attacco vanilla); `rpgbridge bot leave <nome>` lo disconnette.
+  Durante la prova di base il bot è escluso dal blocco per classe; con `stay` poi vi è soggetto (per provare le regole).
 
 ## Pelican / Pterodactyl
 1. Crea (o usa) un server Minecraft Purpur/Paper e nella scheda **Startup** scegli come **Docker Image** quella con

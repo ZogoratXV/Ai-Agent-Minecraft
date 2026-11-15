@@ -143,7 +143,10 @@ public final class SelfTestBot {
 		int port = server.getPort() > 0 ? server.getPort() : 25565;
 		connection.initiateServerboundPlayConnection("127.0.0.1", port, LoginProtocols.SERVERBOUND, LoginProtocols.CLIENTBOUND,
 				proxy(ClientLoginPacketListener.class, ConnectionProtocol.LOGIN, this::onLogin), false);
-		connection.send(new ServerboundHelloPacket(name, UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8))));
+		UUID botId = UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8));
+		// The basic test checks the mods, not the server's class rules: exempt the bot while it runs.
+		dev.rpgbridge.core.classlock.ClassLock.setExempt(botId, true);
+		connection.send(new ServerboundHelloPacket(name, botId));
 		String verdict;
 		try {
 			verdict = done.get(45, TimeUnit.SECONDS);
@@ -155,6 +158,8 @@ public final class SelfTestBot {
 		report.accept("play payloads: " + new TreeMap<>(playPayloads));
 		report.accept("items received: " + items);
 		report.accept(verdict);
+		// Kept online for console checks ("bot attack"): from now on the class rules apply to it.
+		dev.rpgbridge.core.classlock.ClassLock.setExempt(botId, false);
 		if (stay && connection.isConnected()) {
 			ONLINE.put(name, this);
 			report.accept(name + " stays online: rpgbridge bot attack " + name + " | rpgbridge bot leave " + name);
@@ -198,6 +203,9 @@ public final class SelfTestBot {
 			case ClientboundCustomPayloadPacket p -> onConfigPayload(p.payload());
 			case ClientboundSelectKnownPacks p -> connection.send(new ServerboundSelectKnownPacks(List.of()));
 			case ClientboundRegistryDataPacket p -> events.add("registry:" + p.registry().identifier());
+			case net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket p -> {
+				if (done.isDone()) report.accept("action bar: " + p.text().getString());
+			}
 			case net.minecraft.network.protocol.game.ClientboundSystemChatPacket p -> {
 				if (done.isDone()) report.accept((p.overlay() ? "action bar: " : "chat: ") + p.content().getString());
 			}
@@ -339,7 +347,7 @@ public final class SelfTestBot {
 		server.execute(() -> {
 			var player = server.getPlayerList().getPlayerByName(name);
 			if (player == null) return;
-			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:zombie"))
+			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:husk")) // husk: does not burn in daylight (fire damage would fake a hit)
 					.create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
 			if (created instanceof net.minecraft.world.entity.Mob z) {
 				var look = player.getLookAngle();
@@ -403,7 +411,7 @@ public final class SelfTestBot {
 			int slot = player.getInventory().getSelectedSlot();
 			player.getInventory().setItem(slot, new ItemStack(sword));
 			player.containerMenu.broadcastChanges();
-			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:zombie"))
+			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:husk")) // husk: does not burn in daylight (fire damage would fake a hit)
 					.create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
 			if (!(created instanceof net.minecraft.world.entity.Mob z)) return;
 			var look = player.getLookAngle();
@@ -549,7 +557,7 @@ public final class SelfTestBot {
 			player.containerMenu.broadcastChanges();
 			ItemStack held = inventory.getItem(slot);
 			String what = held.isEmpty() ? "empty hand" : BuiltInRegistries.ITEM.getKey(held.getItem()) + " \"" + held.getHoverName().getString() + "\"";
-			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:zombie"))
+			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:husk")) // husk: does not burn in daylight (fire damage would fake a hit)
 					.create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
 			if (!(created instanceof net.minecraft.world.entity.Mob z)) return;
 			var look = player.getLookAngle();

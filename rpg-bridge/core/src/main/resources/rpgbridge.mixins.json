@@ -23,6 +23,10 @@
     "paper.RawPluginMessageMixin",
     "replace.networking.PaperCommonCustomPayloadMixin",
     "replace.networking.PaperGameChannelRegistrationMixin",
+    "classlock.PlayerAttackLockMixin",
+    "classlock.ItemStackUseLockMixin",
+    "classlock.SpellCastLockMixin",
+    "classlock.ClassLockEquipmentMixin",
     "paper.ServerCommonPacketListenerImplAccessor"
   ],
   "injectors": {

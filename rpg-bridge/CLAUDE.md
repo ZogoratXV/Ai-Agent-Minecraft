@@ -54,6 +54,10 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
 - `tools/MixinAudit.java` (`tools/audit.sh`): confronta i mixin di tutte le mod con Purpur e vanilla
   (MISSING, NOPOINT, ORDINAL, SHADOW, INVOKER, DESCRIPTOR). I `[also absent in vanilla]` sono spesso falsi
   positivi del matcher, ma non sempre (RWA `spawnProjectile`): verificare.
+- `loader/.../LaunchArgs`: scrive l'argfile di avvio (`.rpgbridge/launch.txt`): librerie del loader, poi SOLO le
+  librerie di `META-INF/libraries.list` di purpur.jar (mai tutto `libraries/`: il library loader di Paper ci scarica
+  anche le librerie dei plugin, es. netty 4.1 di ItemsAdder → NoSuchMethodError al secondo avvio), senza ASM di Paper.
+  Usato da start.sh e run.bat. (`core/run-hybrid.sh`, solo sviluppo, usa ancora `find libraries`.)
 - `dist/start.sh`: launcher per l'admin (paperclip patch-only, download Fabric Loader, classpath, avvio);
   librerie del loader elencate a mano (niente python: i container Pelican non lo hanno), servono bash/curl/find.
   `dist/run.bat`: stesso launcher per Windows (librerie del loader 0.19.5 elencate a mano, classpath in un
@@ -84,6 +88,10 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
 
 - Testato da un utente con client reale su Windows (68 mod): login ok; crash all'apertura dello Spell Binding
   (getBukkitView astratto) risolto, ora coperto dal self-test.
+
+- Plugin (jar dell'utente, non nel repo, in `run-dist/plugins`): ProtocolLib 5.5.0, MythicLib 1.7.1, MMOCore 1.13.1,
+  MMOItems 6.10.1 ok; `rpgbridge selftest <nome> stay` + `rpgbridge bot attack <nome> [vanilla]` per provare classi
+  e oggetti dalla console. ItemsAdder 4.0.18 fallisce anche su Purpur liscio (FastNbt `nms/Version` non caricata).
 
 ## Prossimi passi
 - Test con un **client reale** (log client `.minecraft/logs/latest.log`).

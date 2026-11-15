@@ -92,6 +92,9 @@ public final class SelfTestBot {
 	private final List<String> items = Collections.synchronizedList(new ArrayList<>());
 	private final CompletableFuture<String> done = new CompletableFuture<>();
 	private volatile boolean sentChannels;
+	private volatile boolean stay;
+	/** Bots kept online after the test ({@code rpgbridge selftest <name> stay}), driven by {@code rpgbridge bot ...}. */
+	private static final Map<String, SelfTestBot> ONLINE = new ConcurrentHashMap<>();
 	private volatile boolean castStarted;
 	private volatile float zombieHealth = -1;
 	private volatile net.minecraft.world.entity.LivingEntity zombie;
@@ -106,10 +109,16 @@ public final class SelfTestBot {
 
 	/** Runs the whole test asynchronously; {@code report} receives log lines and the final verdict. */
 	public static CompletableFuture<String> run(MinecraftServer server, String name, Consumer<String> report) {
+		return run(server, name, report, false);
+	}
+
+	/** @param stay keep the bot online after the test, for {@link #attack} and {@link #leave} */
+	public static CompletableFuture<String> run(MinecraftServer server, String name, Consumer<String> report, boolean stay) {
 		CompletableFuture<String> result = new CompletableFuture<>();
 		Thread t = new Thread(() -> {
 			try {
 				SelfTestBot bot = new SelfTestBot(server, name, report);
+				bot.stay = stay;
 				result.complete(bot.execute());
 			} catch (Throwable e) {
 				report.accept("FAILED: " + e);
@@ -137,7 +146,12 @@ public final class SelfTestBot {
 		report.accept("play payloads: " + new TreeMap<>(playPayloads));
 		report.accept("items received: " + items);
 		report.accept(verdict);
-		connection.disconnect(net.minecraft.network.chat.Component.literal("self-test finished"));
+		if (stay && connection.isConnected()) {
+			ONLINE.put(name, this);
+			report.accept(name + " stays online: rpgbridge bot attack " + name + " | rpgbridge bot leave " + name);
+		} else {
+			connection.disconnect(net.minecraft.network.chat.Component.literal("self-test finished"));
+		}
 		return verdict;
 	}
 
@@ -174,6 +188,9 @@ public final class SelfTestBot {
 			case ClientboundCustomPayloadPacket p -> onConfigPayload(p.payload());
 			case ClientboundSelectKnownPacks p -> connection.send(new ServerboundSelectKnownPacks(List.of()));
 			case ClientboundRegistryDataPacket p -> events.add("registry:" + p.registry().identifier());
+			case net.minecraft.network.protocol.game.ClientboundSystemChatPacket p -> {
+				if (done.isDone()) report.accept((p.overlay() ? "action bar: " : "chat: ") + p.content().getString());
+			}
 			case ClientboundKeepAlivePacket p -> connection.send(new ServerboundKeepAlivePacket(p.getId()));
 			case ClientboundPingPacket p -> connection.send(new ServerboundPongPacket(p.getId()));
 			case ClientboundFinishConfigurationPacket p -> {
@@ -255,7 +272,9 @@ public final class SelfTestBot {
 						done.complete("FAILED: wizards:wand_arcane not registered");
 						return;
 					}
-					player.getInventory().add(new ItemStack(item.get()));
+					// A player saved by an earlier run may hold something else: start from an empty inventory.
+					player.getInventory().clearContent();
+					player.getInventory().setItem(player.getInventory().getSelectedSlot(), new ItemStack(item.get()));
 					// Arcane spells consume arcane runes (spell cost item).
 					BuiltInRegistries.ITEM.getOptional(Identifier.parse("runes:arcane_stone"))
 							.ifPresent(rune -> player.getInventory().add(new ItemStack(rune, 16)));
@@ -432,6 +451,64 @@ public final class SelfTestBot {
 				}));
 			});
 		});
+	}
+
+	/** Disconnects a bot kept online with {@code stay}. */
+	public static boolean leave(String name) {
+		SelfTestBot bot = ONLINE.remove(name);
+		if (bot == null) return false;
+		bot.connection.disconnect(net.minecraft.network.chat.Component.literal("left"));
+		return true;
+	}
+
+	/**
+	 * Attacks a fresh zombie (no AI) in front of a bot kept online, with the item in its main hand (or the first
+	 * item of its inventory, moved to the main hand), through a Better Combat attack request like a client
+	 * (or a plain vanilla attack packet).
+	 * Reports the zombie's health before and after: plugins that block the attack (e.g. MMOItems class
+	 * requirements) leave it unchanged. Chat and action bar messages the bot receives are reported too.
+	 */
+	public static boolean attack(String name, boolean vanilla) {
+		SelfTestBot bot = ONLINE.get(name);
+		if (bot == null) return false;
+		bot.server.execute(() -> {
+			var player = bot.server.getPlayerList().getPlayerByName(name);
+			if (player == null) return;
+			var inventory = player.getInventory();
+			int slot = inventory.getSelectedSlot();
+			if (inventory.getItem(slot).isEmpty()) {
+				for (int i = 0; i < 36; i++) {
+					if (!inventory.getItem(i).isEmpty()) {
+						inventory.setItem(slot, inventory.getItem(i).copy());
+						inventory.setItem(i, ItemStack.EMPTY);
+						break;
+					}
+				}
+			}
+			player.containerMenu.broadcastChanges();
+			ItemStack held = inventory.getItem(slot);
+			String what = held.isEmpty() ? "empty hand" : BuiltInRegistries.ITEM.getKey(held.getItem()) + " \"" + held.getHoverName().getString() + "\"";
+			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:zombie"))
+					.create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+			if (!(created instanceof net.minecraft.world.entity.Mob z)) return;
+			var look = player.getLookAngle();
+			z.setPos(player.getX() + look.x * 2, player.getY(), player.getZ() + look.z * 2);
+			z.setNoAi(true);
+			player.level().addFreshEntity(z);
+			float before = z.getHealth();
+			int id = z.getId();
+			java.util.concurrent.CompletableFuture.delayedExecutor(1500, TimeUnit.MILLISECONDS).execute(() -> {
+				if (vanilla) bot.connection.send(new net.minecraft.network.protocol.game.ServerboundAttackPacket(id));
+				else bot.send(new net.bettercombat.network.Packets.C2S_AttackRequest(0, false, slot, id, new int[] {id}));
+				java.util.concurrent.CompletableFuture.delayedExecutor(1500, TimeUnit.MILLISECONDS).execute(() -> bot.server.execute(() -> {
+					float after = z.isAlive() ? z.getHealth() : 0;
+					z.discard();
+					bot.report.accept((vanilla ? "vanilla" : "Better Combat") + " attack with " + what + ": zombie " + before + " -> " + after
+							+ (after < before ? " (HIT)" : " (NO DAMAGE)"));
+				}));
+			});
+		});
+		return true;
 	}
 
 	// ---------------------------------------------------------------- listener proxies

@@ -52,21 +52,12 @@ call :fetch org/ow2/asm/asm-tree/9.10.1/asm-tree-9.10.1.jar || goto :fail
 call :fetch org/ow2/asm/asm-util/9.10.1/asm-util-9.10.1.jar || goto :fail
 call :fetch net/fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/sponge-mixin-0.17.4+mixin.0.8.7.jar || goto :fail
 
-rem 3. Class path: Fabric Loader first, then Purpur's libraries (Paper's own ASM is replaced by Fabric's).
-rem    It is too long for a cmd variable, so it goes in a Java argument file, one jar per line
-rem    (a "\" at the end of a line inside quotes continues the argument on the next line).
-set "ARGS=.rpgbridge\classpath.txt"
-> "%ARGS%" echo -cp "\
-for %%f in ("%LIB%\*.jar") do call :cpadd "%%~ff"
-call :cpadd "%CD%\rpgbridge-loader.jar"
-for /r libraries %%f in (*.jar) do (
-  set "P=%%f"
-  if "!P:\org\ow2\asm\=!"=="!P!" call :cpadd "%%f"
-)
->> "%ARGS%" echo "
+rem 3. Class path in a Java argument file: Fabric Loader, then only the libraries Purpur lists (plugin libraries
+rem    downloaded into libraries\ by Paper must stay out), without Paper's own ASM (Fabric's replaces it).
+set "ARGS=.rpgbridge\launch.txt"
+"%JAVA%" -cp rpgbridge-loader.jar dev.rpgbridge.loader.LaunchArgs "%PURPUR_JAR%" "%LIB%" "%ARGS%" || goto :fail
 
-set "GAME_JAR=!GAME_JAR:\=/!"
-"%JAVA%" -Xmx%MEMORY% %JVM_ARGS% -Dlog4j.configurationFile=rpgbridge-log4j2.xml -Dfabric.skipMcProvider=true "-Dfabric.gameJarPath=!GAME_JAR!" @"%ARGS%" net.fabricmc.loader.impl.launch.knot.KnotServer %*
+"%JAVA%" -Xmx%MEMORY% %JVM_ARGS% -Dlog4j.configurationFile=rpgbridge-log4j2.xml -Dfabric.skipMcProvider=true @"%ARGS%" net.fabricmc.loader.impl.launch.knot.KnotServer %*
 set "RC=%ERRORLEVEL%"
 pause
 exit /b %RC%
@@ -87,11 +78,6 @@ rem Reads e.g. 'openjdk version "25.0.1" 2025-10-21' into JVER=25.0.1, JMAJOR=25
 set "JVER=?" & set "JMAJOR=0"
 for /f "tokens=3" %%v in ('call "%JAVA%" -version 2^>^&1 ^| findstr /i version') do if "!JVER!"=="?" set "JVER=%%~v"
 for /f "delims=.-+" %%m in ("!JVER!") do set /a "JMAJOR=%%m" 2>nul
-exit /b 0
-
-:cpadd
-set "E=%~1"
->> "%ARGS%" echo !E:\=/!;\
 exit /b 0
 
 :findgame

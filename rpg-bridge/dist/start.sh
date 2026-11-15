@@ -23,7 +23,6 @@ ls mods/rpgbridge-core*.jar >/dev/null 2>&1 || { echo "Missing mods/rpgbridge-co
 if ! ls versions/*/purpur-*.jar >/dev/null 2>&1; then
   "$JAVA" -Dpaperclip.patchonly=true -jar "$PURPUR_JAR"
 fi
-GAME_JAR=$(ls versions/*/purpur-*.jar | head -1)
 
 # 2. Fabric Loader and its libraries (Apache-2.0 / MIT / BSD), downloaded once.
 mkdir -p "$LIB"
@@ -43,11 +42,12 @@ for path in \
   fetch "$FABRIC_MAVEN/$path"
 done
 
-# 3. Class path: Fabric Loader first, then Purpur's libraries (Paper's own ASM is replaced by Fabric's).
-CP="$(find "$LIB" -name '*.jar' | tr '\n' ':')rpgbridge-loader.jar:$(find libraries -name '*.jar' | grep -v '/org/ow2/asm/' | tr '\n' ':')"
+# 3. Class path in a Java argument file: Fabric Loader, then only the libraries Purpur lists (plugin libraries
+#    downloaded into libraries/ by Paper must stay out), without Paper's own ASM (Fabric's replaces it).
+ARGS=.rpgbridge/launch.txt
+"$JAVA" -cp rpgbridge-loader.jar dev.rpgbridge.loader.LaunchArgs "$PURPUR_JAR" "$LIB" "$ARGS"
 
 exec "$JAVA" -Xmx"$MEMORY" ${JVM_ARGS:-} \
   -Dlog4j.configurationFile=rpgbridge-log4j2.xml \
   -Dfabric.skipMcProvider=true \
-  -Dfabric.gameJarPath="$GAME_JAR" \
-  -cp "$CP" net.fabricmc.loader.impl.launch.knot.KnotServer "$@"
+  @"$ARGS" net.fabricmc.loader.impl.launch.knot.KnotServer "$@"

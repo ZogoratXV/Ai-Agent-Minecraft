@@ -28,6 +28,13 @@ I giocatori entrano con il loro client Fabric e le stesse mod, come su un server
    Il primo avvio fa applicare a paperclip le patch di Purpur e scarica Fabric Loader
    da `maven.fabricmc.net`. I plugin vanno in `plugins/` come sempre.
 
+## Comandi di prova (console)
+- `rpgbridge selftest` — prova completa con un client simulato (vedi *Verifica*).
+- `rpgbridge selftest <nome> stay` — come sopra, ma il bot resta connesso: puoi dargli oggetti
+  (`give`, `mi give ...`), cambiargli classe (`mmocore admin class <nome> <classe>`) e poi
+  `rpgbridge bot attack <nome>` (attacco Better Combat con l'oggetto in mano, riporta il danno) o
+  `rpgbridge bot attack <nome> vanilla` (attacco vanilla); `rpgbridge bot leave <nome>` lo disconnette.
+
 ## Pelican / Pterodactyl
 1. Crea (o usa) un server Minecraft Purpur/Paper e nella scheda **Startup** scegli come **Docker Image** quella con
    **Java 25**.
@@ -50,6 +57,13 @@ Risultato atteso nel log: `[SelfTest] PASSED: Fabric handshakes, modded item, wi
 ## Menu e inventari delle mod
 I menu delle mod (es. Spell Binding Table) hanno per Bukkit una vista generica: in alto gli slot del menu
 (tipo `CHEST`), in basso l'inventario del giocatore. Gli eventi Bukkit di apertura/chiusura/click funzionano.
+
+## Plugin testati
+ProtocolLib 5.5.0, MythicLib 1.7.1, MMOCore 1.13.1, MMOItems 6.10.1: si avviano e funzionano (oggetti MMOItems,
+classi MMOCore, `required-class`: con la classe sbagliata MMOItems non applica le statistiche dell'arma, sia con
+l'attacco vanilla sia con quello di Better Combat). MMOItems vede anche gli attributi delle mod (`spell-power:*`).
+ItemsAdder 4.0.18 non parte su Purpur 26.2, **anche senza RPG Bridge** (`NoClassDefFoundError:
+beer/devs/fastnbt/nms/Version`): serve una versione di ItemsAdder che supporti 26.2.
 
 ## Limiti noti
 - Server pensato per client **modded**: un client vanilla non può entrare (riceverebbe contenuti

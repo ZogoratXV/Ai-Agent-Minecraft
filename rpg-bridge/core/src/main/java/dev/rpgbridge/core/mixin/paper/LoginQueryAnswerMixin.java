@@ -22,6 +22,7 @@ public abstract class LoginQueryAnswerMixin {
 	private CustomQueryAnswerPayload rpgbridge$paperPayload(ServerboundCustomQueryAnswerPacket packet, Operation<CustomQueryAnswerPayload> original) {
 		CustomQueryAnswerPayload payload = original.call(packet);
 		if (payload instanceof FriendlyByteBufLoginQueryResponse fabric) {
+			if (Boolean.getBoolean("rpgbridge.debugLoginQuery")) new Throwable("login query answer ridx=" + fabric.data().readerIndex() + " widx=" + fabric.data().writerIndex()).printStackTrace();
 			return new ServerboundCustomQueryAnswerPacket.QueryAnswerPayload(fabric.data());
 		}
 		return payload;

@@ -176,6 +176,7 @@ public final class SelfTestBot {
 				connection.send(new ServerboundClientInformationPacket(ClientInformation.createDefault()));
 			}
 			case ClientboundLoginDisconnectPacket p -> done.complete("FAILED: disconnected during login: " + p.reason().getString());
+			case net.minecraft.network.protocol.login.ClientboundCustomQueryPacket p -> onLoginQuery(p);
 			default -> { }
 		}
 		return null;
@@ -509,6 +510,38 @@ public final class SelfTestBot {
 			});
 		});
 		return true;
+	}
+
+	/**
+	 * Login queries: answer Velocity's modern forwarding ("velocity:player_info") like the proxy would, signed with
+	 * the secret of Paper's config, so the self-test also covers servers behind Velocity. Others: no answer.
+	 */
+	private void onLoginQuery(net.minecraft.network.protocol.login.ClientboundCustomQueryPacket query) {
+		net.minecraft.network.protocol.login.custom.CustomQueryAnswerPayload answer = null;
+		if (query.payload().id().toString().equals("velocity:player_info")) {
+			try {
+				var data = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+				data.writeVarInt(1); // MODERN_DEFAULT
+				data.writeUtf("127.0.0.1");
+				data.writeUUID(UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8)));
+				data.writeUtf(name);
+				data.writeVarInt(0); // no profile properties
+				byte[] bytes = new byte[data.readableBytes()];
+				data.readBytes(bytes);
+				String secret = io.papermc.paper.configuration.GlobalConfiguration.get().proxies.velocity.secret;
+				javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+				mac.init(new javax.crypto.spec.SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+				var signed = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+				signed.writeBytes(mac.doFinal(bytes));
+				signed.writeBytes(bytes);
+				answer = new net.minecraft.network.protocol.login.ServerboundCustomQueryAnswerPacket.QueryAnswerPayload(signed);
+				events.add("velocity forwarding answered");
+			} catch (java.security.GeneralSecurityException e) {
+				done.complete("FAILED: velocity forwarding: " + e);
+				return;
+			}
+		}
+		connection.send(new net.minecraft.network.protocol.login.ServerboundCustomQueryAnswerPacket(query.transactionId(), answer));
 	}
 
 	// ---------------------------------------------------------------- listener proxies

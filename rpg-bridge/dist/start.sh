@@ -31,18 +31,17 @@ fetch() { # url
   local f="$LIB/$(basename "$1")"
   [ -s "$f" ] || curl -fsSLo "$f" "$1"
 }
-fetch "$FABRIC_MAVEN/net/fabricmc/fabric-loader/$LOADER_VERSION/fabric-loader-$LOADER_VERSION.jar"
-LOADER_JSON="$LIB/fabric-loader-$LOADER_VERSION.json"
-[ -s "$LOADER_JSON" ] || curl -fsSLo "$LOADER_JSON" "$FABRIC_MAVEN/net/fabricmc/fabric-loader/$LOADER_VERSION/fabric-loader-$LOADER_VERSION.json"
-# Library coordinates from the loader's own metadata ("name": "group:artifact:version", "url": repo).
-python3 - "$LOADER_JSON" <<'EOF' | while read -r url; do fetch "$url"; done
-import json, sys
-d = json.load(open(sys.argv[1]))
-libs = d["libraries"]["common"] + d["libraries"].get("server", [])
-for l in libs:
-    g, a, v = l["name"].split(":")[:3]
-    print(f'{l["url"].rstrip("/")}/{g.replace(".", "/")}/{a}/{v}/{a}-{v}.jar')
-EOF
+# Same list as the "libraries" of fabric-loader-$LOADER_VERSION.json (no python/jq needed, e.g. in Pelican containers).
+for path in \
+  "net/fabricmc/fabric-loader/$LOADER_VERSION/fabric-loader-$LOADER_VERSION.jar" \
+  org/ow2/asm/asm/9.10.1/asm-9.10.1.jar \
+  org/ow2/asm/asm-analysis/9.10.1/asm-analysis-9.10.1.jar \
+  org/ow2/asm/asm-commons/9.10.1/asm-commons-9.10.1.jar \
+  org/ow2/asm/asm-tree/9.10.1/asm-tree-9.10.1.jar \
+  org/ow2/asm/asm-util/9.10.1/asm-util-9.10.1.jar \
+  "net/fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/sponge-mixin-0.17.4+mixin.0.8.7.jar"; do
+  fetch "$FABRIC_MAVEN/$path"
+done
 
 # 3. Class path: Fabric Loader first, then Purpur's libraries (Paper's own ASM is replaced by Fabric's).
 CP="$(find "$LIB" -name '*.jar' | tr '\n' ':')rpgbridge-loader.jar:$(find libraries -name '*.jar' | grep -v '/org/ow2/asm/' | tr '\n' ':')"

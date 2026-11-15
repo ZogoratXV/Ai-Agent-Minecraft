@@ -16,6 +16,8 @@
     "paper.EntityHardCollidingMixin",
     "bukkit.CraftEntityTypeMixin",
     "bukkit.CraftEntityMixin",
+    "bukkit.AbstractContainerMenuMixin",
+    "bukkit.TrinketInventoryMixin",
     "paper.ConfigurationTaskThreadMixin",
     "paper.ServerCommonPacketListenerImplAccessor"
   ],

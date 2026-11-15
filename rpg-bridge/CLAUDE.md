@@ -40,15 +40,22 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     Bukkit sincroni quando riprende la configurazione).
   - `mixin/bukkit/**` + `bukkit/ModdedEntities`: tipi entità modded → `EntityType.UNKNOWN`, wrapper Craft
     concreto più vicino alla gerarchia NMS.
+  - `mixin/bukkit/AbstractContainerMenuMixin` + `bukkit/ModdedMenus`: CraftBukkit rende astratto
+    `AbstractContainerMenu.getBukkitView()`; @Overwrite con corpo di default (i menu vanilla lo sovrascrivono):
+    `CraftInventoryView` con in alto un Container vivo sugli slot non del giocatore. `TrinketInventoryMixin`
+    (@Pseudo su `TrinketInventoryImpl`): metodi Container di CraftBukkit mancanti (getContents, onOpen, ...).
+    Scan delle classi delle mod che estendono AbstractContainerMenu / implementano Container: ripeterlo per mod nuove.
   - `selftest/SelfTestBot` + comando `rpgbridge selftest`: client nella JVM del server (usa i registri del
     server = quelli che il client ricostruisce col registry sync), fa da client Fabric (risponde a
     `minecraft:register`, `c:version`, `c:register`, `fabric:registry/sync`, `fabric:accepted_attachments_v1`,
     `fabric:custom_ingredient_sync`, ack Spell Engine/Better Combat), entra, riceve la bacchetta, lancia
-    Arcane Bolt (serve `runes:arcane_stone`) e controlla proiettile + danno.
+    Arcane Bolt (serve `runes:arcane_stone`) e controlla proiettile + danno, attacco Better Combat, poi piazza
+    e usa lo Spell Binding Table (pacchetto use-item-on) e chiude il menu.
 - `tools/MixinAudit.java` (`tools/audit.sh`): confronta i mixin di tutte le mod con Purpur e vanilla
   (MISSING, NOPOINT, ORDINAL, SHADOW, INVOKER, DESCRIPTOR). I `[also absent in vanilla]` sono spesso falsi
   positivi del matcher, ma non sempre (RWA `spawnProjectile`): verificare.
-- `dist/start.sh`: launcher per l'admin (paperclip patch-only, download Fabric Loader, classpath, avvio).
+- `dist/start.sh`: launcher per l'admin (paperclip patch-only, download Fabric Loader, classpath, avvio);
+  librerie del loader elencate a mano (niente python: i container Pelican non lo hanno), servono bash/curl/find.
   `dist/run.bat`: stesso launcher per Windows (librerie del loader 0.19.5 elencate a mano, classpath in un
   argfile Java una riga per jar con `\` di continuazione: le variabili cmd sono limitate a 8191 caratteri).
   Non provato su Windows reale. Il `.bat` deve restare con fine riga CRLF (`.gitattributes`).
@@ -74,6 +81,9 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
   con `C2S_AttackRequest` colpisce).
 - Verificati da console: entità modded (Spirit Wolf), blocchi + block entity (Spell Binding), effetti
   (Frozen), attributi (Spell Power).
+
+- Testato da un utente con client reale su Windows (68 mod): login ok; crash all'apertura dello Spell Binding
+  (getBukkitView astratto) risolto, ora coperto dal self-test.
 
 ## Prossimi passi
 - Test con un **client reale** (log client `.minecraft/logs/latest.log`).

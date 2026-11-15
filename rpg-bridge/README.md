@@ -28,11 +28,28 @@ I giocatori entrano con il loro client Fabric e le stesse mod, come su un server
    Il primo avvio fa applicare a paperclip le patch di Purpur e scarica Fabric Loader
    da `maven.fabricmc.net`. I plugin vanno in `plugins/` come sempre.
 
+## Pelican / Pterodactyl
+1. Crea (o usa) un server Minecraft Purpur/Paper e nella scheda **Startup** scegli come **Docker Image** quella con
+   **Java 25**.
+2. Con il **File Manager** (o SFTP) carica nella cartella principale: `purpur.jar` (Purpur 26.2), `start.sh`,
+   `rpgbridge-loader.jar`, `rpgbridge-log4j2.xml`; in `mods/`: `rpgbridge-core.jar` + le mod dei giocatori.
+   Se l'egg usa un altro nome per il jar del server (es. `server.jar`), rinominalo `purpur.jar`
+   o aggiungi `PURPUR_JAR=server.jar` al comando qui sotto.
+3. **Startup Command** (scheda Startup; se non è modificabile serve un admin del pannello):
+   `MEMORY={{SERVER_MEMORY}}M bash start.sh nogui`
+   (se il container viene chiuso per memoria esaurita, usa un valore più basso, es. `MEMORY=3500M` su 4096 MB).
+4. Il primo avvio scarica Minecraft (paperclip) e Fabric Loader: il container deve poter uscire su internet.
+   Lo script usa solo `bash`, `curl` e `find`, presenti nelle immagini Java di Pelican.
+
 ## Verifica
 Dalla console: `rpgbridge selftest`. Un client Fabric simulato entra nel server, completa tutti gli
 handshake (registry sync, Spell Engine, Better Combat, Fabric API), riceve una `wizards:wand_arcane`
 lancia *Arcane Bolt* su uno zombie e ne colpisce un altro con un attacco Better Combat.
 Risultato atteso nel log: `[SelfTest] PASSED: Fabric handshakes, modded item, wizards:arcane_bolt hit (...), Better Combat attack hit (...)`.
+
+## Menu e inventari delle mod
+I menu delle mod (es. Spell Binding Table) hanno per Bukkit una vista generica: in alto gli slot del menu
+(tipo `CHEST`), in basso l'inventario del giocatore. Gli eventi Bukkit di apertura/chiusura/click funzionano.
 
 ## Limiti noti
 - Server pensato per client **modded**: un client vanilla non può entrare (riceverebbe contenuti

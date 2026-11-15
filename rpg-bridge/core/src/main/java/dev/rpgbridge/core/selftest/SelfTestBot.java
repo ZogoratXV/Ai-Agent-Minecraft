@@ -378,11 +378,57 @@ public final class SelfTestBot {
 					report.accept("bettercombat: zombie health " + zombieHealth + " -> " + now);
 					z.discard();
 					if (now < zombieHealth) {
-						done.complete("PASSED: Fabric handshakes, modded item, " + castResult
+						openModdedMenu("Fabric handshakes, modded item, " + castResult
 								+ ", Better Combat attack hit (zombie " + zombieHealth + " -> " + now + ")");
 					} else {
 						done.complete("FAILED: Better Combat attack did not damage the target (" + castResult + ")");
 					}
+				}));
+			});
+		});
+	}
+
+	/**
+	 * Mod menu: place Spell Engine's Spell Binding table and use it like a client (use-item-on packet), so
+	 * Paper opens the mod menu and fires the Bukkit open/close events (needs a Bukkit view of the menu).
+	 */
+	private void openModdedMenu(String passed) {
+		server.execute(() -> {
+			var player = server.getPlayerList().getPlayerByName(name);
+			if (player == null) return;
+			var block = BuiltInRegistries.BLOCK.getValue(Identifier.parse("spell_engine:spell_binding"));
+			var pos = player.blockPosition().relative(player.getDirection(), 2);
+			player.level().setBlockAndUpdate(pos, block.defaultBlockState());
+			player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
+			player.containerMenu.broadcastChanges();
+			var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos),
+					net.minecraft.core.Direction.UP, pos, false);
+			java.util.concurrent.CompletableFuture.delayedExecutor(500, TimeUnit.MILLISECONDS).execute(() -> {
+				connection.send(new net.minecraft.network.protocol.game.ServerboundUseItemOnPacket(
+						net.minecraft.world.InteractionHand.MAIN_HAND, hit, 1));
+				events.add("use spell_engine:spell_binding sent");
+				java.util.concurrent.CompletableFuture.delayedExecutor(1000, TimeUnit.MILLISECONDS).execute(() -> server.execute(() -> {
+					var menu = player.containerMenu;
+					String menuClass = menu.getClass().getName();
+					if (!menuClass.contains("SpellBinding")) {
+						done.complete("FAILED: Spell Binding menu not open (" + menuClass + ")");
+						return;
+					}
+					var view = menu.getBukkitView();
+					var top = view.getTopInventory();
+					report.accept("menu: " + menuClass + " bukkit top=" + top.getType() + " size=" + top.getSize()
+							+ " contents=" + top.getContents().length + " player=" + view.getPlayer().getName());
+					int id = menu.containerId;
+					connection.send(new net.minecraft.network.protocol.game.ServerboundContainerClosePacket(id));
+					java.util.concurrent.CompletableFuture.delayedExecutor(500, TimeUnit.MILLISECONDS).execute(() -> server.execute(() -> {
+						player.level().removeBlock(pos, false);
+						if (player.containerMenu == player.inventoryMenu) {
+							done.complete("PASSED: " + passed + ", Spell Binding menu opened and closed (Bukkit "
+									+ top.getType() + " view, " + top.getSize() + " slots)");
+						} else {
+							done.complete("FAILED: Spell Binding menu did not close");
+						}
+					}));
 				}));
 			});
 		});

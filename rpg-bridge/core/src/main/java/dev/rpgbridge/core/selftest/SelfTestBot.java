@@ -522,6 +522,53 @@ public final class SelfTestBot {
 		}));
 	}
 
+	/**
+	 * Casts a spell with a bot kept online ({@code stay}) at a fresh husk in front of it, like a client (cast request,
+	 * then cast input), and reports the husk's health: lets the console check spells granted by items or blocked
+	 * by the class/tome rules. Spells with a rune cost need the runes in the inventory.
+	 */
+	public static boolean cast(String name, String spellId) {
+		SelfTestBot bot = ONLINE.get(name);
+		Identifier spell = Identifier.tryParse(spellId);
+		if (bot == null || spell == null) return false;
+		bot.server.execute(() -> {
+			var player = bot.server.getPlayerList().getPlayerByName(name);
+			if (player == null) return;
+			var created = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse("minecraft:husk"))
+					.create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+			if (!(created instanceof net.minecraft.world.entity.Mob target)) return;
+			var look = player.getLookAngle();
+			target.setPos(player.getX() + look.x * 4, player.getY(), player.getZ() + look.z * 4);
+			target.setNoAi(true);
+			player.level().addFreshEntity(target);
+			float before = target.getHealth();
+			String held = player.getMainHandItem().isEmpty() ? "empty hand" : BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem())
+					+ " \"" + player.getMainHandItem().getHoverName().getString() + "\"";
+			var snapshot = new net.spell_engine.internals.casting.SpellCast.TargetSnapshot(List.of(target.getId()), null);
+			java.util.concurrent.CompletableFuture.delayedExecutor(500, TimeUnit.MILLISECONDS).execute(() -> {
+				bot.send(new net.spell_engine.network.Packets.CastRequest(spell, snapshot));
+				java.util.concurrent.CompletableFuture.delayedExecutor(1500, TimeUnit.MILLISECONDS).execute(() -> {
+					bot.send(new net.spell_engine.network.Packets.CastInput(spell, snapshot));
+					java.util.concurrent.CompletableFuture.delayedExecutor(2500, TimeUnit.MILLISECONDS).execute(() -> bot.server.execute(() -> {
+						float after = target.isAlive() ? target.getHealth() : 0;
+						target.discard();
+						bot.report.accept("cast " + spell + " with " + held + ": husk " + before + " -> " + after
+								+ (after < before ? " (HIT)" : " (NO DAMAGE)"));
+					}));
+				});
+			});
+		});
+		return true;
+	}
+
+	/** Right-clicks in the air with the main-hand item of a bot kept online (e.g. equips a trinket such as a spell book). */
+	public static boolean use(String name) {
+		SelfTestBot bot = ONLINE.get(name);
+		if (bot == null) return false;
+		bot.connection.send(new net.minecraft.network.protocol.game.ServerboundUseItemPacket(net.minecraft.world.InteractionHand.MAIN_HAND, 1, 0f, 0f));
+		return true;
+	}
+
 	/** Disconnects a bot kept online with {@code stay}. */
 	public static boolean leave(String name) {
 		SelfTestBot bot = ONLINE.remove(name);

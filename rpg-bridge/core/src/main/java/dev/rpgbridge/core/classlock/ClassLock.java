@@ -85,7 +85,6 @@ public final class ClassLock {
 	private static volatile boolean mmoItemsRequiredClass;
 	private static volatile String message = "";
 	private static volatile List<Rule> rules = List.of();
-	private static volatile boolean permissionRegistered;
 	private static final Map<UUID, Long> LAST_MESSAGE = new ConcurrentHashMap<>();
 	/** Giocatori esclusi dal blocco: il bot del self-test durante la prova di base. */
 	private static final java.util.Set<UUID> EXEMPT = ConcurrentHashMap.newKeySet();
@@ -136,7 +135,7 @@ public final class ClassLock {
 		return o == null ? List.of() : List.of(o);
 	}
 
-	private static Pattern glob(String text) {
+	static Pattern glob(String text) {
 		StringBuilder regex = new StringBuilder();
 		for (String part : text.trim().split("\\*", -1)) {
 			if (!regex.isEmpty()) regex.append(".*");
@@ -197,8 +196,14 @@ public final class ClassLock {
 
 	/** true se il giocatore può usare l'oggetto (nessuna regola, classe ammessa, permesso di bypass o blocco inattivo). */
 	public static boolean allowed(ServerPlayer player, ItemStack stack) {
+		if (stack == null || stack.isEmpty() || EXEMPT.contains(player.getUUID())) return true;
+		return BoundTomes.allowed(player, stack) && classAllowed(player, stack);
+	}
+
+	/** Solo la parte "classe" del controllo (senza il legame dei tomi). */
+	public static boolean classAllowed(ServerPlayer player, ItemStack stack) {
 		if (!loaded) reload();
-		if (!enabled || stack == null || stack.isEmpty() || EXEMPT.contains(player.getUUID())) return true;
+		if (!enabled || stack == null || stack.isEmpty()) return true;
 		List<String> required = requiredClasses(stack);
 		if (required == null) return true;
 		String[] playerClass = playerClass(player.getUUID());
@@ -208,7 +213,7 @@ public final class ClassLock {
 				if (own != null && normalize(own).equals(normalize(c))) return true;
 			}
 		}
-		return hasBypass(player);
+		return hasPermission(player, BYPASS_PERMISSION, "Ignora il blocco degli oggetti per classe di RPG Bridge");
 	}
 
 	/** Come {@link #allowed}, ma avvisa il giocatore nella barra delle azioni (al massimo una volta al secondo). */
@@ -230,8 +235,13 @@ public final class ClassLock {
 		Long last = LAST_MESSAGE.get(player.getUUID());
 		if (last != null && now - last < 1000) return;
 		LAST_MESSAGE.put(player.getUUID(), now);
-		List<String> required = requiredClasses(stack);
-		String text = message.replace("{classi}", required == null ? "" : String.join(", ", required));
+		String text;
+		if (!BoundTomes.allowed(player, stack)) {
+			text = BoundTomes.deniedMessage(stack);
+		} else {
+			List<String> required = requiredClasses(stack);
+			text = message.replace("{classi}", required == null ? "" : String.join(", ", required));
+		}
 		var server = player.level().getServer();
 		Runnable send = () -> player.sendOverlayMessage(Component.literal(text));
 		if (server.isSameThread()) send.run();
@@ -242,22 +252,22 @@ public final class ClassLock {
 		return s.toLowerCase(Locale.ROOT).replaceAll("[\\s_\\-]", "");
 	}
 
-	private static boolean hasBypass(ServerPlayer player) {
-		if (!permissionRegistered) {
-			synchronized (ClassLock.class) {
-				if (!permissionRegistered) {
-					try {
-						if (Bukkit.getPluginManager().getPermission(BYPASS_PERMISSION) == null) {
-							Bukkit.getPluginManager().addPermission(new Permission(BYPASS_PERMISSION,
-									"Ignora il blocco degli oggetti per classe di RPG Bridge", PermissionDefault.FALSE));
-						}
-					} catch (RuntimeException ignored) {
-					}
-					permissionRegistered = true;
+	private static final java.util.Set<String> REGISTERED = ConcurrentHashMap.newKeySet();
+
+	/**
+	 * Permesso Bukkit registrato con default FALSE, quindi negato anche agli OP finché non viene concesso
+	 * esplicitamente (es. LuckPerms).
+	 */
+	public static boolean hasPermission(ServerPlayer player, String permission, String description) {
+		if (REGISTERED.add(permission)) {
+			try {
+				if (Bukkit.getPluginManager().getPermission(permission) == null) {
+					Bukkit.getPluginManager().addPermission(new Permission(permission, description, PermissionDefault.FALSE));
 				}
+			} catch (RuntimeException ignored) {
 			}
 		}
-		return player.getBukkitEntity().hasPermission(BYPASS_PERMISSION);
+		return player.getBukkitEntity().hasPermission(permission);
 	}
 
 	// ------------------------------------------------------------------ MMOCore (riflessione: nessuna dipendenza di compilazione)

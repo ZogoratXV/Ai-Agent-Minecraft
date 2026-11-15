@@ -5,7 +5,10 @@
 package dev.rpgbridge.core;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
+import dev.rpgbridge.core.classlock.BoundTomes;
 import dev.rpgbridge.core.classlock.ClassLock;
+import dev.rpgbridge.core.classlock.TrinketSlots;
+import dev.rpgbridge.core.classlock.WeaponBonuses;
 import dev.rpgbridge.core.selftest.SelfTestBot;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +27,7 @@ public final class RpgBridgeMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		// Crea/legge config/rpgbridge/classi.yml all'avvio (MMOCore e i plugin sono già caricati).
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> ClassLock.reload());
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> reloadAll());
 		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> dispatcher.register(
 				Commands.literal("rpgbridge")
 						.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -34,9 +37,26 @@ public final class RpgBridgeMod implements ModInitializer {
 										.executes(c -> selfTest(c.getSource(), StringArgumentType.getString(c, "name"), false))
 										.then(Commands.literal("stay")
 												.executes(c -> selfTest(c.getSource(), StringArgumentType.getString(c, "name"), true)))))
+						.then(Commands.literal("ricarica").executes(c -> {
+							c.getSource().sendSystemMessage(Component.literal("RPG Bridge: " + reloadAll()));
+							return 1;
+						}))
+						.then(Commands.literal("tomo")
+								.then(Commands.literal("slega").then(Commands.argument("giocatore", EntityArgument.player())
+										.executes(c -> {
+											ServerPlayer target = EntityArgument.getPlayer(c, "giocatore");
+											var stack = target.getMainHandItem();
+											if (BoundTomes.unbind(stack)) {
+												target.inventoryMenu.broadcastChanges();
+												c.getSource().sendSystemMessage(Component.literal("Tomo di " + target.getName().getString() + " sciolto: si legherà a chi lo equipaggia."));
+												return 1;
+											}
+											c.getSource().sendFailure(Component.literal(target.getName().getString() + " non ha in mano un tomo legato."));
+											return 0;
+										}))))
 						.then(Commands.literal("classi")
 								.then(Commands.literal("ricarica").executes(c -> {
-									c.getSource().sendSystemMessage(Component.literal("RPG Bridge: " + ClassLock.reload()));
+									c.getSource().sendSystemMessage(Component.literal("RPG Bridge: " + reloadAll()));
 									return 1;
 								}))
 								.then(Commands.literal("controlla").then(Commands.argument("giocatore", EntityArgument.player())
@@ -46,6 +66,12 @@ public final class RpgBridgeMod implements ModInitializer {
 										.executes(c -> botResult(c.getSource(), SelfTestBot.attack(StringArgumentType.getString(c, "name"), false)))
 										.then(Commands.literal("vanilla")
 												.executes(c -> botResult(c.getSource(), SelfTestBot.attack(StringArgumentType.getString(c, "name"), true))))))
+								.then(Commands.literal("cast").then(Commands.argument("name", StringArgumentType.word())
+										.then(Commands.argument("spell", StringArgumentType.greedyString())
+												.executes(c -> botResult(c.getSource(), SelfTestBot.cast(StringArgumentType.getString(c, "name"),
+														StringArgumentType.getString(c, "spell").trim()))))))
+								.then(Commands.literal("use").then(Commands.argument("name", StringArgumentType.word())
+										.executes(c -> botResult(c.getSource(), SelfTestBot.use(StringArgumentType.getString(c, "name"))))))
 								.then(Commands.literal("leave").then(Commands.argument("name", StringArgumentType.word())
 										.executes(c -> botResult(c.getSource(), SelfTestBot.leave(StringArgumentType.getString(c, "name")))))))));
 	}
@@ -57,11 +83,26 @@ public final class RpgBridgeMod implements ModInitializer {
 		for (var slot : net.minecraft.world.entity.EquipmentSlot.values()) {
 			var stack = player.getItemBySlot(slot);
 			if (stack.isEmpty()) continue;
-			var required = ClassLock.requiredClasses(stack);
-			source.sendSystemMessage(Component.literal(" " + slot.getName() + ": " + ClassLock.itemKeys(stack)
-					+ (required == null ? " - libero" : " - classi " + required + (ClassLock.allowed(player, stack) ? " (consentito)" : " (BLOCCATO)"))));
+			source.sendSystemMessage(Component.literal(" " + slot.getName() + ": " + describe(player, stack)));
+		}
+		for (var access : TrinketSlots.equipped(player)) {
+			source.sendSystemMessage(Component.literal(" trinket: " + describe(player, access.get())));
 		}
 		return 1;
+	}
+
+	private static String describe(ServerPlayer player, net.minecraft.world.item.ItemStack stack) {
+		var required = ClassLock.requiredClasses(stack);
+		String owner = BoundTomes.ownerName(stack);
+		return ClassLock.itemKeys(stack)
+				+ (required == null ? " - classe libera" : " - classi " + required)
+				+ (BoundTomes.owner(stack) == null ? (BoundTomes.isTome(stack) ? " - tomo non legato" : "") : " - tomo di " + owner)
+				+ WeaponBonuses.describe(stack)
+				+ (ClassLock.allowed(player, stack) ? " (consentito)" : " (BLOCCATO)");
+	}
+
+	private static String reloadAll() {
+		return ClassLock.reload() + "; " + BoundTomes.reload() + "; " + WeaponBonuses.reload();
 	}
 
 	private static int selfTest(CommandSourceStack source, String name, boolean stay) {

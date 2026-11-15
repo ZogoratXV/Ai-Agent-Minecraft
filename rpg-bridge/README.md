@@ -49,10 +49,35 @@ regole:                              # vale la PRIMA regola che corrisponde
 ```
 Oggetti: id del registro (`wizards:wand_arcane`, `wizards:*` per tutta la mod), `mmoitems:TIPO:ID`,
 `itemsadder:namespace:id`; `*` = qualsiasi testo. Classi: id o nome MMOCore, maiuscole/minuscole indifferenti.
-Comandi (console o OP): `rpgbridge classi ricarica` (rilegge il file), `rpgbridge classi controlla <giocatore>`
-(classe MMOCore e, per ogni slot, identificativi dell'oggetto e se è consentito).
+Comandi (console o OP): `rpgbridge ricarica` (rilegge classi.yml, tomi.yml e armi.yml), `rpgbridge classi controlla
+<giocatore>` (classe MMOCore e, per ogni slot compresi quelli di Trinkets: identificativi, classi, proprietario del
+tomo, bonus e se è consentito).
 Permesso per ignorare il blocco: `rpgbridge.classi.bypass`, **default false anche per gli OP** (assegnarlo con
-LuckPerms). Senza MMOCore il blocco è inattivo. Gli accessori di Trinkets non sono controllati.
+LuckPerms). Senza MMOCore il blocco è inattivo. Anche gli slot di Trinkets sono controllati.
+
+## Tomi legati al giocatore
+Gli Spell Book (configurabile: `config/rpgbridge/tomi.yml`) si legano a chi li **equipaggia per primo** (slot "spell
+book" di Trinkets, o mano secondaria). Il proprietario è scritto nell'oggetto, con la riga "Legato a <nome>" nella
+descrizione. Gli altri giocatori non possono usarlo, equipaggiarlo o lanciarne le spell (torna nell'inventario entro
+mezzo secondo); possono tenerlo nell'inventario o nei bauli. Staff: `rpgbridge tomo slega <giocatore>` scioglie il
+tomo che il giocatore ha in mano; permesso `rpgbridge.tomi.bypass` (default false anche per gli OP).
+
+## Bonus delle mod su oggetti MMOItems / ItemsAdder
+In `config/rpgbridge/armi.yml` si scelgono uno per uno i bonus della RPG Series da dare a un oggetto:
+```yaml
+armi:
+  - oggetti: ["mmoitems:STAFF:BASTONE_DEL_FUOCO"]
+    attributi:                       # sommati con l'oggetto nello slot (predefinito: mano principale)
+      "spell_power:fire": 4
+      "spell_power:critical_chance": 0.05
+    stile-attacco: bettercombat:staff   # animazioni, combo e portata di Better Combat
+    spell: [wizards:fireball]           # spell di Spell Engine lanciabili con l'oggetto in mano
+```
+Opzioni: `operazione` (add_value, add_multiplied_base, add_multiplied_total), `slot` (mainhand, offhand, hand, head,
+chest, legs, feet, armor, any), `tipo-spell` (MAGIC o ARCHERY). Il bridge scrive i bonus nell'oggetto entro un secondo
+da quando è nell'inventario di un giocatore e li riscrive se MMOItems lo ricostruisce o se la regola cambia; il resto
+dell'oggetto (modello, nome, statistiche MMOItems, classe richiesta) resta com'è. MMOItems nasconde gli attributi nel
+tooltip: i bonus agiscono ma non compaiono nella descrizione (aggiungili alla lore MMOItems se vuoi mostrarli).
 
 ## Comandi di prova (console)
 - `rpgbridge selftest` — prova completa con un client simulato (vedi *Verifica*).
@@ -61,6 +86,8 @@ LuckPerms). Senza MMOCore il blocco è inattivo. Gli accessori di Trinkets non s
   `rpgbridge bot attack <nome>` (attacco Better Combat con l'oggetto in mano, riporta il danno) o
   `rpgbridge bot attack <nome> vanilla` (attacco vanilla); `rpgbridge bot leave <nome>` lo disconnette.
   Durante la prova di base il bot è escluso dal blocco per classe; con `stay` poi vi è soggetto (per provare le regole).
+  `rpgbridge bot cast <nome> <spell>` lancia una spell su un husk e riporta il danno; `rpgbridge bot use <nome>` fa
+  tasto destro con l'oggetto in mano (es. equipaggia uno Spell Book in Trinkets).
 
 ## Pelican / Pterodactyl
 1. Crea (o usa) un server Minecraft Purpur/Paper e nella scheda **Startup** scegli come **Docker Image** quella con

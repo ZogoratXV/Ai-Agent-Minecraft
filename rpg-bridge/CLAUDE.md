@@ -63,6 +63,14 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     `ServerNetwork.handleCastRequest/CastInput/AttackPerform` (@Pseudo), `ServerPlayer.doTick` ogni 10 tick toglie
     armature/mano secondaria bloccate (NON `tick()`: Paper non lo chiama per i giocatori). Bypass
     `rpgbridge.classi.bypass` registrato con PermissionDefault.FALSE (niente bypass OP). `-Drpgbridge.debugClassLock=true`.
+    `BoundTomes` (`tomi.yml`): spell book legato a chi lo equipaggia per primo (Trinkets o offhand), proprietario in
+    custom_data `rpgbridge_owner/_name` + riga di lore; il controllo entra in `ClassLock.allowed`. `TrinketSlots`:
+    slot di Trinkets via riflessione (`TrinketsApi.getAttachment(..).allEquipped(false)`, `TrinketSlotAccess` è uno
+    `SlotAccess`). `WeaponBonuses` (`armi.yml`): attributi (`rpgbridge:bonus_N`, tiene quelli di MMOItems), preset
+    Better Combat (`BetterCombatDataComponents.WEAPON_PRESET_ID`), `SpellContainer` (`SpellDataComponents.SPELL_CONTAINER`);
+    marcatore `rpgbridge_bonus` = firma della regola (riapplica se MMOItems ricostruisce o la regola cambia),
+    `rpgbridge_bonus_set` = componenti messi dal bridge (toglie solo quelli). Scansione inventario ogni 20 tick in
+    `ClassLockEquipmentMixin`. Comandi `rpgbridge ricarica`, `rpgbridge tomo slega`, `rpgbridge bot cast|use`.
   - `selftest/SelfTestBot` + comando `rpgbridge selftest`: client nella JVM del server (usa i registri del
     server = quelli che il client ricostruisce col registry sync), fa da client Fabric (risponde a
     `minecraft:register`, `c:version`, `c:register`, `fabric:registry/sync`, `fabric:accepted_attachments_v1`,

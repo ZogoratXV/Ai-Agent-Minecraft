@@ -21,6 +21,7 @@
     "paper.ConfigurationTaskThreadMixin",
     "paper.LoginQueryAnswerMixin",
     "paper.RawPluginMessageMixin",
+    "replace.networking.PaperCommonCustomPayloadMixin",
     "paper.ServerCommonPacketListenerImplAccessor"
   ],
   "injectors": {

@@ -278,6 +278,10 @@ public final class SelfTestBot {
 					player.connection.send(new net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket(
 							new net.minecraft.network.protocol.common.custom.DiscardedPayload(Identifier.parse("minecraft:register"),
 									"rpgbridge:test\0".getBytes(StandardCharsets.UTF_8))));
+					// A play payload on a channel no mod handles (plugin channel, e.g. voice chat): Paper passes it on
+					// to plugin messaging through the common listener (Fabric threw "Unknown addon" there).
+					send(new net.minecraft.network.protocol.common.custom.DiscardedPayload(Identifier.parse("rpgbridge:plugin_test"),
+							new byte[] {1, 2, 3}));
 					// A player saved by an earlier run may hold something else: start from an empty inventory.
 					player.getInventory().clearContent();
 					player.getInventory().setItem(player.getInventory().getSelectedSlot(), new ItemStack(item.get()));

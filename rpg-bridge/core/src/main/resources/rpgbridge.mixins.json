@@ -19,6 +19,7 @@
     "bukkit.AbstractContainerMenuMixin",
     "bukkit.TrinketInventoryMixin",
     "paper.ConfigurationTaskThreadMixin",
+    "paper.LoginQueryAnswerMixin",
     "paper.ServerCommonPacketListenerImplAccessor"
   ],
   "injectors": {

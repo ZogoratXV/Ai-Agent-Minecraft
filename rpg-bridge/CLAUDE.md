@@ -103,7 +103,8 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
 
 - Plugin (jar dell'utente, non nel repo, in `run-dist/plugins`): ProtocolLib 5.5.0, MythicLib 1.7.1, MMOCore 1.13.1,
   MMOItems 6.10.1 ok; `rpgbridge selftest <nome> stay` + `rpgbridge bot attack <nome> [vanilla]` per provare classi
-  e oggetti dalla console. ItemsAdder 4.0.18 fallisce anche su Purpur liscio (FastNbt `nms/Version` non caricata).
+  e oggetti dalla console. ItemsAdder 4.0.18 parte (il fallimento FastNbt era la rete della sessione: serve
+  `repo.alessiodp.com`, ora tra gli host dell'ambiente).
 
 - Server reale dell'utente: Pelican, dietro Velocity, plugin TAB/voicechat/MMO/ItemsAdder, mod client proprie
   "Castigo*" (solo client, Fabric networking su canali `castigo...` verso plugin Bukkit): coperte dai fix di rete.

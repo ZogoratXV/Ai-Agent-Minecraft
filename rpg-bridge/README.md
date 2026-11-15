@@ -64,8 +64,9 @@ I menu delle mod (es. Spell Binding Table) hanno per Bukkit una vista generica: 
 ProtocolLib 5.5.0, MythicLib 1.7.1, MMOCore 1.13.1, MMOItems 6.10.1: si avviano e funzionano (oggetti MMOItems,
 classi MMOCore, `required-class`: con la classe sbagliata MMOItems non applica le statistiche dell'arma, sia con
 l'attacco vanilla sia con quello di Better Combat). MMOItems vede anche gli attributi delle mod (`spell-power:*`).
-ItemsAdder 4.0.18 non parte su Purpur 26.2, **anche senza RPG Bridge** (`NoClassDefFoundError:
-beer/devs/fastnbt/nms/Version`): serve una versione di ItemsAdder che supporti 26.2.
+ItemsAdder 4.0.18 parte (al primo avvio scarica le sue librerie, anche da `repo.alessiodp.com`).
+Mod client che parlano con plugin tramite plugin channel (Fabric networking ↔ `Player.sendPluginMessage` /
+listener Bukkit) funzionano nei due sensi; supportato anche il modern forwarding di Velocity.
 
 ## Limiti noti
 - Server pensato per client **modded**: un client vanilla non può entrare (riceverebbe contenuti

@@ -20,6 +20,7 @@
     "bukkit.TrinketInventoryMixin",
     "paper.ConfigurationTaskThreadMixin",
     "paper.LoginQueryAnswerMixin",
+    "paper.RawPluginMessageMixin",
     "paper.ServerCommonPacketListenerImplAccessor"
   ],
   "injectors": {

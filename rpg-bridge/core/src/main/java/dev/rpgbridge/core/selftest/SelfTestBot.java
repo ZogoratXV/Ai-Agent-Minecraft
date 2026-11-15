@@ -273,6 +273,11 @@ public final class SelfTestBot {
 						done.complete("FAILED: wizards:wand_arcane not registered");
 						return;
 					}
+					// Plugins' channels: Paper announces them with a raw minecraft:register payload, a channel Fabric
+					// API also has a typed codec for (it kicked players: "Failed to encode packet").
+					player.connection.send(new net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket(
+							new net.minecraft.network.protocol.common.custom.DiscardedPayload(Identifier.parse("minecraft:register"),
+									"rpgbridge:test\0".getBytes(StandardCharsets.UTF_8))));
 					// A player saved by an earlier run may hold something else: start from an empty inventory.
 					player.getInventory().clearContent();
 					player.getInventory().setItem(player.getInventory().getSelectedSlot(), new ItemStack(item.get()));

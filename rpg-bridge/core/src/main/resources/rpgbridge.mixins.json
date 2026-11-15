@@ -22,6 +22,7 @@
     "paper.LoginQueryAnswerMixin",
     "paper.RawPluginMessageMixin",
     "replace.networking.PaperCommonCustomPayloadMixin",
+    "replace.networking.PaperGameChannelRegistrationMixin",
     "paper.ServerCommonPacketListenerImplAccessor"
   ],
   "injectors": {

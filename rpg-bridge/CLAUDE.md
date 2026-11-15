@@ -45,12 +45,24 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     `CraftInventoryView` con in alto un Container vivo sugli slot non del giocatore. `TrinketInventoryMixin`
     (@Pseudo su `TrinketInventoryImpl`): metodi Container di CraftBukkit mancanti (getContents, onOpen, ...).
     Scan delle classi delle mod che estendono AbstractContainerMenu / implementano Container: ripeterlo per mod nuove.
+  - Rete Fabric API ↔ Paper/Bukkit (mod client che parlano con plugin, Velocity):
+    `paper/LoginQueryAnswerMixin` (risposte login query di Fabric → `QueryAnswerPayload` per Velocity modern
+    forwarding, letta dall'inizio: Fabric la passa col readerIndex in fondo); `paper/RawPluginMessageMixin`
+    (`DiscardedPayload` scritto come byte grezzi anche se una mod ha un codec per quel canale, es. `minecraft:register`);
+    `replace/networking/PaperCommonCustomPayloadMixin` (sostituisce l'handler comune di Fabric che lanciava
+    "Unknown addon" per i payload di gioco che Paper passa a super; inoltra a Paper (`readChannelIdentifier`, sul
+    thread del server) i canali di `minecraft:register/unregister` che Fabric decodifica come `RegistrationPayload`
+    e consuma, altrimenti `Player.sendPluginMessage` verso le mod client veniva scartato) +
+    `PaperGameChannelRegistrationMixin` (stesso inoltro in gioco, priorità 900 prima di Fabric).
   - `selftest/SelfTestBot` + comando `rpgbridge selftest`: client nella JVM del server (usa i registri del
     server = quelli che il client ricostruisce col registry sync), fa da client Fabric (risponde a
     `minecraft:register`, `c:version`, `c:register`, `fabric:registry/sync`, `fabric:accepted_attachments_v1`,
     `fabric:custom_ingredient_sync`, ack Spell Engine/Better Combat), entra, riceve la bacchetta, lancia
     Arcane Bolt (serve `runes:arcane_stone`) e controlla proiettile + danno, attacco Better Combat, poi piazza
-    e usa lo Spell Binding Table (pacchetto use-item-on) e chiude il menu.
+    e usa lo Spell Binding Table (pacchetto use-item-on) e chiude il menu. Inoltre: risponde al modern forwarding di
+    Velocity se attivo in `paper-global.yml` (segreto letto dalla config), riceve un `minecraft:register` grezzo,
+    manda un payload su un canale plugin, verifica i canali noti a Bukkit e i plugin message nei due sensi (usa
+    il primo plugin caricato). Il packet limiter di Paper è disattivato sulla connessione del bot (lato client).
 - `tools/MixinAudit.java` (`tools/audit.sh`): confronta i mixin di tutte le mod con Purpur e vanilla
   (MISSING, NOPOINT, ORDINAL, SHADOW, INVOKER, DESCRIPTOR). I `[also absent in vanilla]` sono spesso falsi
   positivi del matcher, ma non sempre (RWA `spawnProjectile`): verificare.
@@ -92,6 +104,11 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
 - Plugin (jar dell'utente, non nel repo, in `run-dist/plugins`): ProtocolLib 5.5.0, MythicLib 1.7.1, MMOCore 1.13.1,
   MMOItems 6.10.1 ok; `rpgbridge selftest <nome> stay` + `rpgbridge bot attack <nome> [vanilla]` per provare classi
   e oggetti dalla console. ItemsAdder 4.0.18 fallisce anche su Purpur liscio (FastNbt `nms/Version` non caricata).
+
+- Server reale dell'utente: Pelican, dietro Velocity, plugin TAB/voicechat/MMO/ItemsAdder, mod client proprie
+  "Castigo*" (solo client, Fabric networking su canali `castigo...` verso plugin Bukkit): coperte dai fix di rete.
+- Noto: MythicLib/MMOItems NPE su `ItemStack.getType()` null per oggetti delle mod (Material assente) negli eventi
+  di danno; il danno passa comunque.
 
 ## Prossimi passi
 - Test con un **client reale** (log client `.minecraft/logs/latest.log`).

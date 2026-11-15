@@ -95,6 +95,7 @@ public final class SelfTestBot {
 	private volatile boolean stay;
 	/** Bots kept online after the test ({@code rpgbridge selftest <name> stay}), driven by {@code rpgbridge bot ...}. */
 	private static final Map<String, SelfTestBot> ONLINE = new ConcurrentHashMap<>();
+	private static final String PLUGIN_CHANNEL = "rpgbridge:plugin_test";
 	private volatile boolean castStarted;
 	private volatile float zombieHealth = -1;
 	private volatile net.minecraft.world.entity.LivingEntity zombie;
@@ -105,6 +106,14 @@ public final class SelfTestBot {
 		this.report = report;
 		int port = server.getPort() > 0 ? server.getPort() : 25565;
 		this.connection = Connection.connectToServer(new InetSocketAddress("127.0.0.1", port), EventLoopGroupHolder.remote(false), null);
+		// Paper's packet limiter lives in Connection, so it also counts what the bot (a client) receives: in a world
+		// with many entities it kicked the bot. Real clients are not affected; turn it off for the bot's side only.
+		try {
+			var counts = Connection.class.getDeclaredField("allPacketCounts");
+			counts.setAccessible(true);
+			counts.set(connection, null);
+		} catch (ReflectiveOperationException ignored) {
+		}
 	}
 
 	/** Runs the whole test asynchronously; {@code report} receives log lines and the final verdict. */
@@ -263,7 +272,12 @@ public final class SelfTestBot {
 			case ClientboundLoginPacket p -> {
 				events.add("joined");
 				connection.send(new ServerboundPlayerLoadedPacket());
-				if (sentChannels) send(new RegistrationPayload(RegistrationPayload.REGISTER, channels(PayloadTypeRegistryImpl.CLIENTBOUND_PLAY)));
+				if (sentChannels) {
+					// Like a Fabric client mod talking to a plugin: it also registers the plugin's channel.
+					List<Identifier> playChannels = new ArrayList<>(channels(PayloadTypeRegistryImpl.CLIENTBOUND_PLAY));
+					playChannels.add(Identifier.parse(PLUGIN_CHANNEL));
+					send(new RegistrationPayload(RegistrationPayload.REGISTER, playChannels));
+				}
 				// Give the bot a modded item: it must arrive with the right id.
 				server.execute(() -> {
 					var player = server.getPlayerList().getPlayerByName(name);
@@ -451,9 +465,16 @@ public final class SelfTestBot {
 					connection.send(new net.minecraft.network.protocol.game.ServerboundContainerClosePacket(id));
 					java.util.concurrent.CompletableFuture.delayedExecutor(500, TimeUnit.MILLISECONDS).execute(() -> server.execute(() -> {
 						player.level().removeBlock(pos, false);
-						if (player.containerMenu == player.inventoryMenu) {
-							done.complete("PASSED: " + passed + ", Spell Binding menu opened and closed (Bukkit "
-									+ top.getType() + " view, " + top.getSize() + " slots)");
+						// Channels the client registered (minecraft:register) must be known to Bukkit, or plugin
+						// messages to client mods are dropped.
+						var listening = player.getBukkitEntity().getListeningPluginChannels();
+						report.accept("Bukkit listening channels: " + listening.size() + " " + listening.stream().limit(5).toList());
+						if (listening.isEmpty()) {
+							done.complete("FAILED: Bukkit does not know the channels registered by the client");
+						} else if (player.containerMenu == player.inventoryMenu) {
+							pluginMessaging(player, passed + ", Spell Binding menu opened and closed (Bukkit "
+									+ top.getType() + " view, " + top.getSize() + " slots), " + listening.size()
+									+ " client channels known to Bukkit");
 						} else {
 							done.complete("FAILED: Spell Binding menu did not close");
 						}
@@ -461,6 +482,36 @@ public final class SelfTestBot {
 				}));
 			});
 		});
+	}
+
+	/**
+	 * Plugin messaging both ways, like client mods that talk to Bukkit plugins: a plugin (any loaded one stands in)
+	 * sends on a channel the bot registered, and receives what the bot sends on it.
+	 */
+	private void pluginMessaging(net.minecraft.server.level.ServerPlayer player, String passed) {
+		var plugin = java.util.Arrays.stream(org.bukkit.Bukkit.getPluginManager().getPlugins()).filter(org.bukkit.plugin.Plugin::isEnabled).findFirst().orElse(null);
+		if (plugin == null) {
+			done.complete("PASSED: " + passed + " (plugin messaging not tested: no plugin loaded)");
+			return;
+		}
+		var messenger = org.bukkit.Bukkit.getMessenger();
+		var received = new java.util.concurrent.atomic.AtomicInteger(-1);
+		org.bukkit.plugin.messaging.PluginMessageListener listener = (channel, who, message) -> received.set(message.length);
+		messenger.registerOutgoingPluginChannel(plugin, PLUGIN_CHANNEL);
+		messenger.registerIncomingPluginChannel(plugin, PLUGIN_CHANNEL, listener);
+		player.getBukkitEntity().sendPluginMessage(plugin, PLUGIN_CHANNEL, new byte[] {4, 5, 6, 7});
+		send(new net.minecraft.network.protocol.common.custom.DiscardedPayload(Identifier.parse(PLUGIN_CHANNEL), new byte[] {1, 2, 3}));
+		java.util.concurrent.CompletableFuture.delayedExecutor(1000, TimeUnit.MILLISECONDS).execute(() -> server.execute(() -> {
+			messenger.unregisterIncomingPluginChannel(plugin, PLUGIN_CHANNEL, listener);
+			messenger.unregisterOutgoingPluginChannel(plugin, PLUGIN_CHANNEL);
+			boolean toClient = playPayloads.containsKey(PLUGIN_CHANNEL);
+			report.accept("plugin messaging: plugin -> client " + toClient + ", client -> plugin " + received.get() + " bytes");
+			if (toClient && received.get() == 3) {
+				done.complete("PASSED: " + passed + ", plugin messages both ways");
+			} else {
+				done.complete("FAILED: plugin messaging (plugin -> client " + toClient + ", client -> plugin " + received.get() + " bytes)");
+			}
+		}));
 	}
 
 	/** Disconnects a bot kept online with {@code stay}. */

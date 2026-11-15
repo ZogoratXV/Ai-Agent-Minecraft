@@ -43,8 +43,10 @@ I giocatori entrano con il loro client Fabric e le stesse mod, come su un server
    Se l'egg usa un altro nome per il jar del server (es. `server.jar`), rinominalo `purpur.jar`
    o aggiungi `PURPUR_JAR=server.jar` al comando qui sotto.
 3. **Startup Command** (scheda Startup; se non è modificabile serve un admin del pannello):
-   `MEMORY={{SERVER_MEMORY}}M bash start.sh nogui`
-   (se il container viene chiuso per memoria esaurita, usa un valore più basso, es. `MEMORY=3500M` su 4096 MB).
+   `PURPUR_JAR={{SERVER_JARFILE}} MEMORY=6500M bash start.sh --nogui`
+   con `MEMORY` circa all'80% della memoria del server (es. 6500M su 8 GB, 3300M su 4 GB).
+   In alternativa `start.sh` accetta la stessa riga di `java`: basta sostituire `java ... -jar {{SERVER_JARFILE}}`
+   con `bash start.sh ... -jar {{SERVER_JARFILE}}` (con `-Xmx` o `-XX:MaxRAMPercentage` `MEMORY` non si applica).
 4. Il primo avvio scarica Minecraft (paperclip) e Fabric Loader: il container deve poter uscire su internet.
    Lo script usa solo `bash`, `curl` e `find`, presenti nelle immagini Java di Pelican.
 

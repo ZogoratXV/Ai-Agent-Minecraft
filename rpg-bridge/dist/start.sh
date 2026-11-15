@@ -5,12 +5,27 @@
 # Put this script, rpgbridge-loader.jar and rpgbridge-log4j2.xml in the server directory, next to
 # purpur.jar. Put rpgbridge-core.jar and the same mod jars the players use into ./mods.
 # Usage: ./start.sh [server arguments, e.g. nogui]      Env: JAVA (default: java), MEMORY (default: 4G)
+#    or: ./start.sh [java options] -jar <server jar> [server arguments]
+#        the same command line as "java ... -jar server.jar ...": replace "java" with "bash start.sh"
+#        (e.g. Pelican/Pterodactyl startup commands). With -Xmx or -XX:MaxRAMPercentage among the
+#        options, MEMORY is not applied.
 set -euo pipefail
 cd "$(dirname "$0")"
 
 JAVA=${JAVA:-java}
 MEMORY=${MEMORY:-4G}
 PURPUR_JAR=${PURPUR_JAR:-purpur.jar}
+JVM_OPTS=()
+if printf '%s\n' "$@" | grep -qx -- '-jar'; then
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "-jar" ]; then PURPUR_JAR=$2; shift 2; break; fi
+    JVM_OPTS+=("$1"); shift
+  done
+fi
+HEAP=("-Xmx$MEMORY")
+for o in "${JVM_OPTS[@]}" ${JVM_ARGS:-}; do
+  case "$o" in -Xmx*|-XX:MaxRAMPercentage=*|-XX:MaxRAM=*) HEAP=();; esac
+done
 LOADER_VERSION=0.19.5
 FABRIC_MAVEN=https://maven.fabricmc.net
 LIB=.rpgbridge/libraries
@@ -47,7 +62,7 @@ done
 ARGS=.rpgbridge/launch.txt
 "$JAVA" -cp rpgbridge-loader.jar dev.rpgbridge.loader.LaunchArgs "$PURPUR_JAR" "$LIB" "$ARGS"
 
-exec "$JAVA" -Xmx"$MEMORY" ${JVM_ARGS:-} \
+exec "$JAVA" "${HEAP[@]}" "${JVM_OPTS[@]}" ${JVM_ARGS:-} \
   -Dlog4j.configurationFile=rpgbridge-log4j2.xml \
   -Dfabric.skipMcProvider=true \
   @"$ARGS" net.fabricmc.loader.impl.launch.knot.KnotServer "$@"

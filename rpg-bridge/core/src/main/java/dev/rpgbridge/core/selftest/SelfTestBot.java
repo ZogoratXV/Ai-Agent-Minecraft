@@ -482,7 +482,10 @@ public final class SelfTestBot {
 						String roundTripId = roundTrip == null ? "null" : BuiltInRegistries.ITEM.getKey(roundTrip.getItem()).toString();
 						report.accept("Bukkit material: wizards:wand_arcane -> " + bukkitType + " (key " + (bukkitType == null ? null : bukkitType.getKey())
 								+ ") -> new ItemStack -> " + roundTripId);
-						if (bukkitType == null || !"wizards:wand_arcane".equals(roundTripId)) {
+						// Plugins see Paper's "modern" Materials: [0, LEGACY_AIR.ordinal()); mod Materials must be inside.
+						boolean modern = bukkitType != null && bukkitType.ordinal() < org.bukkit.Material.LEGACY_AIR.ordinal() && !bukkitType.isLegacy();
+						report.accept("Bukkit material ordinal " + (bukkitType == null ? -1 : bukkitType.ordinal()) + ", LEGACY_AIR at " + org.bukkit.Material.LEGACY_AIR.ordinal());
+						if (bukkitType == null || !modern || !"wizards:wand_arcane".equals(roundTripId)) {
 							done.complete("FAILED: Bukkit Material for mod items (" + bukkitType + " -> " + roundTripId + ")");
 							return;
 						}
@@ -577,6 +580,14 @@ public final class SelfTestBot {
 		SelfTestBot bot = ONLINE.get(name);
 		if (bot == null) return false;
 		bot.connection.send(new net.minecraft.network.protocol.game.ServerboundUseItemPacket(net.minecraft.world.InteractionHand.MAIN_HAND, 1, 0f, 0f));
+		return true;
+	}
+
+	/** Selects a hotbar slot (0-8) like a client: Bukkit fires PlayerItemHeldEvent (plugins look at the new item). */
+	public static boolean slot(String name, int slot) {
+		SelfTestBot bot = ONLINE.get(name);
+		if (bot == null || slot < 0 || slot > 8) return false;
+		bot.connection.send(new net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket(slot));
 		return true;
 	}
 

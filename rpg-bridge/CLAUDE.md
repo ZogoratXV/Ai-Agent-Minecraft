@@ -45,7 +45,10 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     le mod (e collisioni con nomi vanilla). Aggiunge costanti enum `Material` (Unsafe.allocateInstance; name
     `NAMESPACE_PERCORSO`, key `namespace:percorso`, legacy=false, itemType/blockType = Registry.ITEM/BLOCK.get(key)),
     aggiorna `$VALUES`, `BY_NAME`, cache enum di Class, ricostruisce le EnumMap `MATERIAL_ITEM/BLOCK` e corregge
-    `ITEM_MATERIAL/BLOCK_MATERIAL`. Rischio: EnumSet/EnumMap/switch su Material inizializzati prima → AIOOBE.
+    `ITEM_MATERIAL/BLOCK_MATERIAL`. Le costanti vanno PRIMA dei `LEGACY_` (ordinali dei LEGACY_ spostati avanti):
+    Commodore riscrive `Material.values()` dei plugin nei soli moderni `[0, LEGACY_AIR.ordinal())` e FAWE
+    (`CachedBukkitAdapter`) ci dimensiona array indicizzati per ordinale (AIOOBE "length 1691" se messe in fondo).
+    Rischio residuo: EnumSet/EnumMap/switch su Material inizializzati prima dell'iniezione → AIOOBE.
   - `mixin/bukkit/AbstractContainerMenuMixin` + `bukkit/ModdedMenus`: CraftBukkit rende astratto
     `AbstractContainerMenu.getBukkitView()`; @Overwrite con corpo di default (i menu vanilla lo sovrascrivono):
     `CraftInventoryView` con in alto un Container vivo sugli slot non del giocatore. `TrinketInventoryMixin`

@@ -66,13 +66,23 @@ public final class ModdedMaterials {
 
 			Material[] old = Material.values();
 			Material template = Material.STICK;
-			Material[] all = Arrays.copyOf(old, old.length + keys.size());
+			// New constants go between the modern Materials and the LEGACY_ ones: Paper's "modern values" seen by
+			// plugins (Commodore rewrites their Material.values()) are [0, LEGACY_AIR.ordinal()), and plugins such as
+			// FastAsyncWorldEdit size arrays by that and index them by ordinal. The LEGACY_ constants move up.
+			int legacyStart = Material.LEGACY_AIR.ordinal();
+			int added = keys.size();
+			Material[] all = new Material[old.length + added];
+			System.arraycopy(old, 0, all, 0, legacyStart);
 			Map<Identifier, Material> created = new LinkedHashMap<>();
-			int ordinal = old.length;
+			int ordinal = legacyStart;
 			for (Identifier id : keys) {
 				Material material = newMaterial(id, ordinal, template);
 				all[ordinal++] = material;
 				created.put(id, material);
+			}
+			for (int i = legacyStart; i < old.length; i++) {
+				putInt(old[i], Enum.class, "ordinal", i + added);
+				all[i + added] = old[i];
 			}
 
 			setStatic(Material.class, "$VALUES", all);

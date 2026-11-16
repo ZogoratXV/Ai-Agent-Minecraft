@@ -70,6 +70,10 @@ public final class RpgBridgeMod implements ModInitializer {
 										.then(Commands.argument("spell", StringArgumentType.greedyString())
 												.executes(c -> botResult(c.getSource(), SelfTestBot.cast(StringArgumentType.getString(c, "name"),
 														StringArgumentType.getString(c, "spell").trim()))))))
+								.then(Commands.literal("slot").then(Commands.argument("name", StringArgumentType.word())
+										.then(Commands.argument("n", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 8))
+												.executes(c -> botResult(c.getSource(), SelfTestBot.slot(StringArgumentType.getString(c, "name"),
+														com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(c, "n")))))))
 								.then(Commands.literal("use").then(Commands.argument("name", StringArgumentType.word())
 										.executes(c -> botResult(c.getSource(), SelfTestBot.use(StringArgumentType.getString(c, "name"))))))
 								.then(Commands.literal("leave").then(Commands.argument("name", StringArgumentType.word())

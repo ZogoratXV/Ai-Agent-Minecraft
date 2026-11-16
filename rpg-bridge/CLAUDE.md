@@ -74,7 +74,7 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     (`getPlugin("CastigoCore").classi().attivo()` → `profilo(UUID)` → `classe()/nome()`; il servizio è una classe privata:
     metodi cercati sull'interfaccia pubblica, `publicMethod`), altrimenti MMOCore
     (`PlayerData.get(UUID).getProfess().getId()/getName()`); classi richieste anche da CastigoEquipaggiamento
-    (`custom_data.PublicBukkitValues."castigoequipaggiamento:classi"`, dopo le regole, prima di MMOItems), regole in `config/rpgbridge/classi.yml` (YamlConfiguration
+    (`custom_data.PublicBukkitValues."castigoequipaggiamento:classi"`, dopo le regole, prima di MMOItems); livello minimo per tier (`castigoequipaggiamento:tier`, sezione `tier` di classi.yml, default variante B: T1-T4 = blocchi 1-4, T5 = blocco 4 + livello 100) con blocco/livello da `Classi.Profilo.blocco()/livello()` (Bellica 0.1.1+: blocco conta il sigillo usato), `ClassLock.tierAllowed` dentro `allowed`, regole in `config/rpgbridge/classi.yml` (YamlConfiguration
     di Bukkit; chiavi italiane), oggetti identificati da id registro, `mmoitems:TIPO:ID` (custom_data
     `MMOITEMS_ITEM_TYPE/ID`, classe richiesta `MMOITEMS_REQUIRED_CLASS`), `rpgbridge_id` (custom_data, sostituisce l'id di registro: oggetti di datapack su base Wizards, es. kit
     `examples/mago-nero` generato da `strumenti/genera_kit.py`), `itemsadder:ns:id` (custom_data

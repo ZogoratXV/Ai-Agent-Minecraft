@@ -56,6 +56,11 @@ dell'id di registro, vedi `examples/mago-nero`); `*` = qualsiasi testo. Classi: 
 MAGO_NERO, DIFENSORE, GUERRIERO, ASSASSINO, ARCIERE; MMOCore: i suoi id), maiuscole/minuscole indifferenti.
 Gli oggetti di **CastigoEquipaggiamento** portano le loro classi nei dati (`castigoequipaggiamento:classi`) e non hanno
 bisogno di regole; le regole di classi.yml hanno comunque la precedenza.
+**Livello minimo per tier** (con CastigoBellica): gli oggetti di CastigoEquipaggiamento portano anche il tier
+(`castigoequipaggiamento:tier`) e si usano/indossano solo con il blocco (sigillo) e il livello richiesti. Predefinito (sezione
+`tier` di classi.yml, valori usati anche se la sezione manca): T1 blocco 1 (Novizio), T2 blocco 2 (Esperto), T3 blocco 3 (Maestro),
+T4 blocco 4 (Leggenda), T5 blocco 4 e livello 100. Messaggio `tier.messaggio` con `{tier}` e `{requisito}`; `tier.attivo: false`
+lo spegne. Il bypass vale anche qui.
 Comandi (console o OP): `rpgbridge ricarica` (rilegge classi.yml, tomi.yml e armi.yml), `rpgbridge classi controlla
 <giocatore>` (classe e fornitore, CastigoBellica o MMOCore, e per ogni slot compresi quelli di Trinkets: identificativi, classi, proprietario del
 tomo, bonus e se è consentito).

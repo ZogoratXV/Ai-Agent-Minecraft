@@ -28,8 +28,9 @@ I giocatori entrano con il loro client Fabric e le stesse mod, come su un server
    Il primo avvio fa applicare a paperclip le patch di Purpur e scarica Fabric Loader
    da `maven.fabricmc.net`. I plugin vanno in `plugins/` come sempre.
 
-## Blocco degli oggetti per classe (MMOCore)
-Con MMOCore installato, RPG Bridge può riservare oggetti a determinate classi. Un oggetto riservato a un'altra classe:
+## Blocco degli oggetti per classe (CastigoBellica o MMOCore)
+RPG Bridge può riservare oggetti a determinate classi. La classe del giocatore arriva da **CastigoBellica** (servizio
+`classi()` di CastigoCore 2.1.0-beta.63 o successivo, letto per riflessione) oppure, se CastigoBellica non c'è, da MMOCore. Un oggetto riservato a un'altra classe:
 - non attacca (attacco normale e Better Combat): il colpo non parte;
 - non si usa (tasto destro in aria, su blocchi ed entità: archi, scudi, bacchette, armature col tasto destro);
 - non lancia spell (Spell Engine);
@@ -42,19 +43,24 @@ attivo: true
 messaggio: "&cQuesto oggetto e' riservato a: &f{classi}"
 mmoitems-classe-richiesta: true      # usa anche la "Required Class" di MMOItems come blocco vero
 regole:                              # vale la PRIMA regola che corrisponde
-  - oggetti: ["wizards:*", "mmoitems:STAFF:*"]
-    classi: [MAGE, ARCANE_MAGE]
+  - oggetti: ["wizards:*", "castamir:*"]
+    classi: [MAGO_NERO]
+  - oggetti: ["paladins:*_mace", "paladins:*_kite_shield"]
+    classi: [DIFENSORE]
   - oggetti: ["itemsadder:castigo:spada_drago"]
-    classi: [WARRIOR]
+    classi: [GUERRIERO]
 ```
 Oggetti: id del registro (`wizards:wand_arcane`, `wizards:*` per tutta la mod), `mmoitems:TIPO:ID`,
 `itemsadder:namespace:id`, `rpgbridge_id` dei datapack (es. `castamir:*`: custom_data `{rpgbridge_id:"castamir:..."}`, prende il posto
-dell'id di registro, vedi `examples/mago-nero`); `*` = qualsiasi testo. Classi: id o nome MMOCore, maiuscole/minuscole indifferenti.
+dell'id di registro, vedi `examples/mago-nero`); `*` = qualsiasi testo. Classi: id o nome (CastigoBellica: MAGO_BIANCO,
+MAGO_NERO, DIFENSORE, GUERRIERO, ASSASSINO, ARCIERE; MMOCore: i suoi id), maiuscole/minuscole indifferenti.
+Gli oggetti di **CastigoEquipaggiamento** portano le loro classi nei dati (`castigoequipaggiamento:classi`) e non hanno
+bisogno di regole; le regole di classi.yml hanno comunque la precedenza.
 Comandi (console o OP): `rpgbridge ricarica` (rilegge classi.yml, tomi.yml e armi.yml), `rpgbridge classi controlla
-<giocatore>` (classe MMOCore e, per ogni slot compresi quelli di Trinkets: identificativi, classi, proprietario del
+<giocatore>` (classe e fornitore, CastigoBellica o MMOCore, e per ogni slot compresi quelli di Trinkets: identificativi, classi, proprietario del
 tomo, bonus e se è consentito).
 Permesso per ignorare il blocco: `rpgbridge.classi.bypass`, **default false anche per gli OP** (assegnarlo con
-LuckPerms). Senza MMOCore il blocco è inattivo. Anche gli slot di Trinkets sono controllati.
+LuckPerms). Senza CastigoBellica né MMOCore il blocco è inattivo. Anche gli slot di Trinkets sono controllati.
 
 ## Tomi legati al giocatore
 Gli Spell Book (configurabile: `config/rpgbridge/tomi.yml`) si legano a chi li **equipaggia per primo** (slot "spell

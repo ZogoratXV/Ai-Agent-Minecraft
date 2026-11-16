@@ -33,19 +33,21 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Blocco degli oggetti per classe MMOCore: un oggetto soggetto a una regola (o con la "Required Class" di MMOItems)
- * non si può usare, con cui attaccare, con cui lanciare spell né indossare se la classe MMOCore del giocatore non è
+ * Blocco degli oggetti per classe: un oggetto soggetto a una regola (o con le classi di CastigoEquipaggiamento, o con la
+ * "Required Class" di MMOItems) non si può usare, con cui attaccare, con cui lanciare spell né indossare se la classe del
+ * giocatore (CastigoBellica tramite CastigoCore, oppure MMOCore) non è
  * tra quelle ammesse. Regole in {@code config/rpgbridge/classi.yml}. Le verifiche sono tutte lato server.
  */
 public final class ClassLock {
 	public static final String BYPASS_PERMISSION = "rpgbridge.classi.bypass";
 	private static final String DEFAULT_CONFIG = """
-			# RPG Bridge - blocco degli oggetti per classe MMOCore
+			# RPG Bridge - blocco degli oggetti per classe (CastigoBellica o MMOCore)
 			#
 			# Un oggetto bloccato non si puo' usare (tasto destro, archi, scudi, bacchette, uso su blocchi ed entita'),
 			# con lui non si attacca (attacco normale e Better Combat), non lancia spell (Spell Engine) e non si puo'
 			# indossare o tenere nella mano secondaria (viene rimesso nell'inventario, o lasciato a terra se pieno).
-			# Senza MMOCore il blocco e' inattivo. Permesso per ignorarlo: rpgbridge.classi.bypass (default false,
+			# La classe arriva da CastigoBellica (servizio classi di CastigoCore 2.1.0-beta.63+) o, in mancanza, da MMOCore;
+			# senza nessuno dei due il blocco e' inattivo. Gli oggetti di CastigoEquipaggiamento portano le loro classi. Permesso per ignorarlo: rpgbridge.classi.bypass (default false,
 			# anche per gli OP: va dato esplicitamente, es. con LuckPerms).
 			# Dopo una modifica: /rpgbridge classi ricarica
 
@@ -63,7 +65,8 @@ public final class ClassLock {
 			#     - oggetti delle mod o vanilla: id del registro, es. wizards:wand_arcane, wizards:* (tutta la mod)
 			#     - MMOItems: mmoitems:TIPO:ID, es. mmoitems:SWORD:SPADONE_DRAGO, mmoitems:STAFF:*
 			#     - ItemsAdder: itemsadder:namespace:id, es. itemsadder:castigo:spada_drago
-			#   classi: id o nome delle classi MMOCore (maiuscole/minuscole indifferenti), es. MAGE, ARCANE_MAGE
+			#   classi: id o nome delle classi (maiuscole/minuscole indifferenti): CastigoBellica MAGO_BIANCO, MAGO_NERO,
+			#     DIFENSORE, GUERRIERO, ASSASSINO, ARCIERE; MMOCore es. MAGE, ARCANE_MAGE
 			# Esempio (togli i # per attivarlo):
 			regole: []
 			#regole:
@@ -119,7 +122,7 @@ public final class ClassLock {
 			message = yaml.getString("messaggio", "&cQuesto oggetto e' riservato a: &f{classi}").replace('&', '§');
 			loaded = true;
 			String summary = "blocco per classe " + (enabled ? "attivo" : "disattivato") + ", " + rules.size() + " regole, MMOItems "
-					+ (mmoItemsRequiredClass ? "si" : "no") + ", MMOCore " + (mmoCore() != null ? "presente" : "assente (blocco inattivo)");
+					+ (mmoItemsRequiredClass ? "si" : "no") + ", classi da " + (classProvider().isEmpty() ? "nessuno (blocco inattivo finché CastigoBellica o MMOCore non sono attivi)" : classProvider());
 			RpgBridgeMod.LOGGER.info("[ClassLock] {} ({})", summary, file);
 			return summary;
 		} catch (IOException | RuntimeException e) {
@@ -183,6 +186,16 @@ public final class ClassLock {
 				}
 			}
 		}
+		// CastigoEquipaggiamento: classi scritte nell'oggetto (PersistentDataContainer → custom_data.PublicBukkitValues)
+		CompoundTag dati = customData(stack);
+		if (dati != null) {
+			String equip = dati.getCompoundOrEmpty("PublicBukkitValues").getStringOr("castigoequipaggiamento:classi", "");
+			if (!equip.isBlank()) {
+				List<String> classes = new ArrayList<>();
+				for (String c : equip.split(",")) if (!c.isBlank()) classes.add(c.trim());
+				if (!classes.isEmpty()) return classes;
+			}
+		}
 		if (mmoItemsRequiredClass) {
 			CompoundTag tag = customData(stack);
 			String required = tag == null ? "" : tag.getStringOr("MMOITEMS_REQUIRED_CLASS", "");
@@ -210,7 +223,7 @@ public final class ClassLock {
 		List<String> required = requiredClasses(stack);
 		if (required == null) return true;
 		String[] playerClass = playerClass(player.getUUID());
-		if (playerClass == null) return true; // MMOCore assente: blocco inattivo (segnalato in ricarica)
+		if (playerClass == null) return true; // né CastigoBellica né MMOCore: blocco inattivo (segnalato in ricarica)
 		for (String c : required) {
 			for (String own : playerClass) {
 				if (own != null && normalize(own).equals(normalize(c))) return true;
@@ -290,8 +303,75 @@ public final class ClassLock {
 		}
 	}
 
-	/** {id, nome} della classe MMOCore del giocatore, oppure null se MMOCore non è disponibile. */
+	// ------------------------------------------------------------------ CastigoBellica (servizio classi() di CastigoCore, per riflessione)
+
+	/**
+	 * {id, nome} della classe del giocatore: dal servizio {@code classi()} di CastigoCore (fornito da CastigoBellica) se
+	 * attivo, altrimenti da MMOCore; null se nessuno dei due è disponibile (blocco inattivo).
+	 */
 	public static String[] playerClass(UUID uuid) {
+		String[] castigo = castigoClass(uuid);
+		return castigo != null ? castigo : mmoCoreClass(uuid);
+	}
+
+	/** Nome del fornitore delle classi, per i messaggi. */
+	public static String classProvider() {
+		if (castigoService() != null) return "CastigoBellica";
+		return mmoCore() != null ? "MMOCore" : "";
+	}
+
+	/** Il servizio Classi attivo di CastigoCore, oppure null. */
+	private static Object castigoService() {
+		try {
+			Plugin core = Bukkit.getPluginManager().getPlugin("CastigoCore");
+			if (core == null || !core.isEnabled()) return null;
+			Object fornitore = core.getClass().getMethod("classi").invoke(core);
+			Object attivo = fornitore.getClass().getMethod("attivo").invoke(fornitore);
+			return attivo instanceof java.util.Optional<?> o ? o.orElse(null) : null;
+		} catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
+			return null; // Core senza il servizio classi (prima della 2.1.0-beta.63)
+		}
+	}
+
+	private static String[] castigoClass(UUID uuid) {
+		Object service = castigoService();
+		if (service == null) return null;
+		try {
+			Object profilo = publicMethod(service, "profilo", UUID.class).invoke(service, uuid);
+			Object p = profilo instanceof java.util.Optional<?> o ? o.orElse(null) : null;
+			if (p == null) return new String[] {"", ""};
+			return new String[] {String.valueOf(publicMethod(p, "classe").invoke(p)), String.valueOf(publicMethod(p, "nome").invoke(p))};
+		} catch (ReflectiveOperationException | RuntimeException e) {
+			return new String[] {"", ""};
+		}
+	}
+
+	/**
+	 * Metodo invocabile anche quando la classe concreta non è pubblica (il fornitore registra una classe privata che
+	 * implementa l'interfaccia pubblica del Core): lo cerca sulle interfacce e sulle superclassi pubbliche.
+	 */
+	private static Method publicMethod(Object target, String name, Class<?>... args) throws NoSuchMethodException {
+		for (Class<?> c = target.getClass(); c != null; c = c.getSuperclass()) {
+			if (java.lang.reflect.Modifier.isPublic(c.getModifiers())) {
+				try {
+					return c.getMethod(name, args);
+				} catch (NoSuchMethodException ignored) {
+				}
+			}
+			for (Class<?> i : c.getInterfaces()) {
+				try {
+					return i.getMethod(name, args);
+				} catch (NoSuchMethodException ignored) {
+				}
+			}
+		}
+		Method m = target.getClass().getMethod(name, args);
+		m.setAccessible(true);
+		return m;
+	}
+
+	/** {id, nome} della classe MMOCore del giocatore, oppure null se MMOCore non è disponibile. */
+	private static String[] mmoCoreClass(UUID uuid) {
 		Plugin plugin = mmoCore();
 		if (plugin == null) return null;
 		try {

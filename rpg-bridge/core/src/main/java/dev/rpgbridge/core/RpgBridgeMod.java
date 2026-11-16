@@ -86,8 +86,8 @@ public final class RpgBridgeMod implements ModInitializer {
 
 	private static int classInfo(CommandSourceStack source, ServerPlayer player) {
 		String[] own = ClassLock.playerClass(player.getUUID());
-		source.sendSystemMessage(Component.literal(player.getName().getString() + ": classe MMOCore "
-				+ (own == null ? "non disponibile (MMOCore assente)" : own[0] + " (" + own[1] + ")")));
+		source.sendSystemMessage(Component.literal(player.getName().getString() + ": classe " + (ClassLock.classProvider().isEmpty() ? "(nessun fornitore) " : "(" + ClassLock.classProvider() + ") ")
+				+ (own == null ? "non disponibile (né CastigoBellica né MMOCore)" : own[0] + " (" + own[1] + ")")));
 		for (var slot : net.minecraft.world.entity.EquipmentSlot.values()) {
 			var stack = player.getItemBySlot(slot);
 			if (stack.isEmpty()) continue;

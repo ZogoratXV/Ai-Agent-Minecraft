@@ -11,3 +11,4 @@ run-dist/
 dist/out/
 deps/
 run-dist.out
+mago-nero*.zip

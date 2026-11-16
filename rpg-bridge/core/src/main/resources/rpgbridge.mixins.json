@@ -18,6 +18,8 @@
     "bukkit.CraftEntityMixin",
     "bukkit.AbstractContainerMenuMixin",
     "bukkit.TrinketInventoryMixin",
+    "bukkit.DefaultBlockStateFactoryMixin",
+    "bukkit.RecipeHolderMixin",
     "paper.ConfigurationTaskThreadMixin",
     "paper.LoginQueryAnswerMixin",
     "paper.RawPluginMessageMixin",

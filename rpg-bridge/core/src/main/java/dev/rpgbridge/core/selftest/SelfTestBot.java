@@ -450,6 +450,25 @@ public final class SelfTestBot {
 			var block = BuiltInRegistries.BLOCK.getValue(Identifier.parse("spell_engine:spell_binding"));
 			var pos = player.blockPosition().relative(player.getDirection(), 2);
 			player.level().setBlockAndUpdate(pos, block.defaultBlockState());
+			try { // Bukkit BlockState of a modded block entity (WorldGuard, lock plugins call getState())
+				events.add("bukkit state " + player.getBukkitEntity().getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ())
+						.getState().getClass().getSimpleName());
+			} catch (Throwable t) {
+				events.add("bukkit state FAILED " + t);
+			}
+			try { // Bukkit.recipeIterator() over every recipe, modded types included (CastigoRicette)
+				int n = 0;
+				for (var it = org.bukkit.Bukkit.recipeIterator(); it.hasNext(); it.next()) n++;
+				events.add("bukkit recipes " + n);
+			} catch (Throwable t) {
+				events.add("bukkit recipes FAILED " + t);
+			}
+			try { // Paper's chat path: decorate(player, source, message) must not throw
+				events.add("chat decorator " + server.getChatDecorator().decorate(player, null,
+						net.minecraft.network.chat.Component.literal("test")).join().getString());
+			} catch (Throwable t) {
+				events.add("chat decorator FAILED " + t);
+			}
 			player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
 			player.containerMenu.broadcastChanges();
 			var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos),

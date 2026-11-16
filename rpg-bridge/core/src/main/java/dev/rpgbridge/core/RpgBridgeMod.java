@@ -27,7 +27,11 @@ public final class RpgBridgeMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		// Crea/legge config/rpgbridge/classi.yml all'avvio (MMOCore e i plugin sono già caricati).
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> reloadAll());
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			reloadAll();
+			// Plugins are enabled: teach every PacketEvents copy (plugin, GrimAC...) the mod entities and items.
+			dev.rpgbridge.core.bukkit.PacketEventsCompat.register(server);
+		});
 		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> dispatcher.register(
 				Commands.literal("rpgbridge")
 						.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))

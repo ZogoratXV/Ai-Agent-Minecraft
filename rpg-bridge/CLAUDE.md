@@ -49,6 +49,13 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     Commodore riscrive `Material.values()` dei plugin nei soli moderni `[0, LEGACY_AIR.ordinal())` e FAWE
     (`CachedBukkitAdapter`) ci dimensiona array indicizzati per ordinale (AIOOBE "length 1691" se messe in fondo).
     Rischio residuo: EnumSet/EnumMap/switch su Material inizializzati prima dell'iniezione → AIOOBE.
+  - `bukkit/PacketEventsCompat` (SERVER_STARTED): trova ogni copia di PacketEvents nei jar dei plugin (plugin
+    `packetevents`, shaded in GrimAC `ac.grim.grimac.shaded.com.github.retrooper.packetevents`, ...) e registra nei suoi
+    `VersionedRegistry` (EntityTypes, ItemTypes) entità e oggetti delle mod con id reali (stesso id per ogni versione:
+    `TypesBuilderData` + `MappingHelper.registerMapping` + `entries`), genitore entità dalla classe NMS. Risolve il kick
+    "this.entityType is null" al lancio di spell. Blocchi (`StateTypes`) non ancora registrati.
+    GrimAC resta incompatibile anche così: simula l'inventario con 46 slot (Trinkets ne aggiunge → errore e kick),
+    movimenti/attacchi vanilla. Solo un fork potrebbe adattarlo.
   - `mixin/bukkit/AbstractContainerMenuMixin` + `bukkit/ModdedMenus`: CraftBukkit rende astratto
     `AbstractContainerMenu.getBukkitView()`; @Overwrite con corpo di default (i menu vanilla lo sovrascrivono):
     `CraftInventoryView` con in alto un Container vivo sugli slot non del giocatore. `TrinketInventoryMixin`
@@ -138,7 +145,7 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
   "Castigo*" (solo client, Fabric networking su canali `castigo...` verso plugin Bukkit): coperte dai fix di rete.
 - Risolto con `ModdedMaterials`: `getType()` null per gli oggetti delle mod (NPE in MythicLib/MMOItems, CastigoZaini
   che espelleva, CastigoCore/Cucina/Voce, ItemTag). GrimAC (packetevents) non conosce gli id degli item delle mod:
-  incompatibile con client modded, consigliato rimuoverlo.
+  incompatibile con client modded, consigliato rimuoverlo (PacketEventsCompat sistema gli id, non l'inventario).
 
 ## Prossimi passi
 - Test con un **client reale** (log client `.minecraft/logs/latest.log`).

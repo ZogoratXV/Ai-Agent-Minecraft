@@ -4,3 +4,14 @@
 regole:
   - oggetti: ["castamir:*"]
     classi: [MAGO_NERO]
+
+# Spell del tomo da apprendere per blocco (CastigoBellica): aggiungi anche questa sezione a classi.yml.
+# Novizio: Drenaggio Vitale e Maledizione; Esperto (sigillo del 25): Globo d'Ombra e Nube di Tenebra;
+# Maestro (sigillo del 50): Raggio dell'Abisso e Marchio della Rovina. Il Dardo d'Ombra del bastone è sempre libero.
+spell:
+  messaggio: "&cPer questa spell serve {requisito}"
+  blocchi:
+    castamir:globo_ombra: 2
+    castamir:nube_tenebra: 2
+    castamir:raggio_abisso: 3
+    castamir:marchio_rovina: 3

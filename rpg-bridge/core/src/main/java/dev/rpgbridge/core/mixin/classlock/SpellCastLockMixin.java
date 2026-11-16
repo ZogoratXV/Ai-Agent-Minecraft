@@ -32,14 +32,22 @@ public abstract class SpellCastLockMixin {
 		return false;
 	}
 
+	/** Spell da apprendere per blocco (sezione "spell" di classi.yml): serve il sigillo del blocco. */
+	@Unique
+	private static boolean rpgbridge$spellBlocked(ServerPlayer player, String spellId) {
+		if (ClassLock.spellAllowed(player, spellId)) return false;
+		ClassLock.notifySpell(player, spellId);
+		return true;
+	}
+
 	@Inject(method = "handleCastRequest", at = @At("HEAD"), cancellable = true, require = 0)
 	private static void rpgbridge$castRequest(Packets.CastRequest packet, MinecraftServer server, ServerPlayer player, CallbackInfo ci) {
-		if (rpgbridge$blocked(player)) ci.cancel();
+		if (rpgbridge$blocked(player) || rpgbridge$spellBlocked(player, String.valueOf(packet.spellId()))) ci.cancel();
 	}
 
 	@Inject(method = "handleCastInput", at = @At("HEAD"), cancellable = true, require = 0)
 	private static void rpgbridge$castInput(Packets.CastInput packet, MinecraftServer server, ServerPlayer player, CallbackInfo ci) {
-		if (rpgbridge$blocked(player)) ci.cancel();
+		if (rpgbridge$blocked(player) || rpgbridge$spellBlocked(player, String.valueOf(packet.spellId()))) ci.cancel();
 	}
 
 	@Inject(method = "handleAttackPerform", at = @At("HEAD"), cancellable = true, require = 0)

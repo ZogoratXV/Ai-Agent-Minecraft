@@ -53,10 +53,37 @@ S["nube_tenebra"] = {"school": "spell_power:soul", "type": "ACTIVE", "range": 0.
     {"action": {"type": "STATUS_EFFECT", "status_effect": {"effect_id": "minecraft:blindness", "duration": 2.0}}}],
   "cost": cost(cd=20.0)}
 
+S["globo_ombra"] = {"school": "spell_power:soul", "type": "ACTIVE", "range": 32.0, "tier": 2, "group": "mago_nero_globo", "learn": {},
+  "active": casting(1.5), "release": release, "target": {"type": "AIM", "aim": {}},
+  "deliver": {"type": "PROJECTILE", "projectile": {"projectile": {"client_data": {"light_level": 6,
+      "travel_particles": [p("spell_engine:magic_spell", PURPLE, "ASCEND", 3.0, "CIRCLE", mn=0.05, mx=0.15, alignment="LOOK"), p("spell_engine:smoke_medium", None, None, 1.0, mn=0.0, mx=0.03)],
+      "composite_model": {"models": [{"fx": {"model_id": "wizards:spell_projectile/arcane_bolt", "scale": 0.9}}]}}}}},
+  "impacts": [{"action": {"type": "DAMAGE", "damage": {"spell_power_coefficient": 0.7, "knockback": 0.6}}}],
+  "area_impact": {"radius": 3.5, "area": {"distance_dropoff": "SQUARED"},
+      "visuals": {"particles": [p("spell_engine:magic_skull", DARK, "BURST", 25.0, mn=0.2, mx=0.6), p("spell_engine:smoke_medium", None, None, 40.0, mn=0.1, mx=0.4)]},
+      "sound": {"id": "spell_engine:generic_soul_release"}},
+  "cost": cost(cd=10.0)}
+S["raggio_abisso"] = {"school": "spell_power:soul", "type": "ACTIVE", "range": 24.0, "tier": 3, "group": "mago_nero_raggio", "learn": {},
+  "active": {"cast": {"duration": 4.0, "type": "CHANNEL", "channel": {"ticks": 20}, "animation": {"id": "spell_engine:two_handed_channeling"},
+      "sound": {"id": "spell_engine:generic_soul_casting", "randomness": 0.0}}},
+  "release": {}, "target": {"type": "BEAM", "beam": {"color_rgba": 0x7A2BB8FF, "width": 0.12, "flow": 1.2, "block_hit": {}}},
+  "impacts": [{"action": {"type": "DAMAGE", "damage": {"spell_power_coefficient": 0.45, "knockback": 0.1}},
+      "visuals": {"particles": [p("spell_engine:magic_spell", DARK, "BURST", 6.0, mn=0.05, mx=0.2)]}}],
+  "cost": {"exhaust": 0.3, "cooldown": {"duration": 14.0, "proportional": True}, "item": {"id": "runes:soul_stone"}}}
+S["marchio_rovina"] = {"school": "spell_power:soul", "type": "ACTIVE", "range": 20.0, "tier": 3, "group": "mago_nero_marchio", "learn": {},
+  "active": casting(1.0), "release": release, "target": {"type": "AIM", "aim": {"sticky": True}},
+  "impacts": [{"action": {"type": "STATUS_EFFECT", "status_effect": {"effect_id": "minecraft:weakness", "duration": 12.0, "amplifier": 0, "amplifier_power_multiplier": 0.1, "amplifier_cap": 2, "show_particles": True}},
+      "visuals": {"particles": [p("spell_engine:magic_skull", DARK, "BURST", 14.0, mn=0.1, mx=0.3), p("soul", None, None, 16.0, "PILLAR", mn=0.02, mx=0.1, vertical_origin=0.1)]},
+      "sound": {"id": "spell_engine:generic_soul_release"}},
+    {"action": {"type": "STATUS_EFFECT", "status_effect": {"effect_id": "minecraft:slowness", "duration": 12.0, "amplifier": 0}}},
+    {"action": {"type": "STATUS_EFFECT", "status_effect": {"effect_id": "minecraft:glowing", "duration": 12.0, "amplifier": 0}}}],
+  "cost": cost(cd=18.0)}
+
 # ---------------- datapack
 w(f"{DP}/pack.mcmeta", {"pack": {"description": "Castamir - Mago Nero (Spell Engine)", "min_format": [107, 1], "max_format": 107}})
 for k, v in S.items(): w(f"{DP}/data/{NS}/spell/{k}.json", v)
-book_spells = ["drenaggio_vitale", "maledizione", "nube_tenebra"]
+# sei spell da apprendere al tavolo di legatura: tre di danno e tre maledizioni (tier 1 Novizio, 2 Esperto, 3 Maestro)
+book_spells = ["drenaggio_vitale", "maledizione", "globo_ombra", "nube_tenebra", "raggio_abisso", "marchio_rovina"]
 w(f"{DP}/data/{NS}/tags/spell/spell_book/mago_nero.json", {"values": [f"{NS}:{s}" for s in book_spells]})
 w(f"{DP}/data/{NS}/tags/spell/spell_scroll/mago_nero.json", {"values": [f"{NS}:{s}" for s in book_spells]})
 w(f"{DP}/data/{NS}/tags/spell/weapon/bastone_ombre.json", {"values": [f"{NS}:dardo_ombra"]})
@@ -105,17 +132,23 @@ lang = {
    "drenaggio_vitale": ("Drenaggio Vitale", "Prosciuga il bersaglio: {damage} danni da anima, curandoti di {heal}."),
    "maledizione": ("Maledizione", "Maledice il bersaglio: {damage} danni da anima e Avvizzimento {effect_amplifier} per {effect_duration} secondi."),
    "nube_tenebra": ("Nube di Tenebra", "Una nube di tenebra ti avvolge: i nemici al suo interno subiscono {damage} danni da anima al secondo, restano accecati e rallentati."),
+   "globo_ombra": ("Globo d'Ombra", "Scaglia un globo d'ombra che esplode all'impatto: {damage} danni da anima al bersaglio e a chi gli sta vicino."),
+   "raggio_abisso": ("Raggio dell'Abisso", "Canalizza un raggio dell'abisso che infligge {damage} danni da anima finché lo mantieni."),
+   "marchio_rovina": ("Marchio della Rovina", "Marchia il bersaglio: Debolezza {effect_amplifier} e Lentezza per {effect_duration} secondi; resta visibile attraverso i muri."),
    "items": {"bastone_ombre": "Bastone delle Ombre", "mago_nero_cappuccio": "Cappuccio del Mago Nero", "mago_nero_veste": "Veste del Mago Nero",
      "mago_nero_gambali": "Gambali del Mago Nero", "mago_nero_calzari": "Calzari del Mago Nero",
-     "spell_book/mago_nero": "Tomo della Tenebra", "spell_book/mago_nero.spell_binding.description": "Tomo del Mago Nero: prosciuga, maledice e avvolge i nemici nella tenebra.",
+     "spell_book/mago_nero": "Tomo della Tenebra", "spell_book/mago_nero.spell_binding.description": "Tomo del Mago Nero: tre spell di danno e tre maledizioni, da apprendere al tavolo di legatura.",
      "spell_scroll/mago_nero": "Pergamena della Tenebra"}, "set": "Paramenti del Mago Nero"},
  "en_us": {"dardo_ombra": ("Shadow Bolt", "Hurls a bolt of shadow, dealing {damage} soul spell damage."),
    "drenaggio_vitale": ("Life Drain", "Drains the target for {damage} soul spell damage, healing you for {heal}."),
    "maledizione": ("Curse", "Curses the target: {damage} soul spell damage and Wither {effect_amplifier} for {effect_duration} seconds."),
    "nube_tenebra": ("Cloud of Darkness", "A cloud of darkness surrounds you: enemies inside take {damage} soul spell damage per second, blinded and slowed."),
+   "globo_ombra": ("Shadow Orb", "Hurls an orb of shadow that explodes on impact: {damage} soul spell damage to the target and those nearby."),
+   "raggio_abisso": ("Abyssal Beam", "Channels a beam from the abyss dealing {damage} soul spell damage while held."),
+   "marchio_rovina": ("Mark of Ruin", "Marks the target: Weakness {effect_amplifier} and Slowness for {effect_duration} seconds; visible through walls."),
    "items": {"bastone_ombre": "Staff of Shadows", "mago_nero_cappuccio": "Black Mage Hood", "mago_nero_veste": "Black Mage Robe",
      "mago_nero_gambali": "Black Mage Leggings", "mago_nero_calzari": "Black Mage Shoes",
-     "spell_book/mago_nero": "Tome of Darkness", "spell_book/mago_nero.spell_binding.description": "Spell Book of Black Mages: drain, curse and engulf enemies in darkness.",
+     "spell_book/mago_nero": "Tome of Darkness", "spell_book/mago_nero.spell_binding.description": "Spell Book of Black Mages: three damage spells and three curses, learned at the Spell Binding Table.",
      "spell_scroll/mago_nero": "Scroll of Darkness"}, "set": "Black Mage Vestments"}}
 for code, L in lang.items():
     d = {}
@@ -150,6 +183,60 @@ I = {
 "2.2.............",
 ".2..............",
 "2...............",
+],
+"globo_ombra": [
+"................",
+".....233332.....",
+"...2345555432...",
+"..234567765432..",
+".23456777765432.",
+".34567777776543.",
+"2345677777776542",
+"3456777777777653",
+"3456777777777653",
+"2345677777776542",
+".34567777776543.",
+".23456777765432.",
+"..234567765432..",
+"...2345555432...",
+".....233332.....",
+"................",
+],
+"raggio_abisso": [
+"2..............2",
+".3............3.",
+"..4..........4..",
+"...5........5...",
+"....6......6....",
+".....7....7.....",
+"......7777......",
+"......7777......",
+"......6776......",
+"......5665......",
+"......4554......",
+"......3443......",
+"......2332......",
+"......1221......",
+".....122221.....",
+"....11111111....",
+],
+"marchio_rovina": [
+"......2222......",
+"....22333322....",
+"...2334444332...",
+"..234455554432..",
+"..234511115432..",
+".23451.77.15432.",
+".2345177771543..",
+".234517..7154322",
+".2345177771543..",
+".23451.77.15432.",
+"..234511115432..",
+"..234455554432..",
+"...2334444332...",
+"....22333322....",
+"......2222......",
+"................",
 ],
 "maledizione": [
 "....33444433....",

@@ -1,0 +1,129 @@
+{
+  "school": "spell_power:soul",
+  "type": "ACTIVE",
+  "range": 20.0,
+  "tier": 3,
+  "group": "mago_nero_marchio",
+  "learn": {},
+  "active": {
+    "cast": {
+      "duration": 1.0,
+      "animation": {
+        "id": "spell_engine:one_handed_projectile_charge"
+      },
+      "sound": {
+        "id": "spell_engine:generic_soul_casting",
+        "randomness": 0.0
+      },
+      "particles": [
+        {
+          "id": "spell_engine:magic_spell",
+          "appearance": {
+            "color": 4286196664,
+            "motion": "ASCEND"
+          },
+          "batch": {
+            "count": 1.0,
+            "shape": "PIPE",
+            "anchor": "ENTITY",
+            "min_speed": 0.05,
+            "max_speed": 0.1,
+            "vertical_origin": 0.1,
+            "width_factor": 2.0
+          }
+        }
+      ]
+    }
+  },
+  "release": {
+    "animation": {
+      "id": "spell_engine:one_handed_projectile_release"
+    },
+    "sound": {
+      "id": "spell_engine:generic_soul_release"
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {
+      "sticky": true
+    }
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "STATUS_EFFECT",
+        "status_effect": {
+          "effect_id": "minecraft:weakness",
+          "duration": 12.0,
+          "amplifier": 0,
+          "amplifier_power_multiplier": 0.1,
+          "amplifier_cap": 2,
+          "show_particles": true
+        }
+      },
+      "visuals": {
+        "particles": [
+          {
+            "id": "spell_engine:magic_skull",
+            "appearance": {
+              "color": 4281995100,
+              "motion": "BURST"
+            },
+            "batch": {
+              "count": 14.0,
+              "shape": "SPHERE",
+              "anchor": "ENTITY",
+              "min_speed": 0.1,
+              "max_speed": 0.3
+            }
+          },
+          {
+            "id": "soul",
+            "appearance": {},
+            "batch": {
+              "count": 16.0,
+              "shape": "PILLAR",
+              "anchor": "ENTITY",
+              "min_speed": 0.02,
+              "max_speed": 0.1,
+              "vertical_origin": 0.1
+            }
+          }
+        ]
+      },
+      "sound": {
+        "id": "spell_engine:generic_soul_release"
+      }
+    },
+    {
+      "action": {
+        "type": "STATUS_EFFECT",
+        "status_effect": {
+          "effect_id": "minecraft:slowness",
+          "duration": 12.0,
+          "amplifier": 0
+        }
+      }
+    },
+    {
+      "action": {
+        "type": "STATUS_EFFECT",
+        "status_effect": {
+          "effect_id": "minecraft:glowing",
+          "duration": 12.0,
+          "amplifier": 0
+        }
+      }
+    }
+  ],
+  "cost": {
+    "exhaust": 0.1,
+    "cooldown": {
+      "duration": 18.0
+    },
+    "item": {
+      "id": "runes:soul_stone"
+    }
+  }
+}

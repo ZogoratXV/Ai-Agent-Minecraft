@@ -82,6 +82,17 @@ public final class ClassLock {
 			    T3: {blocco: 3}
 			    T4: {blocco: 4}
 			    T5: {blocco: 4, livello: 100}
+
+			# Spell da apprendere per blocco (CastigoBellica): id della spell -> blocco minimo (2 Esperto, 3 Maestro, 4 Leggenda).
+			# Le spell non elencate si lanciano sempre. Esempio del kit Mago Nero:
+			spell:
+			  messaggio: "&cPer questa spell serve {requisito}"
+			  blocchi: {}
+			#  blocchi:
+			#    castamir:globo_ombra: 2
+			#    castamir:nube_tenebra: 2
+			#    castamir:raggio_abisso: 3
+			#    castamir:marchio_rovina: 3
 			#regole:
 			#  - oggetti: ["wizards:*", "mmoitems:STAFF:*"]
 			#    classi: [MAGE, ARCANE_MAGE]
@@ -107,6 +118,9 @@ public final class ClassLock {
 	private static volatile boolean tiersEnabled = true;
 	private static volatile Map<String, TierRequirement> tiers = DEFAULT_TIERS;
 	private static volatile String tierMessage = "§cPer un oggetto {tier} serve {requisito}";
+	/** Spell da apprendere per blocco (id spell → blocco minimo di CastigoBellica, sezione "spell" di classi.yml). */
+	private static volatile Map<String, Integer> spellBlocks = Map.of();
+	private static volatile String spellMessage = "§cPer questa spell serve {requisito}";
 
 	private static volatile boolean loaded;
 	private static volatile boolean enabled;
@@ -142,6 +156,12 @@ public final class ClassLock {
 				if (!items.isEmpty() && !classes.isEmpty()) parsed.add(new Rule(List.copyOf(items), List.copyOf(classes)));
 			}
 			rules = List.copyOf(parsed);
+			var spellSection = yaml.getConfigurationSection("spell");
+			var parsedSpells = new java.util.HashMap<String, Integer>();
+			spellMessage = (spellSection == null ? "&cPer questa spell serve {requisito}" : spellSection.getString("messaggio", "&cPer questa spell serve {requisito}")).replace('&', '§');
+			var blocchi = spellSection == null ? null : spellSection.getConfigurationSection("blocchi");
+			if (blocchi != null) for (String id : blocchi.getKeys(false)) parsedSpells.put(id.toLowerCase(Locale.ROOT), Math.max(1, Math.min(4, blocchi.getInt(id, 1))));
+			spellBlocks = Map.copyOf(parsedSpells);
 			var tierSection = yaml.getConfigurationSection("tier");
 			tiersEnabled = tierSection == null || tierSection.getBoolean("attivo", true);
 			tierMessage = (tierSection == null ? "&cPer un oggetto {tier} serve {requisito}"
@@ -162,7 +182,7 @@ public final class ClassLock {
 			message = yaml.getString("messaggio", "&cQuesto oggetto e' riservato a: &f{classi}").replace('&', '§');
 			loaded = true;
 			String summary = "blocco per classe " + (enabled ? "attivo" : "disattivato") + ", " + rules.size() + " regole, MMOItems "
-					+ (mmoItemsRequiredClass ? "si" : "no") + ", tier " + (tiersEnabled ? tiers.size() + " requisiti" : "spento") + ", classi da " + (classProvider().isEmpty() ? "nessuno (blocco inattivo finché CastigoBellica o MMOCore non sono attivi)" : classProvider());
+					+ (mmoItemsRequiredClass ? "si" : "no") + ", tier " + (tiersEnabled ? tiers.size() + " requisiti" : "spento") + ", spell per blocco " + spellBlocks.size() + ", classi da " + (classProvider().isEmpty() ? "nessuno (blocco inattivo finché CastigoBellica o MMOCore non sono attivi)" : classProvider());
 			RpgBridgeMod.LOGGER.info("[ClassLock] {} ({})", summary, file);
 			return summary;
 		} catch (IOException | RuntimeException e) {
@@ -283,6 +303,37 @@ public final class ClassLock {
 		if (progress == null) return true;
 		if (missingTier(tiers, tier, progress[0], progress[1]) == null) return true;
 		return hasPermission(player, BYPASS_PERMISSION, "Ignora il blocco degli oggetti per classe di RPG Bridge");
+	}
+
+	/** Blocco minimo per la spell (sezione "spell" di classi.yml), 1 se non elencata. */
+	public static int spellBlock(String spellId) {
+		if (!loaded) reload();
+		return spellId == null ? 1 : spellBlocks.getOrDefault(spellId.toLowerCase(Locale.ROOT), 1);
+	}
+
+	/** Spell da apprendere per blocco: lanciabile solo col blocco (sigillo) richiesto. Senza CastigoBellica sempre ammessa. */
+	public static boolean spellAllowed(ServerPlayer player, String spellId) {
+		if (!loaded) reload();
+		if (!enabled || EXEMPT.contains(player.getUUID())) return true;
+		int need = spellBlock(spellId);
+		if (need <= 1) return true;
+		int[] progress = castigoProgress(player.getUUID());
+		if (progress == null || progress[0] >= need) return true;
+		return hasPermission(player, BYPASS_PERMISSION, "Ignora il blocco degli oggetti per classe di RPG Bridge");
+	}
+
+	/** Avviso nella barra delle azioni per una spell non ancora consentita. */
+	public static void notifySpell(ServerPlayer player, String spellId) {
+		long now = System.currentTimeMillis();
+		if (Boolean.getBoolean("rpgbridge.debugClassLock")) RpgBridgeMod.LOGGER.info("[ClassLock] spell {} bloccata per {} (serve blocco {})", spellId, player.getName().getString(), spellBlock(spellId));
+		Long last = LAST_MESSAGE.get(player.getUUID());
+		if (last != null && now - last < 1000) return;
+		LAST_MESSAGE.put(player.getUUID(), now);
+		String text = spellMessage.replace("{requisito}", requirementText(new TierRequirement(spellBlock(spellId), 1)));
+		var server = player.level().getServer();
+		Runnable send = () -> player.sendOverlayMessage(Component.literal(text));
+		if (server.isSameThread()) send.run();
+		else server.execute(send);
 	}
 
 	static String blockName(int block) {

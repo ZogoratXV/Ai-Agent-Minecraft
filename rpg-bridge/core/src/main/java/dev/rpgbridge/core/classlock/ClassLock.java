@@ -69,6 +69,19 @@ public final class ClassLock {
 			#     DIFENSORE, GUERRIERO, ASSASSINO, ARCIERE; MMOCore es. MAGE, ARCANE_MAGE
 			# Esempio (togli i # per attivarlo):
 			regole: []
+
+			# Livello minimo per tier degli oggetti di CastigoEquipaggiamento (tier scritto nell'oggetto), con CastigoBellica:
+			# blocco = sigillo raggiunto (1 Novizio, 2 Esperto dal 25, 3 Maestro dal 50, 4 Leggenda dal 75), livello = livello minimo.
+			# {tier} e {requisito} nel messaggio. Il permesso rpgbridge.classi.bypass ignora anche questo controllo.
+			tier:
+			  attivo: true
+			  messaggio: "&cPer un oggetto {tier} serve {requisito}"
+			  requisiti:
+			    T1: {blocco: 1}
+			    T2: {blocco: 2}
+			    T3: {blocco: 3}
+			    T4: {blocco: 4}
+			    T5: {blocco: 4, livello: 100}
 			#regole:
 			#  - oggetti: ["wizards:*", "mmoitems:STAFF:*"]
 			#    classi: [MAGE, ARCANE_MAGE]
@@ -82,6 +95,18 @@ public final class ClassLock {
 
 	private record Rule(List<Pattern> items, List<String> classes) {
 	}
+
+	/** Requisito di un tier di CastigoEquipaggiamento: blocco di CastigoBellica (sigillo) e livello minimi. */
+	record TierRequirement(int block, int level) {
+	}
+
+	/** Variante B decisa il 16 novembre 2026: un tier per blocco, il T5 solo a livello 100. */
+	static final Map<String, TierRequirement> DEFAULT_TIERS = Map.of(
+			"T1", new TierRequirement(1, 1), "T2", new TierRequirement(2, 1), "T3", new TierRequirement(3, 1),
+			"T4", new TierRequirement(4, 1), "T5", new TierRequirement(4, 100));
+	private static volatile boolean tiersEnabled = true;
+	private static volatile Map<String, TierRequirement> tiers = DEFAULT_TIERS;
+	private static volatile String tierMessage = "§cPer un oggetto {tier} serve {requisito}";
 
 	private static volatile boolean loaded;
 	private static volatile boolean enabled;
@@ -117,12 +142,27 @@ public final class ClassLock {
 				if (!items.isEmpty() && !classes.isEmpty()) parsed.add(new Rule(List.copyOf(items), List.copyOf(classes)));
 			}
 			rules = List.copyOf(parsed);
+			var tierSection = yaml.getConfigurationSection("tier");
+			tiersEnabled = tierSection == null || tierSection.getBoolean("attivo", true);
+			tierMessage = (tierSection == null ? "&cPer un oggetto {tier} serve {requisito}"
+					: tierSection.getString("messaggio", "&cPer un oggetto {tier} serve {requisito}")).replace('&', '§');
+			var reqSection = tierSection == null ? null : tierSection.getConfigurationSection("requisiti");
+			if (reqSection == null) tiers = DEFAULT_TIERS;
+			else {
+				var parsedTiers = new java.util.HashMap<String, TierRequirement>();
+				for (String t : reqSection.getKeys(false)) {
+					int block = Math.max(1, Math.min(4, reqSection.getInt(t + ".blocco", 1)));
+					int level = Math.max(1, Math.min(1000, reqSection.getInt(t + ".livello", 1)));
+					parsedTiers.put(t.toUpperCase(Locale.ROOT), new TierRequirement(block, level));
+				}
+				tiers = Map.copyOf(parsedTiers);
+			}
 			enabled = yaml.getBoolean("attivo", true);
 			mmoItemsRequiredClass = yaml.getBoolean("mmoitems-classe-richiesta", true);
 			message = yaml.getString("messaggio", "&cQuesto oggetto e' riservato a: &f{classi}").replace('&', '§');
 			loaded = true;
 			String summary = "blocco per classe " + (enabled ? "attivo" : "disattivato") + ", " + rules.size() + " regole, MMOItems "
-					+ (mmoItemsRequiredClass ? "si" : "no") + ", classi da " + (classProvider().isEmpty() ? "nessuno (blocco inattivo finché CastigoBellica o MMOCore non sono attivi)" : classProvider());
+					+ (mmoItemsRequiredClass ? "si" : "no") + ", tier " + (tiersEnabled ? tiers.size() + " requisiti" : "spento") + ", classi da " + (classProvider().isEmpty() ? "nessuno (blocco inattivo finché CastigoBellica o MMOCore non sono attivi)" : classProvider());
 			RpgBridgeMod.LOGGER.info("[ClassLock] {} ({})", summary, file);
 			return summary;
 		} catch (IOException | RuntimeException e) {
@@ -213,7 +253,52 @@ public final class ClassLock {
 	/** true se il giocatore può usare l'oggetto (nessuna regola, classe ammessa, permesso di bypass o blocco inattivo). */
 	public static boolean allowed(ServerPlayer player, ItemStack stack) {
 		if (stack == null || stack.isEmpty() || EXEMPT.contains(player.getUUID())) return true;
-		return BoundTomes.allowed(player, stack) && classAllowed(player, stack);
+		return BoundTomes.allowed(player, stack) && classAllowed(player, stack) && tierAllowed(player, stack);
+	}
+
+	/** Tier scritto da CastigoEquipaggiamento nell'oggetto (es. "T3"), oppure "". */
+	public static String itemTier(ItemStack stack) {
+		CompoundTag dati = customData(stack);
+		if (dati == null) return "";
+		return dati.getCompoundOrEmpty("PublicBukkitValues").getStringOr("castigoequipaggiamento:tier", "").trim().toUpperCase(Locale.ROOT);
+	}
+
+	/** Requisito non soddisfatto per il tier dell'oggetto, oppure null se il giocatore lo può usare. */
+	static TierRequirement missingTier(Map<String, TierRequirement> table, String tier, int block, int level) {
+		TierRequirement req = table.get(tier);
+		if (req == null) return null;
+		return block >= req.block() && level >= req.level() ? null : req;
+	}
+
+	/**
+	 * Livello minimo per tier (dalla classe di CastigoBellica): blocco raggiunto (sigillo consegnato) e livello. Senza
+	 * CastigoBellica il controllo è spento; chi non ha ancora una classe vale come blocco 1, livello 1.
+	 */
+	public static boolean tierAllowed(ServerPlayer player, ItemStack stack) {
+		if (!loaded) reload();
+		if (!enabled || !tiersEnabled || stack == null || stack.isEmpty()) return true;
+		String tier = itemTier(stack);
+		if (tier.isEmpty()) return true;
+		int[] progress = castigoProgress(player.getUUID());
+		if (progress == null) return true;
+		if (missingTier(tiers, tier, progress[0], progress[1]) == null) return true;
+		return hasPermission(player, BYPASS_PERMISSION, "Ignora il blocco degli oggetti per classe di RPG Bridge");
+	}
+
+	static String blockName(int block) {
+		return switch (block) {
+			case 1 -> "Novizio";
+			case 2 -> "Esperto";
+			case 3 -> "Maestro";
+			default -> "Leggenda";
+		};
+	}
+
+	static String requirementText(TierRequirement req) {
+		String seal = req.block() <= 1 ? "" : "il sigillo di " + blockName(req.block());
+		String lvl = req.level() <= 1 ? "" : "il livello " + req.level();
+		if (seal.isEmpty()) return lvl;
+		return lvl.isEmpty() ? seal : seal + " e " + lvl;
 	}
 
 	/** Solo la parte "classe" del controllo (senza il legame dei tomi). */
@@ -256,7 +341,12 @@ public final class ClassLock {
 			text = BoundTomes.deniedMessage(stack);
 		} else {
 			List<String> required = requiredClasses(stack);
-			text = message.replace("{classi}", required == null ? "" : String.join(", ", required));
+			if (classAllowed(player, stack) && !tierAllowed(player, stack)) {
+				String tier = itemTier(stack);
+				int[] progress = castigoProgress(player.getUUID());
+				TierRequirement req = progress == null ? null : missingTier(tiers, tier, progress[0], progress[1]);
+				text = tierMessage.replace("{tier}", tier).replace("{requisito}", req == null ? "" : requirementText(req));
+			} else text = message.replace("{classi}", required == null ? "" : String.join(", ", required));
 		}
 		var server = player.level().getServer();
 		Runnable send = () -> player.sendOverlayMessage(Component.literal(text));
@@ -343,6 +433,20 @@ public final class ClassLock {
 			return new String[] {String.valueOf(publicMethod(p, "classe").invoke(p)), String.valueOf(publicMethod(p, "nome").invoke(p))};
 		} catch (ReflectiveOperationException | RuntimeException e) {
 			return new String[] {"", ""};
+		}
+	}
+
+	/** {blocco, livello} del personaggio da CastigoBellica; {1, 1} senza classe; null senza il servizio classi. */
+	static int[] castigoProgress(UUID uuid) {
+		Object service = castigoService();
+		if (service == null) return null;
+		try {
+			Object profilo = publicMethod(service, "profilo", UUID.class).invoke(service, uuid);
+			Object p = profilo instanceof java.util.Optional<?> o ? o.orElse(null) : null;
+			if (p == null) return new int[] {1, 1};
+			return new int[] {((Number) publicMethod(p, "blocco").invoke(p)).intValue(), ((Number) publicMethod(p, "livello").invoke(p)).intValue()};
+		} catch (ReflectiveOperationException | RuntimeException e) {
+			return new int[] {1, 1};
 		}
 	}
 

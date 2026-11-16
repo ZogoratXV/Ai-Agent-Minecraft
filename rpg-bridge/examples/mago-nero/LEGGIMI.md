@@ -17,12 +17,21 @@ Il kit cambia solo nome, statistiche, spell e set. Nel resource pack ci sono sol
 Valori presi dalla scala dei Wizards (bastone 6 di potere, vesti 0,25 + 0,02 per pezzo). Ogni oggetto ha
 `custom_data {rpgbridge_id:"castamir:..."}` per il blocco per classe.
 
-| Spell | Cosa fa | Costo | Ricarica |
-|---|---|---|---|
-| `castamir:dardo_ombra` | proiettile, danno anima 0,8 × potere | 1 runa dell'anima | arma |
-| `castamir:drenaggio_vitale` | danno anima 0,6 e cura il mago 0,35 | 1 runa | 6 s |
-| `castamir:maledizione` | danno anima 0,3 + Avvizzimento 8 s, livello che sale col potere (max 4) | 1 runa | 12 s |
-| `castamir:nube_tenebra` | nube di 4,5 blocchi per 8 s: danno 0,15/s, lentezza II, cecità | 1 runa | 20 s |
+Attacco base del bastone e sei spell da apprendere al tavolo di legatura (Tomo della Tenebra): tre di danno e tre
+maledizioni. Con CastigoBellica le spell si sbloccano coi sigilli (sezione `spell` di `classi.yml` del bridge).
+
+| Spell | Tipo | Blocco | Cosa fa | Ricarica |
+|---|---|---|---|---|
+| `castamir:dardo_ombra` | attacco base | sempre | proiettile, danno anima 0,8 × potere | arma |
+| `castamir:drenaggio_vitale` | danno | Novizio | danno anima 0,6 e cura il mago 0,35 | 6 s |
+| `castamir:globo_ombra` | danno | Esperto | globo che esplode: danno anima 0,7 nel raggio di 3,5 blocchi | 10 s |
+| `castamir:raggio_abisso` | danno | Maestro | raggio canalizzato 4 s, danno anima 0,45 a impulso | 14 s |
+| `castamir:maledizione` | maledizione | Novizio | danno anima 0,3 + Avvizzimento 8 s, livello col potere (max 4) | 12 s |
+| `castamir:nube_tenebra` | maledizione | Esperto | nube di 4,5 blocchi per 8 s: danno 0,15/s, lentezza II, cecità | 20 s |
+| `castamir:marchio_rovina` | maledizione | Maestro | Debolezza (col potere, max III), Lentezza, bersaglio luminoso per 12 s | 18 s |
+
+Tutte costano 1 runa dell'anima. Le staffe del Mago Nero di CastigoEquipaggiamento 0.4 lanciano il Dardo d'Ombra e danno
+potere dell'anima: con il tomo equipaggiato lanciano le spell apprese.
 Rune: `runes:soul_stone`. Le spell del tomo stanno al tavolo di legatura (Spell Binding), come quelle dei Wizards.
 
 ## Installazione

@@ -61,6 +61,9 @@ bisogno di regole; le regole di classi.yml hanno comunque la precedenza.
 `tier` di classi.yml, valori usati anche se la sezione manca): T1 blocco 1 (Novizio), T2 blocco 2 (Esperto), T3 blocco 3 (Maestro),
 T4 blocco 4 (Leggenda), T5 blocco 4 e livello 100. Messaggio `tier.messaggio` con `{tier}` e `{requisito}`; `tier.attivo: false`
 lo spegne. Il bypass vale anche qui.
+**Spell per blocco** (con CastigoBellica): la sezione `spell` di classi.yml (`blocchi: {id_spell: blocco}`) rende le spell
+lanciabili solo dal blocco (sigillo) indicato; le spell non elencate sono sempre libere. Messaggio `spell.messaggio`
+con `{requisito}`. Esempio nel kit `examples/mago-nero/config/rpgbridge/classi-mago-nero.yml`.
 Comandi (console o OP): `rpgbridge ricarica` (rilegge classi.yml, tomi.yml e armi.yml), `rpgbridge classi controlla
 <giocatore>` (classe e fornitore, CastigoBellica o MMOCore, e per ogni slot compresi quelli di Trinkets: identificativi, classi, proprietario del
 tomo, bonus e se è consentito).

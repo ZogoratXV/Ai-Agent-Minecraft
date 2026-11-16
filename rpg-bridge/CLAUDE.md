@@ -40,6 +40,12 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
     Bukkit sincroni quando riprende la configurazione).
   - `mixin/bukkit/**` + `bukkit/ModdedEntities`: tipi entità modded → `EntityType.UNKNOWN`, wrapper Craft
     concreto più vicino alla gerarchia NMS.
+  - `bukkit/ModdedMaterials` (chiamato in `PaperMainMixin` subito dopo il freeze dei registri, prima di CraftBukkit e
+    plugin): CraftMagicNumbers mappa gli item per *percorso* (`Material.getMaterial(path.toUpperCase())`) → null per
+    le mod (e collisioni con nomi vanilla). Aggiunge costanti enum `Material` (Unsafe.allocateInstance; name
+    `NAMESPACE_PERCORSO`, key `namespace:percorso`, legacy=false, itemType/blockType = Registry.ITEM/BLOCK.get(key)),
+    aggiorna `$VALUES`, `BY_NAME`, cache enum di Class, ricostruisce le EnumMap `MATERIAL_ITEM/BLOCK` e corregge
+    `ITEM_MATERIAL/BLOCK_MATERIAL`. Rischio: EnumSet/EnumMap/switch su Material inizializzati prima → AIOOBE.
   - `mixin/bukkit/AbstractContainerMenuMixin` + `bukkit/ModdedMenus`: CraftBukkit rende astratto
     `AbstractContainerMenu.getBukkitView()`; @Overwrite con corpo di default (i menu vanilla lo sovrascrivono):
     `CraftInventoryView` con in alto un Container vivo sugli slot non del giocatore. `TrinketInventoryMixin`
@@ -127,8 +133,9 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
 
 - Server reale dell'utente: Pelican, dietro Velocity, plugin TAB/voicechat/MMO/ItemsAdder, mod client proprie
   "Castigo*" (solo client, Fabric networking su canali `castigo...` verso plugin Bukkit): coperte dai fix di rete.
-- Noto: MythicLib/MMOItems NPE su `ItemStack.getType()` null per oggetti delle mod (Material assente) negli eventi
-  di danno; il danno passa comunque.
+- Risolto con `ModdedMaterials`: `getType()` null per gli oggetti delle mod (NPE in MythicLib/MMOItems, CastigoZaini
+  che espelleva, CastigoCore/Cucina/Voce, ItemTag). GrimAC (packetevents) non conosce gli id degli item delle mod:
+  incompatibile con client modded, consigliato rimuoverlo.
 
 ## Prossimi passi
 - Test con un **client reale** (log client `.minecraft/logs/latest.log`).

@@ -475,6 +475,17 @@ public final class SelfTestBot {
 						player.level().removeBlock(pos, false);
 						// Channels the client registered (minecraft:register) must be known to Bukkit, or plugin
 						// messages to client mods are dropped.
+						// Bukkit Material of a mod item: must exist, and a plugin-made stack must be the real mod item.
+						var wand = BuiltInRegistries.ITEM.getValue(Identifier.parse("wizards:wand_arcane"));
+						var bukkitType = org.bukkit.craftbukkit.inventory.CraftItemStack.asBukkitCopy(new ItemStack(wand)).getType();
+						var roundTrip = bukkitType == null ? null : org.bukkit.craftbukkit.inventory.CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(bukkitType));
+						String roundTripId = roundTrip == null ? "null" : BuiltInRegistries.ITEM.getKey(roundTrip.getItem()).toString();
+						report.accept("Bukkit material: wizards:wand_arcane -> " + bukkitType + " (key " + (bukkitType == null ? null : bukkitType.getKey())
+								+ ") -> new ItemStack -> " + roundTripId);
+						if (bukkitType == null || !"wizards:wand_arcane".equals(roundTripId)) {
+							done.complete("FAILED: Bukkit Material for mod items (" + bukkitType + " -> " + roundTripId + ")");
+							return;
+						}
 						var listening = player.getBukkitEntity().getListeningPluginChannels();
 						report.accept("Bukkit listening channels: " + listening.size() + " " + listening.stream().limit(5).toList());
 						if (listening.isEmpty()) {
@@ -482,7 +493,7 @@ public final class SelfTestBot {
 						} else if (player.containerMenu == player.inventoryMenu) {
 							pluginMessaging(player, passed + ", Spell Binding menu opened and closed (Bukkit "
 									+ top.getType() + " view, " + top.getSize() + " slots), " + listening.size()
-									+ " client channels known to Bukkit");
+									+ " client channels known to Bukkit, Bukkit Material " + bukkitType);
 						} else {
 							done.complete("FAILED: Spell Binding menu did not close");
 						}

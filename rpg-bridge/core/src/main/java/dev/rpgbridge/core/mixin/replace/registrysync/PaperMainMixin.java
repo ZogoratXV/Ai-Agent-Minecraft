@@ -31,5 +31,7 @@ public abstract class PaperMainMixin {
 		BuiltInRegistries.bootStrap(paper); // createContents() is a no-op the second time (Fabric's BuiltInRegistriesMixin)
 		BlockInitTracker.postFreeze();
 		CreativeModeTabs.validate();
+		// Bukkit Material for mod items and blocks (before CraftBukkit and the plugins initialise).
+		dev.rpgbridge.core.bukkit.ModdedMaterials.register();
 	}
 }

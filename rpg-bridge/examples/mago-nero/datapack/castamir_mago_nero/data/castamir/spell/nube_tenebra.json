@@ -1,0 +1,99 @@
+{
+  "school": "spell_power:soul",
+  "range": 0.0,
+  "tier": 2,
+  "group": "mago_nero_nube",
+  "learn": {},
+  "active": {},
+  "release": {
+    "animation": {
+      "id": "spell_engine:one_handed_area_release"
+    },
+    "sound": {
+      "id": "spell_engine:generic_soul_release"
+    }
+  },
+  "deliver": {
+    "type": "CLOUD",
+    "clouds": [
+      {
+        "volume": {
+          "radius": 4.5,
+          "area": {
+            "vertical_range_multiplier": 0.4
+          }
+        },
+        "time_to_live_seconds": 8.0,
+        "impact_tick_interval": 20,
+        "client_data": {
+          "particles": [
+            {
+              "id": "spell_engine:smoke_medium",
+              "appearance": {},
+              "batch": {
+                "count": 3.0,
+                "shape": "PILLAR",
+                "anchor": "ENTITY",
+                "min_speed": 0.01,
+                "max_speed": 0.05,
+                "vertical_origin": 0.1
+              }
+            },
+            {
+              "id": "spell_engine:area_swirl",
+              "appearance": {
+                "color": 4281995100
+              },
+              "batch": {
+                "count": 1.0,
+                "shape": "PILLAR",
+                "anchor": "ENTITY",
+                "min_speed": 0.0,
+                "max_speed": 0.0,
+                "vertical_origin": 0.05
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "spell_power_coefficient": 0.15,
+          "knockback": 0.0
+        }
+      }
+    },
+    {
+      "action": {
+        "type": "STATUS_EFFECT",
+        "status_effect": {
+          "effect_id": "minecraft:slowness",
+          "duration": 2.0,
+          "amplifier": 1
+        }
+      }
+    },
+    {
+      "action": {
+        "type": "STATUS_EFFECT",
+        "status_effect": {
+          "effect_id": "minecraft:blindness",
+          "duration": 2.0
+        }
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "duration": 20.0
+    },
+    "item": {
+      "id": "runes:soul_stone"
+    }
+  }
+}

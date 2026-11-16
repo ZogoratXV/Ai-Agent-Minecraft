@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "Castamir - Mago Nero (spell Spell Engine)",
+    "min_format": [
+      107,
+      1
+    ],
+    "max_format": 107
+  }
+}

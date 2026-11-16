@@ -1,0 +1,10 @@
+{
+  "spell.castamir.dardo_ombra.name": "Dardo d'Ombra",
+  "spell.castamir.dardo_ombra.description": "Scaglia un dardo d'ombra che infligge {damage} danni da anima.",
+  "spell.castamir.drenaggio_vitale.name": "Drenaggio Vitale",
+  "spell.castamir.drenaggio_vitale.description": "Prosciuga il bersaglio: {damage} danni da anima e ti cura di {heal}.",
+  "spell.castamir.maledizione.name": "Maledizione",
+  "spell.castamir.maledizione.description": "Maledice il bersaglio: {damage} danni da anima, poi lo avvizzisce per 8 secondi.",
+  "spell.castamir.nube_tenebra.name": "Nube di Tenebra",
+  "spell.castamir.nube_tenebra.description": "Evoca attorno a te una nube che acceca, rallenta e consuma i nemici."
+}

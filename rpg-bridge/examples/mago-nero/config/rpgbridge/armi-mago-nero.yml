@@ -1,0 +1,11 @@
+# Mago Nero (RPG Bridge, esempio): aggiungi queste regole alla lista "armi:" di config/rpgbridge/armi.yml
+armi:
+  - oggetti: ["mmoitems:SWORD:BASTONE_OMBRE"]
+    attributi:
+      "spell_power:soul": 4
+    stile-attacco: bettercombat:staff
+    spell: [castamir:dardo_ombra, castamir:drenaggio_vitale, castamir:maledizione, castamir:nube_tenebra]
+  - oggetti: ["mmoitems:OFF_CATALYST:GRIMORIO_NERO"]
+    attributi:
+      "spell_power:soul": 2
+    slot: offhand

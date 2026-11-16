@@ -1,0 +1,25 @@
+# Mago Nero (RPG Bridge, esempio): incolla queste voci in plugins/MMOItems/item/sword.yml (BASTONE_OMBRE)
+# e in plugins/MMOItems/item/off_catalyst.yml (GRIMORIO_NERO), poi /mi reload.
+# Il tipo SWORD evita l'attacco speciale dei bastoni di MMOItems: animazioni e portata le dà Better Combat (armi.yml).
+BASTONE_OMBRE:
+  base:
+    material: STICK
+    name: '&5Bastone delle Ombre'
+    lore:
+    - '&7Un ramo nero che sussurra.'
+    - '&5+4 Potere dell''anima'
+    - '&8Spell: Dardo d''Ombra, Drenaggio Vitale,'
+    - '&8Maledizione, Nube di Tenebra'
+    attack-damage: 3.0
+    attack-speed: 1.2
+    required-class:
+    - Mago Nero
+GRIMORIO_NERO:
+  base:
+    material: BOOK
+    name: '&5Grimorio Nero'
+    lore:
+    - '&7Pagine scritte con l''inchiostro delle anime.'
+    - '&5+2 Potere dell''anima (mano secondaria)'
+    required-class:
+    - Mago Nero

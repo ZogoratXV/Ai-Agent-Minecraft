@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "castamir:dardo_ombra",
+      "required": false
+    },
+    {
+      "id": "castamir:drenaggio_vitale",
+      "required": false
+    },
+    {
+      "id": "castamir:maledizione",
+      "required": false
+    },
+    {
+      "id": "castamir:nube_tenebra",
+      "required": false
+    }
+  ]
+}

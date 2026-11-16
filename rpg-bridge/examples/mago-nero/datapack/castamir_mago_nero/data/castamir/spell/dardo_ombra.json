@@ -1,0 +1,148 @@
+{
+  "school": "spell_power:soul",
+  "range": 48.0,
+  "tier": 0,
+  "group": "mago_nero_arma",
+  "learn": {},
+  "active": {
+    "cast": {
+      "duration": 1.0,
+      "animation": {
+        "id": "spell_engine:one_handed_projectile_charge"
+      },
+      "sound": {
+        "id": "spell_engine:generic_soul_casting",
+        "randomness": 0.0
+      },
+      "particles": [
+        {
+          "id": "spell_engine:magic_spell",
+          "appearance": {
+            "color": 4286196664,
+            "motion": "ASCEND"
+          },
+          "batch": {
+            "count": 1.0,
+            "shape": "PIPE",
+            "anchor": "ENTITY",
+            "min_speed": 0.05,
+            "max_speed": 0.1,
+            "vertical_origin": 0.1,
+            "width_factor": 2.0
+          }
+        }
+      ]
+    }
+  },
+  "release": {
+    "animation": {
+      "id": "spell_engine:one_handed_projectile_release"
+    },
+    "sound": {
+      "id": "spell_engine:generic_soul_release"
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {}
+  },
+  "deliver": {
+    "type": "PROJECTILE",
+    "projectile": {
+      "projectile": {
+        "client_data": {
+          "light_level": 4,
+          "travel_particles": [
+            {
+              "id": "spell_engine:magic_spell",
+              "appearance": {
+                "color": 4281995100,
+                "motion": "ASCEND"
+              },
+              "batch": {
+                "count": 2.0,
+                "shape": "CIRCLE",
+                "anchor": "ENTITY",
+                "min_speed": 0.05,
+                "max_speed": 0.1,
+                "alignment": "LOOK"
+              }
+            },
+            {
+              "id": "smoke",
+              "appearance": {},
+              "batch": {
+                "count": 1.0,
+                "shape": "SPHERE",
+                "anchor": "ENTITY",
+                "min_speed": 0.0,
+                "max_speed": 0.02
+              }
+            }
+          ],
+          "composite_model": {
+            "models": [
+              {
+                "fx": {
+                  "model_id": "wizards:spell_projectile/arcane_bolt",
+                  "scale": 0.45
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "spell_power_coefficient": 0.8,
+          "knockback": 0.5
+        }
+      },
+      "visuals": {
+        "particles": [
+          {
+            "id": "spell_engine:magic_skull",
+            "appearance": {
+              "color": 4286196664,
+              "motion": "BURST"
+            },
+            "batch": {
+              "count": 6.0,
+              "shape": "SPHERE",
+              "anchor": "ENTITY",
+              "min_speed": 0.1,
+              "max_speed": 0.4
+            }
+          },
+          {
+            "id": "spell_engine:smoke_medium",
+            "appearance": {},
+            "batch": {
+              "count": 12.0,
+              "shape": "SPHERE",
+              "anchor": "ENTITY",
+              "min_speed": 0.05,
+              "max_speed": 0.3
+            }
+          }
+        ]
+      },
+      "sound": {
+        "id": "spell_engine:generic_soul_release"
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "group": "weapon"
+    },
+    "item": {
+      "id": "runes:soul_stone"
+    }
+  }
+}

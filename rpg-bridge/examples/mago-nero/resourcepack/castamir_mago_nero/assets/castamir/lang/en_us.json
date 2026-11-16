@@ -1,0 +1,10 @@
+{
+  "spell.castamir.dardo_ombra.name": "Shadow Bolt",
+  "spell.castamir.dardo_ombra.description": "Hurls a bolt of shadow, dealing {damage} soul spell damage.",
+  "spell.castamir.drenaggio_vitale.name": "Life Drain",
+  "spell.castamir.drenaggio_vitale.description": "Drains the target: {damage} soul spell damage, healing you for {heal}.",
+  "spell.castamir.maledizione.name": "Curse",
+  "spell.castamir.maledizione.description": "Curses the target: {damage} soul spell damage, then withers it for 8 seconds.",
+  "spell.castamir.nube_tenebra.name": "Cloud of Darkness",
+  "spell.castamir.nube_tenebra.description": "Summons a cloud around you that blinds, slows and consumes enemies."
+}

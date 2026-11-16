@@ -1,0 +1,117 @@
+{
+  "school": "spell_power:soul",
+  "range": 16.0,
+  "tier": 1,
+  "group": "mago_nero_drenaggio",
+  "learn": {},
+  "active": {
+    "cast": {
+      "duration": 1.25,
+      "animation": {
+        "id": "spell_engine:one_handed_projectile_charge"
+      },
+      "sound": {
+        "id": "spell_engine:generic_soul_casting",
+        "randomness": 0.0
+      },
+      "particles": [
+        {
+          "id": "spell_engine:magic_spell",
+          "appearance": {
+            "color": 4286196664,
+            "motion": "ASCEND"
+          },
+          "batch": {
+            "count": 1.0,
+            "shape": "PIPE",
+            "anchor": "ENTITY",
+            "min_speed": 0.05,
+            "max_speed": 0.1,
+            "vertical_origin": 0.1,
+            "width_factor": 2.0
+          }
+        }
+      ]
+    }
+  },
+  "release": {
+    "animation": {
+      "id": "spell_engine:one_handed_projectile_release"
+    },
+    "sound": {
+      "id": "spell_engine:generic_soul_release"
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {
+      "sticky": true
+    }
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "spell_power_coefficient": 0.6,
+          "knockback": 0.2
+        }
+      },
+      "visuals": {
+        "particles": [
+          {
+            "id": "spell_engine:dripping_blood",
+            "appearance": {},
+            "batch": {
+              "count": 15.0,
+              "shape": "PILLAR",
+              "anchor": "ENTITY",
+              "min_speed": 0.05,
+              "max_speed": 0.2,
+              "vertical_origin": 0.5
+            }
+          }
+        ]
+      },
+      "sound": {
+        "id": "spell_engine:leeching_impact"
+      }
+    },
+    {
+      "action": {
+        "type": "HEAL",
+        "apply_to_caster": true,
+        "heal": {
+          "spell_power_coefficient": 0.35
+        }
+      },
+      "visuals": {
+        "particles": [
+          {
+            "id": "spell_engine:magic_heal",
+            "appearance": {
+              "color": 4286196664,
+              "motion": "ASCEND"
+            },
+            "batch": {
+              "count": 10.0,
+              "shape": "PILLAR",
+              "anchor": "ENTITY",
+              "min_speed": 0.02,
+              "max_speed": 0.15,
+              "vertical_origin": 0.1
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "duration": 6.0
+    },
+    "item": {
+      "id": "runes:soul_stone"
+    }
+  }
+}

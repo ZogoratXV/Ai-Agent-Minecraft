@@ -94,7 +94,7 @@ def give(stack):
     comps = ",".join(f"{k}={json.dumps(v, ensure_ascii=False)}" for k, v in stack["components"].items())
     return f"give @s {stack['id']}[{comps}]"
 book = {"id": "spell_engine:spell_book", "components": {"spell_engine:spell_container": {"pool": f"{NS}:spell_book/mago_nero"},
-  "minecraft:item_model": f"{NS}:spell_book/mago_nero", "minecraft:item_name": {"translate": f"item.{NS}.spell_book/mago_nero"}}}
+  "minecraft:item_model": "wizards:spell_book/arcane", "minecraft:item_name": {"translate": f"item.{NS}.spell_book/mago_nero"}}}
 kit = ["# Kit del Mago Nero (per lo staff): /function castamir:mago_nero/kit", give(STAFF)] + [give(ARMOR[k]) for k in ARMOR] + [give(book), "give @s runes:soul_stone 64"]
 w(f"{DP}/data/{NS}/function/mago_nero/kit.mcfunction", "\n".join(kit) + "\n")
 

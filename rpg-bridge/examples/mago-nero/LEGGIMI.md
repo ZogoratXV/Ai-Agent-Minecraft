@@ -27,8 +27,12 @@ Rune: `runes:soul_stone`. Le spell del tomo stanno al tavolo di legatura (Spell 
 
 ## Installazione
 1. **Datapack**: `datapack/castamir_mago_nero` in `world/datapacks/`, poi riavvio o `/reload`.
-2. **Resource pack**: unisci `resourcepack/castamir_mago_nero/assets/castamir` al resource pack del server
-   (con ItemsAdder: in `plugins/ItemsAdder/contents/<cartella>/resourcepack/assets/castamir`, poi `/iazip`).
+2. **Resource pack**: copia TUTTA la cartella `resourcepack/castamir_mago_nero/assets/castamir` (con `items/`, `lang/`
+   e `textures/`, non solo le texture) nel resource pack del server. Con ItemsAdder:
+   `plugins/ItemsAdder/contents/castamir_mago_nero/resourcepack/assets/castamir/...`, poi `/iazip` e rientra.
+   Senza `items/spell_book` e `items/spell_scroll`, i tomi e le pergamene creati al tavolo di legatura (modello
+   `castamir:spell_book/mago_nero`) appaiono come cubo nero e viola. Il tomo del comando kit usa direttamente il
+   modello dei Wizards e si vede comunque.
 3. **Classe MMOCore**: `plugins/MMOCore/classes/mago_nero.yml`, poi `/mmocore reload`.
 4. **Blocco per classe**: regola di `config/rpgbridge/classi-mago-nero.yml` in `config/rpgbridge/classi.yml`, poi
    `/rpgbridge ricarica`.

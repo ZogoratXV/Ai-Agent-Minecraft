@@ -1,0 +1,56 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "A",
+    "B"
+  ],
+  "key": {
+    "A": "minecraft:wither_skeleton_skull",
+    "B": "wizards:staff_arcane"
+  },
+  "result": {
+    "id": "wizards:staff_arcane",
+    "count": 1,
+    "components": {
+      "minecraft:rarity": "rare",
+      "minecraft:item_name": {
+        "translate": "item.castamir.bastone_ombre",
+        "color": "dark_purple",
+        "italic": false
+      },
+      "minecraft:attribute_modifiers": [
+        {
+          "type": "minecraft:attack_damage",
+          "amount": 3.0,
+          "operation": "add_value",
+          "id": "castamir:bastone_ombre_danno",
+          "slot": "mainhand"
+        },
+        {
+          "type": "minecraft:attack_speed",
+          "amount": -3.0,
+          "operation": "add_value",
+          "id": "castamir:bastone_ombre_velocita",
+          "slot": "mainhand"
+        },
+        {
+          "type": "spell_power:soul",
+          "amount": 6.0,
+          "operation": "add_value",
+          "id": "castamir:bastone_ombre_anima",
+          "slot": "mainhand"
+        }
+      ],
+      "minecraft:custom_data": {
+        "rpgbridge_id": "castamir:bastone_ombre"
+      },
+      "spell_engine:spell_container": {
+        "access": "MAGIC",
+        "spell_ids": [
+          "castamir:dardo_ombra"
+        ]
+      }
+    }
+  }
+}

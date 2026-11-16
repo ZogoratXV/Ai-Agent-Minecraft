@@ -149,8 +149,11 @@ public final class ClassLock {
 	/** Identificativi con cui le regole riconoscono l'oggetto: id del registro, mmoitems:TIPO:ID, itemsadder:ns:id. */
 	public static List<String> itemKeys(ItemStack stack) {
 		List<String> keys = new ArrayList<>(3);
-		keys.add(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
 		CompoundTag tag = customData(stack);
+		// oggetti dei datapack (es. kit Mago Nero su oggetti Wizards): custom_data rpgbridge_id "ns:id" prende il
+		// posto dell'id di registro, così il bastone del Mago Nero non ricade nelle regole "wizards:*"
+		String own = tag == null ? "" : tag.getStringOr("rpgbridge_id", "");
+		keys.add(own.isEmpty() ? BuiltInRegistries.ITEM.getKey(stack.getItem()).toString() : own);
 		if (tag != null) {
 			String type = tag.getStringOr("MMOITEMS_ITEM_TYPE", "");
 			String id = tag.getStringOr("MMOITEMS_ITEM_ID", "");

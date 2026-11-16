@@ -1,5 +1,6 @@
 {
   "school": "spell_power:soul",
+  "type": "ACTIVE",
   "range": 48.0,
   "tier": 0,
   "group": "mago_nero_arma",
@@ -138,6 +139,7 @@
     }
   ],
   "cost": {
+    "exhaust": 0.1,
     "cooldown": {
       "group": "weapon"
     },

@@ -73,7 +73,8 @@ adattate di Fabric API (Apache-2.0), Spell Engine (GPL-3.0), Ranged Weapon API (
   - `classlock/ClassLock` + `mixin/classlock/**`: blocco oggetti per classe MMOCore (classe via riflessione:
     `PlayerData.get(UUID).getProfess().getId()/getName()`), regole in `config/rpgbridge/classi.yml` (YamlConfiguration
     di Bukkit; chiavi italiane), oggetti identificati da id registro, `mmoitems:TIPO:ID` (custom_data
-    `MMOITEMS_ITEM_TYPE/ID`, classe richiesta `MMOITEMS_REQUIRED_CLASS`), `itemsadder:ns:id` (custom_data
+    `MMOITEMS_ITEM_TYPE/ID`, classe richiesta `MMOITEMS_REQUIRED_CLASS`), `rpgbridge_id` (custom_data, sostituisce l'id di registro: oggetti di datapack su base Wizards, es. kit
+    `examples/mago-nero` generato da `strumenti/genera_kit.py`), `itemsadder:ns:id` (custom_data
     `itemsadder{namespace,id}`, formato non provato: la licenza IA non si verifica nella sessione). Punti: `Player.attack`
     (vanilla + Better Combat), `ItemStack.use/useOn/interactLivingEntity` → FAIL, Spell Engine
     `ServerNetwork.handleCastRequest/CastInput/AttackPerform` (@Pseudo), `ServerPlayer.doTick` ogni 10 tick toglie

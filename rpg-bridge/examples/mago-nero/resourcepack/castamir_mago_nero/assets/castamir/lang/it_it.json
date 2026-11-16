@@ -2,9 +2,18 @@
   "spell.castamir.dardo_ombra.name": "Dardo d'Ombra",
   "spell.castamir.dardo_ombra.description": "Scaglia un dardo d'ombra che infligge {damage} danni da anima.",
   "spell.castamir.drenaggio_vitale.name": "Drenaggio Vitale",
-  "spell.castamir.drenaggio_vitale.description": "Prosciuga il bersaglio: {damage} danni da anima e ti cura di {heal}.",
+  "spell.castamir.drenaggio_vitale.description": "Prosciuga il bersaglio: {damage} danni da anima, curandoti di {heal}.",
   "spell.castamir.maledizione.name": "Maledizione",
-  "spell.castamir.maledizione.description": "Maledice il bersaglio: {damage} danni da anima, poi lo avvizzisce per 8 secondi.",
+  "spell.castamir.maledizione.description": "Maledice il bersaglio: {damage} danni da anima e Avvizzimento {effect_amplifier} per {effect_duration} secondi.",
   "spell.castamir.nube_tenebra.name": "Nube di Tenebra",
-  "spell.castamir.nube_tenebra.description": "Evoca attorno a te una nube che acceca, rallenta e consuma i nemici."
+  "spell.castamir.nube_tenebra.description": "Una nube di tenebra ti avvolge: i nemici al suo interno subiscono {damage} danni da anima al secondo, restano accecati e rallentati.",
+  "item.castamir.bastone_ombre": "Bastone delle Ombre",
+  "item.castamir.mago_nero_cappuccio": "Cappuccio del Mago Nero",
+  "item.castamir.mago_nero_veste": "Veste del Mago Nero",
+  "item.castamir.mago_nero_gambali": "Gambali del Mago Nero",
+  "item.castamir.mago_nero_calzari": "Calzari del Mago Nero",
+  "item.castamir.spell_book/mago_nero": "Tomo della Tenebra",
+  "item.castamir.spell_book/mago_nero.spell_binding.description": "Tomo del Mago Nero: prosciuga, maledice e avvolge i nemici nella tenebra.",
+  "item.castamir.spell_scroll/mago_nero": "Pergamena della Tenebra",
+  "equipment_set.castamir.mago_nero": "Paramenti del Mago Nero"
 }

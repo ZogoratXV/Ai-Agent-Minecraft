@@ -1,0 +1,6 @@
+# Mago Nero (RPG Bridge, esempio): aggiungi questa regola alla lista "regole:" di config/rpgbridge/classi.yml.
+# Gli oggetti del kit sono oggetti dei Wizards con custom_data rpgbridge_id "castamir:...": il bridge li riconosce
+# con quell'id al posto di quello della mod, quindi NON ricadono nelle regole "wizards:*" del Mago.
+regole:
+  - oggetti: ["castamir:*"]
+    classi: [MAGO_NERO]

@@ -1,5 +1,6 @@
 {
   "school": "spell_power:soul",
+  "type": "ACTIVE",
   "range": 24.0,
   "tier": 1,
   "group": "mago_nero_maledizione",
@@ -106,6 +107,7 @@
     }
   ],
   "cost": {
+    "exhaust": 0.1,
     "cooldown": {
       "duration": 12.0
     },

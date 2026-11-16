@@ -48,7 +48,7 @@ public final class WeaponBonuses {
 			#   oggetti: mmoitems:TIPO:ID, itemsadder:namespace:id o id del registro (* = qualsiasi testo)
 			#   attributi: "id attributo": valore, sommato quando l'oggetto e' nello slot indicato. Esempi:
 			#       "spell_power:arcane", "spell_power:fire", "spell_power:frost", "spell_power:healing",
-			#       "spell_power:lightning", "spell_power:soul", "spell_power:critical_chance" (0.05 = +5%),
+			#       "spell_power:lightning", "spell_power:soul", "spell_power:critical_chance" (5 = +5%: crit e haste sono in punti percentuali, base 100),
 			#       "spell_power:critical_damage", "spell_power:haste", "minecraft:attack_damage", "minecraft:attack_speed"
 			#   operazione: add_value (somma, predefinita), add_multiplied_base, add_multiplied_total
 			#   slot: mainhand (predefinito), offhand, hand, head, chest, legs, feet, armor, any
@@ -64,7 +64,7 @@ public final class WeaponBonuses {
 			#  - oggetti: ["mmoitems:STAFF:BASTONE_DEL_FUOCO"]
 			#    attributi:
 			#      "spell_power:fire": 4
-			#      "spell_power:critical_chance": 0.05
+			#      "spell_power:critical_chance": 5
 			#    stile-attacco: bettercombat:staff
 			#    spell: [wizards:fireball, wizards:fire_blast]
 			#  - oggetti: ["itemsadder:castigo:spadone_drago"]

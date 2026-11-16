@@ -1,0 +1,51 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "R",
+    "B"
+  ],
+  "key": {
+    "R": "minecraft:wither_rose",
+    "B": "wizards:netherite_arcane_robe_legs"
+  },
+  "result": {
+    "id": "wizards:netherite_arcane_robe_legs",
+    "count": 1,
+    "components": {
+      "minecraft:rarity": "uncommon",
+      "minecraft:item_name": {
+        "translate": "item.castamir.mago_nero_gambali",
+        "color": "dark_purple",
+        "italic": false
+      },
+      "minecraft:attribute_modifiers": [
+        {
+          "type": "minecraft:armor",
+          "amount": 2.0,
+          "operation": "add_value",
+          "id": "castamir:mago_nero_gambali_armatura",
+          "slot": "legs"
+        },
+        {
+          "type": "spell_power:soul",
+          "amount": 0.25,
+          "operation": "add_multiplied_base",
+          "id": "castamir:mago_nero_gambali_anima",
+          "slot": "legs"
+        },
+        {
+          "type": "spell_power:haste",
+          "amount": 0.02,
+          "operation": "add_multiplied_base",
+          "id": "castamir:mago_nero_gambali_rapidita",
+          "slot": "legs"
+        }
+      ],
+      "minecraft:custom_data": {
+        "rpgbridge_id": "castamir:mago_nero_gambali"
+      },
+      "spell_engine:equipment_set": "castamir:mago_nero"
+    }
+  }
+}

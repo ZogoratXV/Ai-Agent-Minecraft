@@ -2,9 +2,18 @@
   "spell.castamir.dardo_ombra.name": "Shadow Bolt",
   "spell.castamir.dardo_ombra.description": "Hurls a bolt of shadow, dealing {damage} soul spell damage.",
   "spell.castamir.drenaggio_vitale.name": "Life Drain",
-  "spell.castamir.drenaggio_vitale.description": "Drains the target: {damage} soul spell damage, healing you for {heal}.",
+  "spell.castamir.drenaggio_vitale.description": "Drains the target for {damage} soul spell damage, healing you for {heal}.",
   "spell.castamir.maledizione.name": "Curse",
-  "spell.castamir.maledizione.description": "Curses the target: {damage} soul spell damage, then withers it for 8 seconds.",
+  "spell.castamir.maledizione.description": "Curses the target: {damage} soul spell damage and Wither {effect_amplifier} for {effect_duration} seconds.",
   "spell.castamir.nube_tenebra.name": "Cloud of Darkness",
-  "spell.castamir.nube_tenebra.description": "Summons a cloud around you that blinds, slows and consumes enemies."
+  "spell.castamir.nube_tenebra.description": "A cloud of darkness surrounds you: enemies inside take {damage} soul spell damage per second, blinded and slowed.",
+  "item.castamir.bastone_ombre": "Staff of Shadows",
+  "item.castamir.mago_nero_cappuccio": "Black Mage Hood",
+  "item.castamir.mago_nero_veste": "Black Mage Robe",
+  "item.castamir.mago_nero_gambali": "Black Mage Leggings",
+  "item.castamir.mago_nero_calzari": "Black Mage Shoes",
+  "item.castamir.spell_book/mago_nero": "Tome of Darkness",
+  "item.castamir.spell_book/mago_nero.spell_binding.description": "Spell Book of Black Mages: drain, curse and engulf enemies in darkness.",
+  "item.castamir.spell_scroll/mago_nero": "Scroll of Darkness",
+  "equipment_set.castamir.mago_nero": "Black Mage Vestments"
 }

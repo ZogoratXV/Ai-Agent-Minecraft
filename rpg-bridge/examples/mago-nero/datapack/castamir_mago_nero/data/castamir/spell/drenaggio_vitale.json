@@ -1,5 +1,6 @@
 {
   "school": "spell_power:soul",
+  "type": "ACTIVE",
   "range": 16.0,
   "tier": 1,
   "group": "mago_nero_drenaggio",
@@ -107,6 +108,7 @@
     }
   ],
   "cost": {
+    "exhaust": 0.1,
     "cooldown": {
       "duration": 6.0
     },

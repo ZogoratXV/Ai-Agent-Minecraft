@@ -1,5 +1,6 @@
 {
   "school": "spell_power:soul",
+  "type": "ACTIVE",
   "range": 0.0,
   "tier": 2,
   "group": "mago_nero_nube",
@@ -89,6 +90,7 @@
     }
   ],
   "cost": {
+    "exhaust": 0.1,
     "cooldown": {
       "duration": 20.0
     },

@@ -1,35 +1,54 @@
-# Mago Nero — kit di esempio (RPG Bridge)
+# Mago Nero — kit (RPG Bridge, Spell Engine 1.10, Minecraft 26.2)
 
-Classe di maghi della scuola **Anima** (`spell_power:soul`, già presente in Spell Power e non usata dalla RPG Series),
-fatta solo con dati: spell di Spell Engine in un datapack, classe MMOCore, armi MMOItems e regole del bridge.
+Classe di maghi della scuola **Anima** (`spell_power:soul`: esiste in Spell Power ma la RPG Series non la usa), fatta
+solo con dati, nel formato documentato da Spell Engine (spell, tag del libro e delle pergamene, set di equipaggiamento,
+componenti degli oggetti). **Bastone, vesti, libro e pergamena sono quelli della mod Wizards**: gli oggetti veri
+(`wizards:staff_arcane`, `wizards:netherite_arcane_robe_*`) e i modelli del libro/pergamena arcani, che il client ha già.
+Il kit cambia solo nome, statistiche, spell e set. Nel resource pack ci sono solo testi e le icone delle 4 spell.
 
-## Spell (datapack `castamir_mago_nero`, namespace `castamir`)
+## Contenuto
+| Cosa | Oggetto | Statistiche |
+|---|---|---|
+| Bastone delle Ombre | `wizards:staff_arcane` | danno 4, velocità −3,0, **Potere anima +6**, spell Dardo d'Ombra |
+| Cappuccio / Veste / Gambali / Calzari del Mago Nero | `wizards:netherite_arcane_robe_head/chest/legs/feet` | armatura 1/3/2/1, ogni pezzo **anima +25%** e **rapidità +2%** |
+| Set "Paramenti del Mago Nero" | `castamir:mago_nero` | 2 pezzi: anima +10%; 4 pezzi: critico +10%, rapidità +5% |
+| Tomo della Tenebra | libro di Spell Engine, pool `#castamir:spell_book/mago_nero` | Drenaggio Vitale, Maledizione, Nube di Tenebra |
+
+Valori presi dalla scala dei Wizards (bastone 6 di potere, vesti 0,25 + 0,02 per pezzo). Ogni oggetto ha
+`custom_data {rpgbridge_id:"castamir:..."}` per il blocco per classe.
+
 | Spell | Cosa fa | Costo | Ricarica |
 |---|---|---|---|
-| `castamir:dardo_ombra` — Dardo d'Ombra | proiettile, danno anima (0,8 × potere) | 1 runa dell'anima | arma |
-| `castamir:drenaggio_vitale` — Drenaggio Vitale | danno anima (0,6) al bersaglio e cura il mago (0,35) | 1 runa dell'anima | 6 s |
-| `castamir:maledizione` — Maledizione | danno anima (0,3) + Avvizzimento 8 s, livello che sale col potere (max 4) | 1 runa dell'anima | 12 s |
-| `castamir:nube_tenebra` — Nube di Tenebra | nube di 4,5 blocchi attorno al mago per 8 s: danno (0,15 al secondo), lentezza II, cecità | 1 runa dell'anima | 20 s |
-Le rune sono `runes:soul_stone` (mod Runes). Tag per i libri: `#castamir:spell_book/mago_nero` e `#castamir:mago_nero`.
+| `castamir:dardo_ombra` | proiettile, danno anima 0,8 × potere | 1 runa dell'anima | arma |
+| `castamir:drenaggio_vitale` | danno anima 0,6 e cura il mago 0,35 | 1 runa | 6 s |
+| `castamir:maledizione` | danno anima 0,3 + Avvizzimento 8 s, livello che sale col potere (max 4) | 1 runa | 12 s |
+| `castamir:nube_tenebra` | nube di 4,5 blocchi per 8 s: danno 0,15/s, lentezza II, cecità | 1 runa | 20 s |
+Rune: `runes:soul_stone`. Le spell del tomo stanno al tavolo di legatura (Spell Binding), come quelle dei Wizards.
 
 ## Installazione
-1. **Datapack**: copia `datapack/castamir_mago_nero` in `world/datapacks/` del server e riavvia (o `/reload`).
+1. **Datapack**: `datapack/castamir_mago_nero` in `world/datapacks/`, poi riavvio o `/reload`.
 2. **Resource pack**: unisci `resourcepack/castamir_mago_nero/assets/castamir` al resource pack del server
-   (nomi e descrizioni in italiano/inglese, icone 16×16). Senza, le spell funzionano ma con nome tecnico e senza icona.
-3. **Classe MMOCore**: `plugins/MMOCore/classes/mago_nero.yml` (copia della classe Mage con nome/descrizione/icona
-   cambiati: adatta abilità e statistiche). Riavvia o `/mmocore reload`.
-4. **Armi MMOItems**: le voci di `plugins/MMOItems/item/mago_nero.yml` vanno in `sword.yml` (BASTONE_OMBRE) e in
-   `off_catalyst.yml` (GRIMORIO_NERO), poi `/mi reload`. Classe richiesta: Mago Nero.
-5. **RPG Bridge**: aggiungi le regole di `config/rpgbridge/armi-mago-nero.yml` in `config/rpgbridge/armi.yml`,
-   poi `/rpgbridge ricarica`. Il bastone riceve Spell Power anima +4, stile Better Combat "staff" e le 4 spell;
-   il grimorio +2 in mano secondaria.
+   (con ItemsAdder: in `plugins/ItemsAdder/contents/<cartella>/resourcepack/assets/castamir`, poi `/iazip`).
+3. **Classe MMOCore**: `plugins/MMOCore/classes/mago_nero.yml`, poi `/mmocore reload`.
+4. **Blocco per classe**: regola di `config/rpgbridge/classi-mago-nero.yml` in `config/rpgbridge/classi.yml`, poi
+   `/rpgbridge ricarica`.
+5. Oggetti allo staff: `/function castamir:mago_nero/kit` (bastone, 4 vesti, tomo da legare, 64 rune).
+   Ai giocatori: ricette nel banco da lavoro (teschio di wither sopra un bastone arcano; rosa del wither sopra un pezzo
+   di veste arcana di netherite). Se usate CastigoFabbro o altri plugin per il crafting, togliete
+   `data/castamir/recipe` e date gli oggetti col comando o con i vostri plugin.
 
-## Provato (server di prova)
-Classe MAGO_NERO, Bastone delle Ombre: Dardo d'Ombra 4 danni; Drenaggio Vitale 3 danni e cura 10 → 11,75;
-Maledizione 3,5 in 4,5 s (avvizzimento ancora in corso); Nube di Tenebra 2,6 in 4,5 s; con classe Human la spell
-è bloccata. Non provati: grimorio in mano secondaria, aspetto in gioco (particelle, icone, nomi) su un client vero.
+Alternativa MMOItems (facoltativa): `plugins/MMOItems/item/mago_nero.yml` + `config/rpgbridge/armi-mago-nero.yml`
+danno un bastone e un grimorio MMOItems con le stesse spell tramite i bonus del bridge.
+
+## Provato sul server di prova (bot, classe MAGO_NERO, set completo)
+- `/function castamir:mago_nero/kit` caricata ed eseguita senza errori.
+- Attributi: potere anima 14,7 (= (6+1) × 2,1), critico +10, rapidità +13, armatura 7: set a 4 pezzi attivo.
+- Dardo d'Ombra 11,8 danni a un husk; con il tomo nello slot Trinkets: Maledizione 7,4, Drenaggio 8,8, Nube 6,6.
+- Classe Human: bastone bloccato; classe Mago Nero: consentito.
+- Il tomo in **mano secondaria** non aggiunge le spell al bastone: va nello slot "spell book" di Trinkets.
+- Non provato su un client vero: aspetto in gioco, icone, nomi tradotti, tavolo di legatura con questo tomo.
 
 ## Modificare
-`strumenti/genera_spell.py` rigenera datapack e resource pack (valori, effetti, nomi, icone):
-`python3 strumenti/genera_spell.py <cartella>`. Il proiettile usa il modello dell'Arcane Bolt dei Wizards (più
-piccolo), con particelle scure: per un modello proprio serve un modello nel resource pack.
+`python3 strumenti/genera_kit.py .` (dalla cartella del kit, serve Pillow) rigenera datapack e resource pack: valori,
+effetti, testi, icone. Le icone delle spell sono pixel art originale; i grafici di Castamir possono sostituire i PNG in
+`resourcepack/.../textures/spell/` (16×16) senza toccare altro.

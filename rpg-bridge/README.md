@@ -48,7 +48,8 @@ regole:                              # vale la PRIMA regola che corrisponde
     classi: [WARRIOR]
 ```
 Oggetti: id del registro (`wizards:wand_arcane`, `wizards:*` per tutta la mod), `mmoitems:TIPO:ID`,
-`itemsadder:namespace:id`; `*` = qualsiasi testo. Classi: id o nome MMOCore, maiuscole/minuscole indifferenti.
+`itemsadder:namespace:id`, `rpgbridge_id` dei datapack (es. `castamir:*`: custom_data `{rpgbridge_id:"castamir:..."}`, prende il posto
+dell'id di registro, vedi `examples/mago-nero`); `*` = qualsiasi testo. Classi: id o nome MMOCore, maiuscole/minuscole indifferenti.
 Comandi (console o OP): `rpgbridge ricarica` (rilegge classi.yml, tomi.yml e armi.yml), `rpgbridge classi controlla
 <giocatore>` (classe MMOCore e, per ogni slot compresi quelli di Trinkets: identificativi, classi, proprietario del
 tomo, bonus e se è consentito).
@@ -69,7 +70,7 @@ armi:
   - oggetti: ["mmoitems:STAFF:BASTONE_DEL_FUOCO"]
     attributi:                       # sommati con l'oggetto nello slot (predefinito: mano principale)
       "spell_power:fire": 4
-      "spell_power:critical_chance": 0.05
+      "spell_power:critical_chance": 5   # punti percentuali: 5 = +5% (anche haste)
     stile-attacco: bettercombat:staff   # animazioni, combo e portata di Better Combat
     spell: [wizards:fireball]           # spell di Spell Engine lanciabili con l'oggetto in mano
 ```

@@ -1,0 +1,51 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "R",
+    "B"
+  ],
+  "key": {
+    "R": "minecraft:wither_rose",
+    "B": "wizards:netherite_arcane_robe_feet"
+  },
+  "result": {
+    "id": "wizards:netherite_arcane_robe_feet",
+    "count": 1,
+    "components": {
+      "minecraft:rarity": "uncommon",
+      "minecraft:item_name": {
+        "translate": "item.castamir.mago_nero_calzari",
+        "color": "dark_purple",
+        "italic": false
+      },
+      "minecraft:attribute_modifiers": [
+        {
+          "type": "minecraft:armor",
+          "amount": 1.0,
+          "operation": "add_value",
+          "id": "castamir:mago_nero_calzari_armatura",
+          "slot": "feet"
+        },
+        {
+          "type": "spell_power:soul",
+          "amount": 0.25,
+          "operation": "add_multiplied_base",
+          "id": "castamir:mago_nero_calzari_anima",
+          "slot": "feet"
+        },
+        {
+          "type": "spell_power:haste",
+          "amount": 0.02,
+          "operation": "add_multiplied_base",
+          "id": "castamir:mago_nero_calzari_rapidita",
+          "slot": "feet"
+        }
+      ],
+      "minecraft:custom_data": {
+        "rpgbridge_id": "castamir:mago_nero_calzari"
+      },
+      "spell_engine:equipment_set": "castamir:mago_nero"
+    }
+  }
+}

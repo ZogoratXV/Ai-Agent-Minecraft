@@ -58,4056 +58,428 @@
       }
     },
     {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        0,
-        21
-      ],
-      "to": [
-        1,
-        25
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        1,
-        21
-      ],
-      "to": [
-        2,
-        25
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        2,
-        21
-      ],
-      "to": [
-        3,
-        25
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        3,
-        21
-      ],
-      "to": [
-        4,
-        25
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 1,
-      "y": 25,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 4,
-      "y": 25,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        3,
-        18
-      ],
-      "to": [
-        5,
-        27
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        4,
-        18
-      ],
-      "to": [
-        6,
-        27
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        5,
-        18
-      ],
-      "to": [
-        7,
-        27
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        6,
-        18
-      ],
-      "to": [
-        8,
-        27
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 5,
-      "y": 27,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 8,
-      "y": 27,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        6,
-        15
-      ],
-      "to": [
-        8,
-        29
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        7,
-        15
-      ],
-      "to": [
-        9,
-        29
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        8,
-        15
-      ],
-      "to": [
-        10,
-        29
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        9,
-        15
-      ],
-      "to": [
-        11,
-        29
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 8,
-      "y": 29,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 11,
-      "y": 29,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        9,
-        12
-      ],
-      "to": [
-        11,
-        30
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        10,
-        12
-      ],
-      "to": [
-        12,
-        30
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        11,
-        12
-      ],
-      "to": [
-        13,
-        30
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        12,
-        12
-      ],
-      "to": [
-        14,
-        30
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 11,
-      "y": 30,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 14,
-      "y": 30,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        12,
-        9
-      ],
-      "to": [
-        14,
-        31
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        13,
-        9
-      ],
-      "to": [
-        15,
-        31
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        14,
-        9
-      ],
-      "to": [
-        16,
-        31
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        15,
-        9
-      ],
-      "to": [
-        17,
-        31
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 14,
-      "y": 31,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 17,
-      "y": 31,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        15,
-        6
-      ],
-      "to": [
-        17,
-        32
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        16,
-        6
-      ],
-      "to": [
-        18,
-        32
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        17,
-        6
-      ],
-      "to": [
-        19,
-        32
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        6
-      ],
-      "to": [
-        20,
-        32
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 17,
-      "y": 32,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 20,
-      "y": 32,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        4
-      ],
-      "to": [
-        20,
-        33
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        19,
-        4
-      ],
-      "to": [
-        21,
-        33
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        20,
-        4
-      ],
-      "to": [
-        22,
-        33
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        21,
-        4
-      ],
-      "to": [
-        23,
-        33
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 20,
-      "y": 33,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 23,
-      "y": 33,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        21,
-        3
-      ],
-      "to": [
-        23,
-        34
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        22,
-        3
-      ],
-      "to": [
-        24,
-        34
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        23,
-        3
-      ],
-      "to": [
-        25,
-        34
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        24,
-        3
-      ],
-      "to": [
-        26,
-        34
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 23,
-      "y": 34,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 26,
-      "y": 34,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        23,
-        2
-      ],
-      "to": [
-        26,
-        35
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        24,
-        2
-      ],
-      "to": [
-        27,
-        35
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        25,
-        2
-      ],
-      "to": [
-        28,
-        35
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        26,
-        2
-      ],
-      "to": [
-        29,
-        35
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 26,
-      "y": 35,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 29,
-      "y": 35,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        25,
-        1
-      ],
-      "to": [
-        28,
-        35
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        26,
-        1
-      ],
-      "to": [
-        29,
-        35
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        27,
-        1
-      ],
-      "to": [
-        30,
-        35
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        28,
-        1
-      ],
-      "to": [
-        31,
-        35
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 31,
-      "y": 35,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        26,
-        1
-      ],
-      "to": [
-        30,
-        33
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        27,
-        1
-      ],
-      "to": [
-        31,
-        33
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        28,
-        1
-      ],
-      "to": [
-        32,
-        33
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        29,
-        1
-      ],
-      "to": [
-        33,
-        33
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 33,
-      "y": 33,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        27,
-        0
-      ],
-      "to": [
-        30,
-        30
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        28,
-        0
-      ],
-      "to": [
-        31,
-        30
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        29,
-        0
-      ],
-      "to": [
-        32,
-        30
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        30,
-        0
-      ],
-      "to": [
-        33,
-        30
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "x": 33,
-      "y": 30,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        9,
-        21
-      ],
-      "to": [
-        10,
-        24
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        10,
-        21
-      ],
-      "to": [
-        11,
-        25
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        11,
-        21
-      ],
-      "to": [
-        12,
-        25
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        12,
-        18
-      ],
-      "to": [
-        13,
-        23
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        13,
-        18
-      ],
-      "to": [
-        14,
-        24
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        14,
-        18
-      ],
-      "to": [
-        15,
-        24
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        15,
-        15
-      ],
-      "to": [
-        16,
-        22
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        16,
-        15
-      ],
-      "to": [
-        17,
-        23
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        17,
-        15
-      ],
-      "to": [
-        18,
-        23
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        12
-      ],
-      "to": [
-        19,
-        21
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        19,
-        12
-      ],
-      "to": [
-        20,
-        22
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        20,
-        12
-      ],
-      "to": [
-        21,
-        22
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        21,
-        11
-      ],
-      "to": [
-        22,
-        20
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        22,
-        11
-      ],
-      "to": [
-        23,
-        21
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        23,
-        11
-      ],
-      "to": [
-        24,
-        21
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        24,
-        10
-      ],
-      "to": [
-        25,
-        20
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        25,
-        10
-      ],
-      "to": [
-        26,
-        21
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        26,
-        10
-      ],
-      "to": [
-        27,
-        21
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        27,
-        9
-      ],
-      "to": [
-        29,
-        19
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        28,
-        9
-      ],
-      "to": [
-        30,
-        20
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        29,
-        9
-      ],
-      "to": [
-        31,
-        20
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        30,
-        8
-      ],
-      "to": [
-        31,
-        18
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        31,
-        8
-      ],
-      "to": [
-        32,
-        19
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        32,
-        8
-      ],
-      "to": [
-        33,
-        19
-      ],
-      "color": "we"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "points": [
-        [
-          11,
-          26
-        ],
-        [
-          12,
-          26
-        ],
-        [
-          14,
-          25
-        ],
-        [
-          15,
-          25
-        ],
-        [
-          17,
-          24
-        ],
-        [
-          18,
-          24
-        ],
-        [
-          20,
-          23
-        ],
-        [
-          21,
-          23
-        ],
-        [
-          23,
-          22
-        ],
-        [
-          24,
-          22
-        ],
-        [
-          26,
-          22
-        ],
-        [
-          27,
-          22
-        ],
-        [
-          30,
-          21
-        ],
-        [
-          31,
-          21
-        ],
-        [
-          32,
-          20
-        ]
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        0,
-        21
-      ],
-      "to": [
-        17,
-        4
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        0,
-        22
-      ],
-      "to": [
-        17,
-        5
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        0,
-        23
-      ],
-      "to": [
-        17,
-        6
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        0,
-        24
-      ],
-      "to": [
-        17,
-        7
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        1,
-        24
-      ],
-      "to": [
-        17,
-        8
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        1,
-        25
-      ],
-      "to": [
-        17,
-        9
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        2,
-        25
-      ],
-      "to": [
-        17,
-        10
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        3,
-        25
-      ],
-      "to": [
-        17,
-        11
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        4,
-        25
-      ],
-      "to": [
-        17,
-        12
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        5,
-        25
-      ],
-      "to": [
-        17,
-        13
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        4
-      ],
-      "to": [
-        29,
-        0
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        5
-      ],
-      "to": [
-        29,
-        1
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        6
-      ],
-      "to": [
-        29,
-        2
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        7
-      ],
-      "to": [
-        29,
-        3
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        8
-      ],
-      "to": [
-        30,
-        4
-      ],
-      "color": "wc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        9
-      ],
-      "to": [
-        30,
-        5
-      ],
-      "color": "wd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        10
-      ],
-      "to": [
-        30,
-        6
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "from": [
-        18,
-        11
-      ],
-      "to": [
-        30,
-        7
-      ],
-      "color": "wb"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "points": [
-        [
-          2,
-          23
-        ],
-        [
-          5,
-          20
-        ],
-        [
-          8,
-          17
-        ],
-        [
-          11,
-          14
-        ],
-        [
-          14,
-          11
-        ],
-        [
-          7,
-          23
-        ],
-        [
-          10,
-          20
-        ],
-        [
-          13,
-          17
-        ],
-        [
-          16,
-          14
-        ]
-      ],
-      "color": "we"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        33,
-        21
-      ],
-      "to": [
-        32,
-        25
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        32,
-        21
-      ],
-      "to": [
-        31,
-        25
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        31,
-        21
-      ],
-      "to": [
-        30,
-        25
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        30,
-        21
-      ],
-      "to": [
-        29,
-        25
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 32,
-      "y": 25,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 29,
-      "y": 25,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        30,
-        18
-      ],
-      "to": [
-        28,
-        27
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        29,
-        18
-      ],
-      "to": [
-        27,
-        27
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        28,
-        18
-      ],
-      "to": [
-        26,
-        27
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        27,
-        18
-      ],
-      "to": [
-        25,
-        27
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 28,
-      "y": 27,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 25,
-      "y": 27,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        27,
-        15
-      ],
-      "to": [
-        25,
-        29
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        26,
-        15
-      ],
-      "to": [
-        24,
-        29
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        25,
-        15
-      ],
-      "to": [
-        23,
-        29
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        24,
-        15
-      ],
-      "to": [
-        22,
-        29
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 25,
-      "y": 29,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 22,
-      "y": 29,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        24,
-        12
-      ],
-      "to": [
-        22,
-        30
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        23,
-        12
-      ],
-      "to": [
-        21,
-        30
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        22,
-        12
-      ],
-      "to": [
-        20,
-        30
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        21,
-        12
-      ],
-      "to": [
-        19,
-        30
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 22,
-      "y": 30,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 19,
-      "y": 30,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        21,
-        9
-      ],
-      "to": [
-        19,
-        31
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        20,
-        9
-      ],
-      "to": [
-        18,
-        31
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        19,
-        9
-      ],
-      "to": [
-        17,
-        31
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        18,
-        9
-      ],
-      "to": [
-        16,
-        31
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 19,
-      "y": 31,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 16,
-      "y": 31,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        18,
-        6
-      ],
-      "to": [
-        16,
-        32
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        17,
-        6
-      ],
-      "to": [
-        15,
-        32
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        16,
-        6
-      ],
-      "to": [
-        14,
-        32
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        6
-      ],
-      "to": [
-        13,
-        32
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 16,
-      "y": 32,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 13,
-      "y": 32,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        4
-      ],
-      "to": [
-        13,
-        33
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        14,
-        4
-      ],
-      "to": [
-        12,
-        33
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        13,
-        4
-      ],
-      "to": [
-        11,
-        33
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        12,
-        4
-      ],
-      "to": [
-        10,
-        33
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 13,
-      "y": 33,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 10,
-      "y": 33,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        12,
-        3
-      ],
-      "to": [
-        10,
-        34
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        11,
-        3
-      ],
-      "to": [
-        9,
-        34
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        10,
-        3
-      ],
-      "to": [
-        8,
-        34
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        9,
-        3
-      ],
-      "to": [
-        7,
-        34
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 10,
-      "y": 34,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 7,
-      "y": 34,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        10,
-        2
-      ],
-      "to": [
-        7,
-        35
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        9,
-        2
-      ],
-      "to": [
-        6,
-        35
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        8,
-        2
-      ],
-      "to": [
-        5,
-        35
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        7,
-        2
-      ],
-      "to": [
-        4,
-        35
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 7,
-      "y": 35,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 4,
-      "y": 35,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        8,
-        1
-      ],
-      "to": [
-        5,
-        35
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        7,
-        1
-      ],
-      "to": [
-        4,
-        35
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        6,
-        1
-      ],
-      "to": [
-        3,
-        35
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        5,
-        1
-      ],
-      "to": [
-        2,
-        35
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 2,
-      "y": 35,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        7,
-        1
-      ],
-      "to": [
-        3,
-        33
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        6,
-        1
-      ],
-      "to": [
-        2,
-        33
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        5,
-        1
-      ],
-      "to": [
-        1,
-        33
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        4,
-        1
-      ],
-      "to": [
-        0,
-        33
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_r",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "....................Ld.......................",
+        ".................LdMLdMLd....................",
+        "...............LdMLdMLdMLdL..................",
+        ".............dMLdMLdMLdMLdMLdL...............",
+        "..........LdMLdMLdMLdMLdMLdMLdLL.............",
+        ".........MLdMLdMLdMLdMLdMLddMLdMLL...........",
+        "........LdMLdMLdMLdMLdMLdMLddMLdMMLL.........",
+        ".......MLdMLdMLdMLdMLdMLdMLdLdMLddMMLL.......",
+        "......LdMLdMLdMLdMLdMLdMLdMLdLdMLdddMMLL.....",
+        ".....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLddMMLL...",
+        "....LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLLddMMLL.",
+        "...MLdMLdMLdMLdMLdMLdMLdMLdMLddMLdMLdMLLddMML",
+        "..LdMLdMLdMLdMLdMLdMLdMLdMLdMLddMLdMLdMMLLd..",
+        ".MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLdMLdMLddMMLL.",
+        "LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLdMLdMLdddM..",
+        "LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdL...",
+        "MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdML.MLddM....",
+        ".LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLddML..L......",
+        "....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLd.ML........",
+        ".....L.MLdMLdMLdMLdMLdMLdMLdMLdMLdL..L.......",
+        ".........LdML.MLdMLdMLdMLdMLdML.ML.L.........",
+        "...........ML..LdMLdMLdMLdML.ML..L...........",
+        ".............L....MLdML.MLdML..L.............",
+        "...................L.ML..L.ML................",
+        ".......................L.....L..............."
+      ],
+      "key": {
+        "d": "wc",
+        "M": "wd",
+        "L": "we"
       },
       "x": 0,
-      "y": 33,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        6,
-        0
-      ],
-      "to": [
-        3,
-        30
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        5,
-        0
-      ],
-      "to": [
-        2,
-        30
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        4,
-        0
-      ],
-      "to": [
-        1,
-        30
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        3,
-        0
-      ],
-      "to": [
-        0,
-        30
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "x": 0,
-      "y": 30,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        24,
-        21
-      ],
-      "to": [
-        23,
-        24
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        23,
-        21
-      ],
-      "to": [
-        22,
-        25
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        22,
-        21
-      ],
-      "to": [
-        21,
-        25
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        21,
-        18
-      ],
-      "to": [
-        20,
-        23
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        20,
-        18
-      ],
-      "to": [
-        19,
-        24
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        19,
-        18
-      ],
-      "to": [
-        18,
-        24
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        18,
-        15
-      ],
-      "to": [
-        17,
-        22
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        17,
-        15
-      ],
-      "to": [
-        16,
-        23
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        16,
-        15
-      ],
-      "to": [
-        15,
-        23
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        12
-      ],
-      "to": [
-        14,
-        21
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        14,
-        12
-      ],
-      "to": [
-        13,
-        22
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        13,
-        12
-      ],
-      "to": [
-        12,
-        22
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        12,
-        11
-      ],
-      "to": [
-        11,
-        20
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        11,
-        11
-      ],
-      "to": [
-        10,
-        21
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        10,
-        11
-      ],
-      "to": [
-        9,
-        21
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        9,
-        10
-      ],
-      "to": [
-        8,
-        20
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        8,
-        10
-      ],
-      "to": [
-        7,
-        21
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        7,
-        10
-      ],
-      "to": [
-        6,
-        21
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        6,
-        9
-      ],
-      "to": [
-        4,
-        19
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        5,
-        9
-      ],
-      "to": [
-        3,
-        20
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        4,
-        9
-      ],
-      "to": [
-        2,
-        20
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        3,
-        8
-      ],
-      "to": [
-        2,
-        18
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        2,
-        8
-      ],
-      "to": [
-        1,
-        19
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        1,
-        8
-      ],
-      "to": [
-        0,
-        19
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "points": [
-        [
-          22,
-          26
-        ],
-        [
-          21,
-          26
-        ],
-        [
-          19,
-          25
-        ],
-        [
-          18,
-          25
-        ],
-        [
-          16,
-          24
-        ],
-        [
-          15,
-          24
-        ],
-        [
-          13,
-          23
-        ],
-        [
-          12,
-          23
-        ],
-        [
-          10,
-          22
-        ],
-        [
-          9,
-          22
-        ],
-        [
-          7,
-          22
-        ],
-        [
-          6,
-          22
-        ],
-        [
-          3,
-          21
-        ],
-        [
-          2,
-          21
-        ],
-        [
-          1,
-          20
-        ]
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        33,
-        21
-      ],
-      "to": [
-        16,
-        4
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        33,
-        22
-      ],
-      "to": [
-        16,
-        5
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        33,
-        23
-      ],
-      "to": [
-        16,
-        6
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        33,
-        24
-      ],
-      "to": [
-        16,
-        7
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        32,
-        24
-      ],
-      "to": [
-        16,
-        8
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        32,
-        25
-      ],
-      "to": [
-        16,
-        9
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        31,
-        25
-      ],
-      "to": [
-        16,
-        10
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        30,
-        25
-      ],
-      "to": [
-        16,
-        11
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        29,
-        25
-      ],
-      "to": [
-        16,
-        12
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        28,
-        25
-      ],
-      "to": [
-        16,
-        13
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        4
-      ],
-      "to": [
-        4,
-        0
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        5
-      ],
-      "to": [
-        4,
-        1
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        6
-      ],
-      "to": [
-        4,
-        2
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        7
-      ],
-      "to": [
-        4,
-        3
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        8
-      ],
-      "to": [
-        3,
-        4
-      ],
-      "color": "nc"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        9
-      ],
-      "to": [
-        3,
-        5
-      ],
-      "color": "nd"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        10
-      ],
-      "to": [
-        3,
-        6
-      ],
-      "color": "ne"
-    },
-    {
-      "op": "line",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "from": [
-        15,
-        11
-      ],
-      "to": [
-        3,
-        7
-      ],
-      "color": "nb"
-    },
-    {
-      "op": "pixels",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "points": [
-        [
-          31,
-          23
-        ],
-        [
-          28,
-          20
-        ],
-        [
-          25,
-          17
-        ],
-        [
-          22,
-          14
-        ],
-        [
-          19,
-          11
-        ],
-        [
-          26,
-          23
-        ],
-        [
-          23,
-          20
-        ],
-        [
-          20,
-          17
-        ],
-        [
-          17,
-          14
-        ]
-      ],
-      "color": "ne"
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
     },
     {
       "op": "pattern",
       "target": {
-        "cubes": "chest",
+        "cubes": "wing_r",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "....................Ld.......................",
+        ".................LdMLdMLd....................",
+        "...............LdMLdMLdMLdL..................",
+        ".............dMLdMLdMLdMLdMLdL...............",
+        "..........LdMLdMLdMLdMLdMLdMLdLL.............",
+        ".........MLdMLdMLdMLdMLdMLddMLdMLL...........",
+        "........LdMLdMLdMLdMLdMLdMLddMLdMMLL.........",
+        ".......MLdMLdMLdMLdMLdMLdMLdLdMLddMM.........",
+        "......LdMLdMLdMLdMLdMLdMLdMLdLdMLddd.........",
+        ".....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdL.........",
+        "....LdMLdMLdMLdMLdML....MLdMLdMLdMLd.........",
+        "...MLdMLdMLdMLdML..........MLddMLdML.........",
+        "..LdMLdMLdMLd.................ddMLdM.........",
+        ".MLdMLdMLd..................................."
+      ],
+      "key": {
+        "d": "wa",
+        "M": "wc",
+        "L": "wd"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_r",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        ".....................................dMMLL...",
+        ".....................................LddMMLL.",
+        ".....................................MLLddMML",
+        ".....................................dMMLLd..",
+        ".....................................LddMMLL.",
+        ".....................................MLdddM..",
+        "LdMLdMLdML.....................dMLdMLdMLdL...",
+        "MLdMLdMLdM.....................LdML.MLddM....",
+        ".LdMLdMLdM.....................LddML..L......",
+        "....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLd.ML........",
+        ".....L.MLdMLdMLdMLdMLdMLdMLdMLdMLdL..L.......",
+        ".........LdML.MLdMLdMLdMLdMLdML.ML.L.........",
+        "...........ML..LdMLdMLdMLdML.ML..L...........",
+        ".............L....MLdML.MLdML..L.............",
+        "...................L.ML..L.ML................",
+        ".......................L.....L..............."
+      ],
+      "key": {
+        "d": "wc",
+        "M": "we",
+        "L": "we"
+      },
+      "x": 0,
+      "y": 9,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_r",
         "faces": [
           "north"
         ]
       },
       "rows": [
-        "wwwwwwww",
-        "WDpqqpDv",
-        "WwDppDwv",
-        "WwwDEwvv",
-        "WwwvEwvu",
-        "vvvuDuuu"
+        ".......................dL....................",
+        "....................dLMdLMdL.................",
+        "..................LdLMdLMdLMdL...............",
+        "...............LdLMdLMdLMdLMdLMd.............",
+        ".............LLdLMdLMdLMdLMdLMdLMdL..........",
+        "...........LLMdLMddLMdLMdLMdLMdLMdLM.........",
+        ".........LLMMdLMddLMdLMdLMdLMdLMdLMdL........",
+        ".......LLMMddLMdLdLMdLMdLMdLMdLMdLMdLM.......",
+        ".....LLMMdddLMdLdLMdLMdLMdLMdLMdLMdLMdL......",
+        "...LLMMddLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.....",
+        ".LLMMddLLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL....",
+        "LMMddLLMdLMdLMddLMdLMdLMdLMdLMdLMdLMdLMdLM...",
+        "..dLLMMdLMdLMddLMdLMdLMdLMdLMdLMdLMdLMdLMdL..",
+        ".LLMMddLMdLMdLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.",
+        "..MdddLMdLMdLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL",
+        "...LdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL",
+        "....MddLM.LMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM",
+        "......L..LMddLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL.",
+        "........LM.dLMdLMdLMdLMdLMdLMdLMdLMdLMdLM....",
+        ".......L..LdLMdLMdLMdLMdLMdLMdLMdLMdLM.L.....",
+        ".........L.LM.LMdLMdLMdLMdLMdLM.LMdL.........",
+        "...........L..LM.LMdLMdLMdLMdL..LM...........",
+        ".............L..LMdLM.LMdLM....L.............",
+        "................LM.L..LM.L...................",
+        "...............L.....L......................."
       ],
       "key": {
-        "W": "i5",
+        "d": "nc",
+        "M": "nd",
+        "L": "ne"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        ".......................dL....................",
+        "....................dLMdLMdL.................",
+        "..................LdLMdLMdLMdL...............",
+        "...............LdLMdLMdLMdLMdLMd.............",
+        ".............LLdLMdLMdLMdLMdLMdLMdL..........",
+        "...........LLMdLMddLMdLMdLMdLMdLMdLM.........",
+        ".........LLMMdLMddLMdLMdLMdLMdLMdLMdL........",
+        ".........MMddLMdLdLMdLMdLMdLMdLMdLMdLM.......",
+        ".........dddLMdLdLMdLMdLMdLMdLMdLMdLMdL......",
+        ".........LdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.....",
+        ".........dLMdLMdLMdLM....LMdLMdLMdLMdLMdL....",
+        ".........LMdLMddLM..........LMdLMdLMdLMdLM...",
+        ".........MdLMdd.................dLMdLMdLMdL..",
+        "...................................dLMdLMdLM."
+      ],
+      "key": {
+        "d": "na",
+        "M": "nc",
+        "L": "nd"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "...LLMMd.....................................",
+        ".LLMMddL.....................................",
+        "LMMddLLM.....................................",
+        "..dLLMMd.....................................",
+        ".LLMMddL.....................................",
+        "..MdddLM.....................................",
+        "...LdLMdLMdLMd.....................LMdLMdLMdL",
+        "....MddLM.LMdL.....................MdLMdLMdLM",
+        "......L..LMddL.....................MdLMdLMdL.",
+        "........LM.dLMdLMdLMdLMdLMdLMdLMdLMdLMdLM....",
+        ".......L..LdLMdLMdLMdLMdLMdLMdLMdLMdLM.L.....",
+        ".........L.LM.LMdLMdLMdLMdLMdLM.LMdL.........",
+        "...........L..LM.LMdLMdLMdLMdL..LM...........",
+        ".............L..LMdLM.LMdLM....L.............",
+        "................LM.L..LM.L...................",
+        "...............L.....L......................."
+      ],
+      "key": {
+        "d": "nc",
+        "M": "ne",
+        "L": "ne"
+      },
+      "x": 0,
+      "y": 9,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "erase",
+      "target": {
+        "cubes": [
+          "wing_cov1b_r",
+          "wing_cov2b_r",
+          "wing_cov3b_r",
+          "wing_cov1f_r",
+          "wing_cov2f_r",
+          "wing_cov3f_r"
+        ]
+      }
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_cov1b_r",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "ccccccccccccc",
+        "wcbwcbwcbwcbw",
+        "bewbewbewbewb",
+        "ebwebwebwebwe",
+        "ebwe.webwe.we",
+        "..w.....w...."
+      ],
+      "key": {
+        "b": "i2",
+        "c": "i4",
+        "w": "i5",
+        "e": "i6"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_cov2b_r",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "cccccccccccc",
+        "wcbwcbwcbwcb",
+        "bewbewbewbew",
+        "ebwebwebwebw",
+        "ebwe.webwe.w",
+        "..w.....w..."
+      ],
+      "key": {
+        "b": "i2",
+        "c": "i4",
+        "w": "i5",
+        "e": "i6"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_cov3b_r",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "ccccccccccccccc",
+        "wcbwcbwcbwcbwcb",
+        "bewbewbewbewbew",
+        "ebwebwebwebwebw",
+        ".ebwe.webwe.web",
+        "....we....we..."
+      ],
+      "key": {
+        "b": "i2",
+        "c": "i4",
+        "w": "i5",
+        "e": "i6"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_cov1f_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "ccccccccccccc",
+        "wbcwbcwbcwbcw",
+        "bwebwebwebweb",
+        "ewbewbewbewbe",
+        "ew.ewbew.ewbe",
+        "....w.....w.."
+      ],
+      "key": {
+        "b": "i2",
+        "c": "i3",
         "w": "i4",
-        "v": "i3",
-        "u": "i2",
+        "e": "i5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_cov2f_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "cccccccccccc",
+        "bcwbcwbcwbcw",
+        "wbewbewbewbe",
+        "wbewbewbewbe",
+        "w.ewbew.ewbe",
+        "...w.....w.."
+      ],
+      "key": {
+        "b": "i2",
+        "c": "i3",
+        "w": "i4",
+        "e": "i5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_cov3f_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "ccccccccccccccc",
+        "bcwbcwbcwbcwbcw",
+        "webwebwebwebweb",
+        "wbewbewbewbewbe",
+        "bew.ewbew.ewbe.",
+        "...ew....ew...."
+      ],
+      "key": {
+        "b": "i2",
+        "c": "i3",
+        "w": "i4",
+        "e": "i5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_bone1_r",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "rows": [
+        "EEFEEEFEEEFEEE",
+        "CCDCCCDCCCDCCC"
+      ],
+      "key": {
+        "C": "g2",
         "D": "g3",
         "E": "g4",
-        "p": "s1",
-        "q": "s2"
+        "F": "g5"
       },
       "x": 0,
       "y": 0,
@@ -4117,78 +489,45 @@
     {
       "op": "pattern",
       "target": {
-        "cubes": "chest",
+        "cubes": "wing_bone2_r",
         "faces": [
-          "east"
-        ]
-      },
-      "rows": [
-        "wwww",
-        "Wwwv",
-        "wWwv",
-        "wwvv",
-        "wvwu",
-        "vuuu"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "chest",
-        "faces": [
-          "west"
-        ]
-      },
-      "rows": [
-        "wwww",
-        "vwwW",
-        "vwWw",
-        "vvww",
-        "uwvw",
-        "uuuv"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "chest",
-        "faces": [
+          "north",
           "south"
         ]
       },
       "rows": [
-        "wwwwwwww",
-        "WwwwvwWw",
-        "wWwwvwww",
-        "wwvwvwvw",
-        "vwwwvwwv",
-        "uvvuuvvu"
+        "EEFEEEFEEEFEE",
+        "CCDCCCDCCCDCC"
       ],
       "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2"
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "wing_bone3_r",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "rows": [
+        "EEFEEEFEEEFEEEFEE",
+        "CCDCCCDCCCDCCCDCC"
+      ],
+      "key": {
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
       },
       "x": 0,
       "y": 0,
@@ -4198,31 +537,69 @@
     {
       "op": "fill",
       "target": {
-        "cubes": "chest",
+        "cubes": [
+          "wing_bone1_r",
+          "wing_bone2_r",
+          "wing_bone3_r"
+        ],
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "g4"
+    },
+    {
+      "op": "rect",
+      "target": {
+        "cubes": [
+          "wing_bone1_r",
+          "wing_bone2_r",
+          "wing_bone3_r"
+        ],
+        "faces": [
+          "up"
+        ]
+      },
+      "x": 0,
+      "y": 0,
+      "w": 17,
+      "h": 1,
+      "color": "g5"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": [
+          "wing_bone1_r",
+          "wing_bone2_r",
+          "wing_bone3_r"
+        ],
         "faces": [
           "down"
         ]
       },
-      "color": "i2"
+      "color": "g1"
     },
     {
       "op": "pattern",
       "target": {
-        "cubes": "waist",
+        "cubes": [
+          "wing_bone1_r",
+          "wing_bone2_r",
+          "wing_bone3_r"
+        ],
         "faces": [
-          "north"
+          "east",
+          "west"
         ]
       },
       "rows": [
-        "vwwwwv",
-        "NNDENN",
-        "uvvvvu"
+        "EDE",
+        "CBC"
       ],
       "key": {
-        "w": "i4",
-        "v": "i3",
-        "u": "i2",
-        "N": "c3",
+        "B": "g1",
+        "C": "g2",
         "D": "g3",
         "E": "g4"
       },
@@ -4234,22 +611,1060 @@
     {
       "op": "pattern",
       "target": {
-        "cubes": "waist",
+        "cubes": "head",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "KKKKKKKK",
+        "KKKKKKKK",
+        "KKKKKKKK",
+        "KKzKKzKK",
+        "KxyKKyxK",
+        "KKzKKzKK",
+        "KKKKKKKK",
+        "LLLLLLLL"
+      ],
+      "key": {
+        "K": "c0",
+        "L": "c1",
+        "x": "e1",
+        "y": "e2",
+        "z": "e0"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_crown",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "TWWWFFWWWT",
+        "WWWEDDEWWW",
+        "WEEDEEDEEW"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_crown",
+        "faces": [
+          "up"
+        ]
+      },
+      "rows": [
+        "DEEEEEEEED",
+        "TTTTTTTTTT",
+        "WWWWWWWWWW",
+        "wWWWWWWWWw",
+        "wWWWWWWWWw",
+        "wWWWWWWWWw",
+        "wWWWWWWWWw",
+        "wWWWWWWWWw",
+        "wWWWWWWWWw",
+        "wWWWWWWWWw",
+        "wWWWWWWWWw",
+        "wwWWWWWWww",
+        "wwwwwwwwww",
+        "wwwwwwwwww"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "w": "i4",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_crown",
+        "faces": [
+          "east"
+        ]
+      },
+      "rows": [
+        "wwwwWWWWWWWWWE",
+        "vwwwwWWWWWWWWD",
+        "vvwwwwwwWWWWWE"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_crown",
+        "faces": [
+          "west"
+        ]
+      },
+      "rows": [
+        "EWWWWWWWWWwwww",
+        "DWWWWWWWWwwwwv",
+        "EWWWWWwwwwwwvv"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_crown",
         "faces": [
           "south"
         ]
       },
       "rows": [
+        "wwwwwwwwww",
+        "vwwvwwvwwv",
+        "vvvvvvvvvv"
+      ],
+      "key": {
+        "w": "i4",
+        "v": "i3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_crown",
+        "faces": [
+          "down"
+        ]
+      },
+      "rows": [
+        "CCCCCCCCCC",
+        "NNNNNNNNNN",
+        "MMMMMMMMMM",
+        "LLLLLLLLLL",
+        "KKKKKKKKKK",
+        "KKKKKKKKKK",
+        "KKKKKKKKKK",
+        "KKKKKKKKKK",
+        "KKKKKKKKKK",
+        "KKKKKKKKKK",
+        "KKKKKKKKKK",
+        "KKKKKKKKKK",
+        "LLLLLLLLLL",
+        "CCCCCCCCCC"
+      ],
+      "key": {
+        "C": "g2",
+        "K": "c0",
+        "L": "c1",
+        "M": "c2",
+        "N": "c3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_cap",
+        "faces": [
+          "up"
+        ]
+      },
+      "rows": [
+        "TTTTTTTT",
+        "WWWTvWWW",
+        "WWWWvWWW",
+        "WWWWvWWW",
+        "WWWWvWWW",
+        "WWWWvWWW",
+        "WWWWvWWW",
+        "wWWWvWWw",
+        "wwWwvwww",
+        "wwwwvwww",
+        "wwwwvwww"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "w": "i4",
+        "v": "i3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "hood_cap",
+        "faces": [
+          "north",
+          "east",
+          "west"
+        ]
+      },
+      "color": "i5"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "hood_cap",
+        "faces": [
+          "south"
+        ]
+      },
+      "color": "i4"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_tip",
+        "faces": [
+          "north",
+          "east",
+          "west",
+          "south"
+        ]
+      },
+      "rows": [
+        "TTTW",
+        "WWWw",
+        "wWwv",
+        "vwvu"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_tip",
+        "faces": [
+          "up"
+        ]
+      },
+      "rows": [
+        "TTTW",
+        "TFET",
+        "TEEW",
+        "WTWW"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_side_r",
+        "faces": [
+          "east"
+        ]
+      },
+      "rows": [
+        "WWWWWWWWWWWv",
+        "wWWWWWWWWWWv",
+        "wwWWvWWWWWWv",
+        "vwwWwvWWWWwu",
+        "vvwwWwvWWWwu",
+        "uvvwwWwvWwwu",
+        "uuvvwwWwvwvu",
+        "uuuvvwwWwvvt",
+        "tuuuvvwwvvut",
+        "DEDCDEDCDEDC"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2",
+        "t": "i1",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_side_r",
+        "faces": [
+          "west"
+        ]
+      },
+      "rows": [
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK",
+        "NMLKKKKKKKKK"
+      ],
+      "key": {
+        "K": "c0",
+        "L": "c1",
+        "M": "c2",
+        "N": "c3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "hood_side_r",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "g2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_back",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "wWWWWWWWWw",
+        "wWWWvvWWWw",
+        "vwWWvvWWwv",
+        "vwWwuuwWwv",
+        "vvwWvvWwvv",
+        "uvwWvvWwvu",
+        "uvwwuuwwvu",
+        "uuvwvvwvuu",
+        "tuvvuuvvut",
+        "DEDCDDCDED"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2",
+        "t": "i1",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_back",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "Ww",
+        "Ww",
+        "vw",
+        "vw",
+        "vv",
+        "uv",
+        "uv",
+        "uu",
+        "tu",
+        "DC"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2",
+        "t": "i1",
+        "C": "g2",
+        "D": "g3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_back",
+        "faces": [
+          "up"
+        ]
+      },
+      "rows": [
+        "wwwwwwwwww",
+        "WWWWWWWWWW"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_back",
+        "faces": [
+          "down"
+        ]
+      },
+      "rows": [
+        "tttttttttt",
+        "CCCCCCCCCC"
+      ],
+      "key": {
+        "C": "g2",
+        "t": "i1"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_rim_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "WF",
+        "WE",
+        "ED",
+        "WE",
+        "TF",
+        "ED",
+        "WE",
+        "WD",
+        "ED",
+        "DC"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_rim_r",
+        "faces": [
+          "east"
+        ]
+      },
+      "rows": [
+        "W",
+        "W",
+        "W",
+        "w",
+        "w",
+        "w",
+        "v",
+        "v",
+        "v",
+        "D"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "D": "g3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_rim_r",
+        "faces": [
+          "west"
+        ]
+      },
+      "rows": [
+        "D",
+        "C",
+        "C",
+        "C",
+        "B",
+        "B",
+        "B",
+        "B",
+        "A",
+        "A"
+      ],
+      "key": {
+        "A": "g0",
+        "B": "g1",
+        "C": "g2",
+        "D": "g3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "hood_rim_r",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "g2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_arch_r",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "E",
+        "D"
+      ],
+      "key": {
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "hood_arch_r",
+        "faces": [
+          "west"
+        ]
+      },
+      "rows": [
+        "C",
+        "B"
+      ],
+      "key": {
+        "B": "g1",
+        "C": "g2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "hood_arch_r",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "g1"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "WWWooooooWWW",
+        "WWWtoEEotWWW",
+        "wwwttDDttwww",
+        "DEDCDEEDCDED"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "t": "i1",
+        "o": "i0",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "WWWWWWWWWWWW",
+        "wWWwWWWWwWWw",
+        "vwwvwwwwvwwv",
+        "DEDCDEDCDEDC"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "WWWWWWW",
+        "wWwWWwW",
+        "vwvwwvw",
+        "DEDCDED"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle",
+        "faces": [
+          "up"
+        ]
+      },
+      "rows": [
+        "TTTTTTTTTTTT",
+        "WWWWWWWWWWWW",
+        "WWWWWWWWWWWW",
+        "WWWWWWWWWWWW",
+        "WWWWWWWWWWWW",
+        "wWWWWWWWWWWw",
+        "wwwwwwwwwwww"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "w": "i4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle",
+        "faces": [
+          "down"
+        ]
+      },
+      "rows": [
+        "CCCCCCCCCCCC",
+        "CuuuuuuuuuuC",
+        "CuttttttttuC",
+        "CuttttttttuC",
+        "CuttttttttuC",
+        "CuuuuuuuuuuC",
+        "CCCCCCCCCCCC"
+      ],
+      "key": {
+        "C": "g2",
+        "u": "i2",
+        "t": "i1"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle_bib",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "EWTTWE",
+        "DEWWED",
+        "CDEEDC"
+      ],
+      "key": {
+        "T": "i6",
+        "W": "i5",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle_bib",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "D",
+        "D",
+        "C"
+      ],
+      "key": {
+        "C": "g2",
+        "D": "g3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "mantle_bib",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "g2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle_point",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "DkD",
+        "CEC"
+      ],
+      "key": {
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "k": "k2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle_point",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "D",
+        "C"
+      ],
+      "key": {
+        "C": "g2",
+        "D": "g3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle_back",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "WWWWWWWWWW",
+        "wWWvWWvWWw",
+        "vwWvwwvWwv",
+        "uvwuvvuwvu",
+        "DEDCDDCDED"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "mantle_back",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "W",
+        "w",
+        "v",
+        "u",
+        "D"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2",
+        "D": "g3"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "mantle_back",
+        "faces": [
+          "down"
+        ]
+      },
+      "color": "g2"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "chest",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "wwwwwwww",
+        "wwwwwwww",
+        "Wvuuuuvw",
+        "Wvuuuuvw",
+        "wvuuuuvv",
+        "vuuttuuv"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2",
+        "t": "i1"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "chest",
+        "faces": [
+          "east",
+          "west",
+          "south"
+        ]
+      },
+      "rows": [
+        "wwwwwwww",
+        "wwwwwwww",
+        "Wwwvwwvw",
+        "wWwvwWwv",
+        "wwvvwwvv",
+        "vvuuvvuu"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "u": "i2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "chest",
+        "faces": [
+          "down"
+        ]
+      },
+      "rows": [
+        "uuuuuuuu",
+        "uttttttu",
+        "uttttttu",
+        "uuuuuuuu"
+      ],
+      "key": {
+        "u": "i2",
+        "t": "i1"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "waist",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "rows": [
         "vwwwwv",
-        "NMNNMN",
         "uvvvvu"
       ],
       "key": {
         "w": "i4",
         "v": "i3",
-        "u": "i2",
-        "N": "c3",
-        "M": "c2"
+        "u": "i2"
       },
       "x": 0,
       "y": 0,
@@ -4267,15 +1682,97 @@
       },
       "rows": [
         "vwv",
-        "NMN",
         "uvu"
       ],
       "key": {
         "w": "i4",
         "v": "i3",
-        "u": "i2",
+        "u": "i2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "belt",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "OEOOOEO",
+        "NMNNNMN"
+      ],
+      "key": {
+        "M": "c2",
         "N": "c3",
-        "M": "c2"
+        "O": "c4",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "belt",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "c3"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "buckle",
+        "faces": [
+          "north"
+        ]
+      },
+      "rows": [
+        "EFE",
+        "DkD",
+        "CDC"
+      ],
+      "key": {
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5",
+        "k": "k2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "buckle",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "E",
+        "D",
+        "C"
+      ],
+      "key": {
+        "C": "g2",
+        "D": "g3",
+        "E": "g4"
       },
       "x": 0,
       "y": 0,
@@ -4353,14 +1850,29 @@
       "color": "i3"
     },
     {
-      "op": "fill",
+      "op": "pattern",
       "target": {
         "cubes": "hips",
         "faces": [
           "down"
         ]
       },
-      "color": "i1"
+      "rows": [
+        "CCCCCCCCC",
+        "CtttttttC",
+        "CtoooootC",
+        "CtttttttC",
+        "CCCCCCCCC"
+      ],
+      "key": {
+        "C": "g2",
+        "t": "i1",
+        "o": "i0"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
     },
     {
       "op": "pattern",
@@ -4371,34 +1883,25 @@
         ]
       },
       "rows": [
-        "CDDDB",
-        "DTWWC",
-        "DwEwC",
-        "DEFEC",
-        "DwEwC",
-        "DwDwC",
-        "DwwwC",
+        "CDDDC",
         "EWwvC",
-        "DWwvC",
-        "DwWvC",
-        "EwWvD",
-        "DwWuC",
-        "DvWuC",
-        "EwWvD",
-        "DwWvC",
-        "DwWuC",
-        "EvWuD",
-        "DvvuC",
-        "DEDEC",
-        "BCBCB"
+        "DWwvD",
+        "EWEvC",
+        "DEFED",
+        "EWEvC",
+        "DWwvD",
+        "EWwvC",
+        "DWEvD",
+        "EEFEC",
+        "DWEvD",
+        "EWwuC",
+        "DwwuD"
       ],
       "key": {
-        "T": "i6",
         "W": "i5",
         "w": "i4",
         "v": "i3",
         "u": "i2",
-        "B": "g1",
         "C": "g2",
         "D": "g3",
         "E": "g4",
@@ -4418,37 +1921,29 @@
         ]
       },
       "rows": [
-        "CDDDB",
-        "DTWWC",
-        "DwwwC",
-        "DwEwC",
-        "DEDEC",
-        "DwEwC",
-        "DwwwC",
-        "DWwvC",
-        "DWwvC",
-        "DwWvC",
-        "EwWvD",
-        "DwWuC",
-        "DvWuC",
-        "DwWvC",
-        "DwWvC",
-        "DwWuC",
-        "EvWuD",
-        "DvvuC",
-        "DEDEC",
-        "BCBCB"
+        "CDDDC",
+        "EWwvC",
+        "DWwvD",
+        "EWwvC",
+        "DWEvD",
+        "EEFEC",
+        "DWEvD",
+        "EWwvC",
+        "DWwvD",
+        "EWwvC",
+        "DWwuD",
+        "EWwuC",
+        "DwwuD"
       ],
       "key": {
-        "T": "i6",
         "W": "i5",
         "w": "i4",
         "v": "i3",
         "u": "i2",
-        "B": "g1",
         "C": "g2",
         "D": "g3",
-        "E": "g4"
+        "E": "g4",
+        "F": "g5"
       },
       "x": 0,
       "y": 0,
@@ -4458,40 +1953,59 @@
     {
       "op": "pattern",
       "target": {
-        "cubes": "tabard_*",
+        "cubes": "tabard_front_low",
         "faces": [
-          "east",
-          "west"
+          "north"
         ]
       },
       "rows": [
-        "w",
-        "w",
-        "v",
-        "w",
-        "v",
-        "v",
-        "w",
-        "v",
-        "v",
-        "u",
-        "v",
-        "v",
-        "u",
-        "v",
-        "u",
-        "v",
-        "u",
-        "u",
-        "D",
-        "C"
+        "DEWwvCD",
+        "EDWwvDC",
+        "DEWEvCD",
+        "EDEFEDC",
+        "DEDEDCD",
+        "CBCBCBC"
       ],
       "key": {
+        "W": "i5",
         "w": "i4",
         "v": "i3",
-        "u": "i2",
+        "B": "g1",
         "C": "g2",
-        "D": "g3"
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "tabard_back_low",
+        "faces": [
+          "south"
+        ]
+      },
+      "rows": [
+        "DEWwvCD",
+        "EDWwvDC",
+        "DEWEvCD",
+        "EDEFEDC",
+        "DEDEDCD",
+        "CBCBCBC"
+      ],
+      "key": {
+        "W": "i5",
+        "w": "i4",
+        "v": "i3",
+        "B": "g1",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
       },
       "x": 0,
       "y": 0,
@@ -4503,10 +2017,21 @@
       "target": {
         "cubes": "tabard_*",
         "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "color": "g3"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "tabard_*",
+        "faces": [
           "up"
         ]
       },
-      "color": "i3"
+      "color": "g2"
     },
     {
       "op": "fill",
@@ -4521,164 +2046,34 @@
     {
       "op": "pattern",
       "target": {
-        "cubes": "hood_crown",
-        "faces": [
-          "up"
-        ]
-      },
-      "rows": [
-        "WWWWWWWWWW",
-        "WTTWWWWTTW",
-        "wWTWWWWTWw",
-        "wWWWwwWWWw",
-        "wWWwvvwWWw",
-        "wWWwvvwWWw",
-        "wWWWvvWWWw",
-        "wwWWvvWWww",
-        "wwWwvvwWww",
-        "vwwwvvwwwv",
-        "vwwwvvwwwv",
-        "vvwwvvwwvv"
-      ],
-      "key": {
-        "T": "i6",
-        "W": "i5",
-        "w": "i4",
-        "v": "i3"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_crown",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        "WTTTTTTTTW",
-        "DEDFDDFDED"
-      ],
-      "key": {
-        "T": "i6",
-        "W": "i5",
-        "D": "g3",
-        "E": "g4",
-        "F": "g5"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_crown",
+        "cubes": "robe_side_r",
         "faces": [
           "east"
         ]
       },
       "rows": [
-        "vwwWWWWWWWWE",
-        "vvwwwWWWWWWD"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_crown",
-        "faces": [
-          "west"
-        ]
-      },
-      "rows": [
-        "EWWWWWWWWwwv",
-        "DWWWWWWwwwvv"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_crown",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "wwwwwwwwww",
-        "vwwvwwvwwv"
-      ],
-      "key": {
-        "w": "i4",
-        "v": "i3"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "hood_crown",
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "c1"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_r",
-        "faces": [
-          "east"
-        ]
-      },
-      "rows": [
-        "WWWWWWWWWWE",
-        "WWWWWWWWWWD",
-        "wWWWWvWWWWE",
-        "wwWWvwWWWWD",
-        "uwwvwWWWWwE",
-        "wuvwwWWWwwD",
-        "uvuvwwWwwvE",
-        "uuuuvvvvvuC",
-        "tuuuuuuuuuB"
+        "uvvC",
+        "vWwD",
+        "vWvE",
+        "wwvD",
+        "vWvD",
+        "vwvE",
+        "wWuD",
+        "vWvD",
+        "vwvE",
+        "wWvD",
+        "uwuD",
+        "vWvE",
+        "vwuD",
+        "uvuD",
+        "DEDE",
+        "BCBC"
       ],
       "key": {
         "W": "i5",
         "w": "i4",
         "v": "i3",
         "u": "i2",
-        "t": "i1",
         "B": "g1",
         "C": "g2",
         "D": "g3",
@@ -4692,130 +2087,35 @@
     {
       "op": "pattern",
       "target": {
-        "cubes": "hood_r",
+        "cubes": "robe_side_r",
         "faces": [
-          "west"
-        ]
-      },
-      "rows": [
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK",
-        "NMLKKKKKKKK"
-      ],
-      "key": {
-        "K": "c0",
-        "L": "c1",
-        "M": "c2",
-        "N": "c3"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        "E",
-        "D",
-        "E",
-        "D",
-        "E",
-        "D",
-        "E",
-        "D",
-        "C"
-      ],
-      "key": {
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "hood_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "i2"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_back",
-        "faces": [
+          "north",
           "south"
         ]
       },
       "rows": [
-        "WWWWWWWWWW",
-        "wWWWWWWWWw",
-        "wWWwWWwWWw",
-        "wwWvWWvWww",
-        "wwvwWWwvww",
-        "vwwwvvwwwv",
-        "vwvwvvwvwv",
-        "uvvwvvwvvu",
-        "DEDCDDCDED"
+        "v",
+        "w",
+        "w",
+        "w",
+        "v",
+        "w",
+        "w",
+        "v",
+        "w",
+        "v",
+        "v",
+        "w",
+        "v",
+        "u",
+        "D",
+        "C"
       ],
       "key": {
-        "W": "i5",
         "w": "i4",
         "v": "i3",
         "u": "i2",
         "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_back",
-        "faces": [
-          "east",
-          "west"
-        ]
-      },
-      "rows": [
-        "W",
-        "w",
-        "w",
-        "w",
-        "w",
-        "v",
-        "v",
-        "u",
-        "D"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2",
         "D": "g3"
       },
       "x": 0,
@@ -4826,127 +2126,22 @@
     {
       "op": "fill",
       "target": {
-        "cubes": "hood_back",
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "i2"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_peak",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "WWWWWW",
-        "wWWWWw",
-        "wwWWww",
-        "vwwwwv",
-        "uvvvvu"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_peak",
-        "faces": [
-          "east",
-          "west"
-        ]
-      },
-      "rows": [
-        "WW",
-        "Ww",
-        "ww",
-        "vw",
-        "uv"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hood_peak",
+        "cubes": "robe_side_r",
         "faces": [
           "up"
         ]
       },
-      "rows": [
-        "TTTTTT",
-        "WWWWWW"
-      ],
-      "key": {
-        "T": "i6",
-        "W": "i5"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
+      "color": "i3"
     },
     {
       "op": "fill",
       "target": {
-        "cubes": "hood_peak",
+        "cubes": "robe_side_r",
         "faces": [
           "down"
         ]
       },
-      "color": "i2"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "head",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        "KKKKKKKK",
-        "KKKKKKKK",
-        "KzKKKKzK",
-        "KxyKKyxK",
-        "KLzLLzLK",
-        "LLLLLLLL",
-        "LMLLLLML",
-        "MMMMMMMM"
-      ],
-      "key": {
-        "K": "c0",
-        "L": "c1",
-        "M": "c2",
-        "x": "e1",
-        "y": "e2",
-        "z": "e0"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
+      "color": "g1"
     },
     {
       "op": "pattern",
@@ -5013,7 +2208,7 @@
         ]
       },
       "rows": [
-        "EFEE",
+        "FEEF",
         "CBBC",
         "DFED",
         "DEDC",
@@ -5055,14 +2250,27 @@
       "anchor": "top-left"
     },
     {
-      "op": "fill",
+      "op": "pattern",
       "target": {
         "cubes": "bracer_r",
         "faces": [
           "down"
         ]
       },
-      "color": "g2"
+      "rows": [
+        "CCCC",
+        "CBBC",
+        "CBBC",
+        "CCCC"
+      ],
+      "key": {
+        "B": "g1",
+        "C": "g2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
     },
     {
       "op": "pattern",
@@ -5070,19 +2278,42 @@
         "cubes": "pauldron_r",
         "faces": [
           "north",
-          "east",
-          "south",
-          "west"
+          "south"
         ]
       },
       "rows": [
         "EFFFE",
-        "DEEDC",
-        "BCBCB",
-        "DFEDC"
+        "DEEED",
+        "CDDDC",
+        "FEEED"
       ],
       "key": {
-        "B": "g1",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "pauldron_r",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "EFFFFE",
+        "DEFFED",
+        "CDDDDC",
+        "FEEEED"
+      ],
+      "key": {
         "C": "g2",
         "D": "g3",
         "E": "g4",
@@ -5103,10 +2334,11 @@
       },
       "rows": [
         "DEEED",
-        "EFFED",
-        "EFEDD",
-        "EEDDC",
-        "DDDCC"
+        "EFFFE",
+        "EFFFE",
+        "EFFEE",
+        "EEEED",
+        "DDDDC"
       ],
       "key": {
         "C": "g2",
@@ -5120,14 +2352,207 @@
       "anchor": "top-left"
     },
     {
-      "op": "fill",
+      "op": "pattern",
       "target": {
         "cubes": "pauldron_r",
         "faces": [
           "down"
         ]
       },
-      "color": "g1"
+      "rows": [
+        "CCCCC",
+        "CBBBC",
+        "CBABC",
+        "CBABC",
+        "CBBBC",
+        "CCCCC"
+      ],
+      "key": {
+        "A": "g0",
+        "B": "g1",
+        "C": "g2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "lame1_r",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "BCCCB",
+        "EFFED"
+      ],
+      "key": {
+        "B": "g1",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "fill",
+      "target": {
+        "cubes": "lame1_r",
+        "faces": [
+          "up"
+        ]
+      },
+      "color": "g3"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "lame1_r",
+        "faces": [
+          "down"
+        ]
+      },
+      "rows": [
+        "CCCCC",
+        "CBBBC",
+        "CBABC",
+        "CBBBC",
+        "CCCCC"
+      ],
+      "key": {
+        "A": "g0",
+        "B": "g1",
+        "C": "g2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "lame2_r",
+        "faces": [
+          "north",
+          "south",
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "BCCB",
+        "DFED"
+      ],
+      "key": {
+        "B": "g1",
+        "C": "g2",
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "lame2_r",
+        "faces": [
+          "down"
+        ]
+      },
+      "rows": [
+        "CCCC",
+        "CBBC",
+        "CBBC",
+        "CCCC"
+      ],
+      "key": {
+        "B": "g1",
+        "C": "g2"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "crest_r",
+        "faces": [
+          "up"
+        ]
+      },
+      "rows": [
+        "EFE",
+        "FFE",
+        "EED"
+      ],
+      "key": {
+        "D": "g3",
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "crest_r",
+        "faces": [
+          "north",
+          "south"
+        ]
+      },
+      "rows": [
+        "EFE"
+      ],
+      "key": {
+        "E": "g4",
+        "F": "g5"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
+    },
+    {
+      "op": "pattern",
+      "target": {
+        "cubes": "crest_r",
+        "faces": [
+          "east",
+          "west"
+        ]
+      },
+      "rows": [
+        "DED"
+      ],
+      "key": {
+        "D": "g3",
+        "E": "g4"
+      },
+      "x": 0,
+      "y": 0,
+      "tile": false,
+      "anchor": "top-left"
     },
     {
       "op": "pattern",
@@ -5136,8 +2561,7 @@
         "faces": [
           "north",
           "east",
-          "south",
-          "west"
+          "south"
         ]
       },
       "rows": [
@@ -5175,8 +2599,7 @@
         "faces": [
           "north",
           "east",
-          "south",
-          "west"
+          "south"
         ]
       },
       "rows": [
@@ -5209,152 +2632,28 @@
       "color": "s3"
     },
     {
-      "op": "fill",
+      "op": "pattern",
       "target": {
         "cubes": "hem_r",
         "faces": [
           "down"
         ]
       },
-      "color": "c2"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "north"
-        ]
-      },
       "rows": [
-        "wWWWWWWWWWw",
-        "wWWwWWWwWWv",
-        "DEDCDEDCDED"
+        "ppppp",
+        "poooo",
+        "poooo",
+        "poooo",
+        "ppppp"
       ],
       "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
+        "p": "s1",
+        "o": "s0"
       },
       "x": 0,
       "y": 0,
       "tile": false,
       "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "wwwwwwwwwww",
-        "vwwvwwwvwwv",
-        "DEDCDEDCDED"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "east"
-        ]
-      },
-      "rows": [
-        "wWWWWWw",
-        "wWwWWwv",
-        "DEDCDED"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "west"
-        ]
-      },
-      "rows": [
-        "wWWWWWw",
-        "vwWWwWw",
-        "DEDCDED"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "up"
-        ]
-      },
-      "color": "i5"
-    },
-    {
-      "op": "rect",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "up"
-        ]
-      },
-      "x": 2,
-      "y": 0,
-      "w": 7,
-      "h": 1,
-      "color": "c2"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "i2"
     },
     {
       "op": "pattern",
@@ -5722,551 +3021,54 @@
     {
       "op": "pattern",
       "target": {
-        "cubes": "wing_arm_r",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "rows": [
-        "DEWWWWWWWWWWWWWWWWWWWWED",
-        "CDwvwwvwwvwwvwwvwwvwwvDC"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_arm_r",
-        "faces": [
-          "up"
-        ]
-      },
-      "rows": [
-        "DETTTTTTTTTTTTTTTTTTTTED",
-        "CDWWWWWWWWWWWWWWWWWWWWDC"
-      ],
-      "key": {
-        "T": "i6",
-        "W": "i5",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_arm_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "CCvvvvvvvvvvvvvvvvvvvvCC",
-        "CCuvuvuvuvuvuvuvuvuvuvCC"
-      ],
-      "key": {
-        "v": "i3",
-        "u": "i2",
-        "C": "g2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "wing_arm_r",
-        "faces": [
-          "east",
-          "west"
-        ]
-      },
-      "color": "g3"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_hand_r",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "rows": [
-        "TWWWWWWWWWWT",
-        "wvwwvwwvwwvw"
-      ],
-      "key": {
-        "T": "i6",
-        "W": "i5",
-        "w": "i4",
-        "v": "i3"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "wing_hand_r",
-        "faces": [
-          "up"
-        ]
-      },
-      "color": "i6"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "wing_hand_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "i3"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "wing_hand_r",
-        "faces": [
-          "east",
-          "west"
-        ]
-      },
-      "color": "i5"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "robe_side_r",
-        "faces": [
-          "east"
-        ]
-      },
-      "rows": [
-        "uvvC",
-        "vWwD",
-        "vWvE",
-        "wwvD",
-        "vWvD",
-        "vwvE",
-        "wWuD",
-        "vWvD",
-        "vwvE",
-        "wWvD",
-        "uwuD",
-        "vWvE",
-        "vwuD",
-        "uvuD",
-        "DEDE",
-        "BCBC"
-      ],
-      "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2",
-        "B": "g1",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "robe_side_r",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "rows": [
-        "v",
-        "w",
-        "w",
-        "w",
-        "v",
-        "w",
-        "w",
-        "v",
-        "w",
-        "v",
-        "v",
-        "w",
-        "v",
-        "u",
-        "D",
-        "C"
-      ],
-      "key": {
-        "w": "i4",
-        "v": "i3",
-        "u": "i2",
-        "C": "g2",
-        "D": "g3"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "robe_side_r",
-        "faces": [
-          "up"
-        ]
-      },
-      "color": "i3"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "robe_side_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "g1"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "pauldron_plate_r",
-        "faces": [
-          "east",
-          "west"
-        ]
-      },
-      "rows": [
-        "CCCC",
-        "EFED",
-        "BDDB"
-      ],
-      "key": {
-        "B": "g1",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4",
-        "F": "g5"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "pauldron_plate_r",
-        "faces": [
-          "north",
-          "south"
-        ]
-      },
-      "rows": [
-        "CCCCC",
-        "DEFED",
-        "BCDCB"
-      ],
-      "key": {
-        "B": "g1",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4",
-        "F": "g5"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "fill",
-      "target": {
-        "cubes": "pauldron_plate_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "color": "g1"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "mantle",
+        "cubes": "wing_r",
         "faces": [
           "north"
         ]
       },
       "rows": [
-        "wWWWWFWWWWw",
-        "wWWwWDWwWWv",
-        "DEDCDEDCDED"
+        ".........MMddLMdLdLMdLMdLMdLMdLMdLMdLM.......",
+        ".........dddLMdLdLMdLMdLMdLMdLMdLMdLMdL......",
+        ".........LdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.....",
+        ".........dLMdLMdLMdLM....LMdLMdLMdLMdLMdL....",
+        ".........LMdLMddLM..........LMdLMdLMdLMdLM...",
+        ".........MdLMdd.................dLMdLMdLMdL..",
+        "...................................dLMdLMdLM."
       ],
       "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4",
-        "F": "g5"
+        "d": "nb",
+        "M": "nc",
+        "L": "nd"
       },
       "x": 0,
-      "y": 0,
+      "y": 7,
       "tile": false,
       "anchor": "top-left"
     },
     {
       "op": "pattern",
       "target": {
-        "cubes": "hood_r",
+        "cubes": "wing_r",
         "faces": [
-          "east"
+          "south"
         ]
       },
       "rows": [
-        "WWWWWWWWWWE",
-        "WWWWWWWWWDD",
-        "wWWWWuWWWWE",
-        "wwWWuwWWWDD",
-        "vwwuwWWWWwE",
-        "wvuwwWWWwDD",
-        "uuvwwWWwwvE",
-        "uuuuvvvvvCD",
-        "DEDCDEDCDEC"
+        ".......MLdMLdMLdMLdMLdMLdMLdLdMLddMM.........",
+        "......LdMLdMLdMLdMLdMLdMLdMLdLdMLddd.........",
+        ".....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdL.........",
+        "....LdMLdMLdMLdMLdML....MLdMLdMLdMLd.........",
+        "...MLdMLdMLdMLdML..........MLddMLdML.........",
+        "..LdMLdMLdMLd.................ddMLdM.........",
+        ".MLdMLdMLd..................................."
       ],
       "key": {
-        "W": "i5",
-        "w": "i4",
-        "v": "i3",
-        "u": "i2",
-        "t": "i1",
-        "C": "g2",
-        "D": "g3",
-        "E": "g4"
+        "d": "wb",
+        "M": "wc",
+        "L": "wd"
       },
       "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "mantle",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "CCCCCCCCCCC",
-        "CuuuuuuuuuC",
-        "CutttttttuC",
-        "CutttttttuC",
-        "CutttttttuC",
-        "CuuuuuuuuuC",
-        "CCCCCCCCCCC"
-      ],
-      "key": {
-        "C": "g2",
-        "u": "i2",
-        "t": "i1"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "pauldron_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "CCCCC",
-        "CBBBC",
-        "CBABC",
-        "CBBBC",
-        "CCCCC"
-      ],
-      "key": {
-        "A": "g0",
-        "B": "g1",
-        "C": "g2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "pauldron_plate_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "CCCCC",
-        "CBBBC",
-        "CBBBC",
-        "CCCCC"
-      ],
-      "key": {
-        "B": "g1",
-        "C": "g2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "bracer_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "CCCC",
-        "CBBC",
-        "CBBC",
-        "CCCC"
-      ],
-      "key": {
-        "B": "g1",
-        "C": "g2"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hips",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "CCCCCCCCC",
-        "CtttttttC",
-        "CtoooootC",
-        "CtttttttC",
-        "CCCCCCCCC"
-      ],
-      "key": {
-        "C": "g2",
-        "t": "i1",
-        "o": "i0"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "chest",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "uuuuuuuu",
-        "uttttttu",
-        "uttttttu",
-        "uuuuuuuu"
-      ],
-      "key": {
-        "u": "i2",
-        "t": "i1"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "hem_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "ppppp",
-        "poooo",
-        "poooo",
-        "poooo",
-        "ppppp"
-      ],
-      "key": {
-        "p": "s1",
-        "o": "s0"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_hand_r",
-        "faces": [
-          "down"
-        ]
-      },
-      "rows": [
-        "vuvvuvvuvvuv"
-      ],
-      "key": {
-        "v": "i3",
-        "u": "i2"
-      },
-      "x": 0,
-      "y": 0,
+      "y": 7,
       "tile": false,
       "anchor": "top-left"
     }

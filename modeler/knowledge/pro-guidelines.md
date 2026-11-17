@@ -47,6 +47,10 @@ stile specifico (`styles/<stile>/notes.md`) hanno sempre la precedenza su queste
   sfasate tra loro) su una base scura, con 2 toni chiari vicini. Serve una faccia larga almeno 6 px: su facce più
   strette qualsiasi motivo diventa rumore, quindi allarga la parte che lo porta (es. l'anima della lama). Lascia
   pulito il filo (margin o listelli separati). Mai macchie, "occhi" o pixel sparsi disegnati a mano.
+- **Ali piumate**: usa l'operazione `feathers` su piani sottili (spessore 0) grandi abbastanza da contenere tutte le
+  penne: file in ordine remiganti lunghe (dietro) → secondarie → copritrici corte vicino all'osso (davanti), larghezza
+  6–7 px (5 per le copritrici), passo tra le penne ≈ 0.6 × larghezza, angoli che si aprono a ventaglio, contorno scuro
+  di separazione. Mai piume disegnate pixel per pixel o con rumore: diventano "pelliccia".
 - Evita il **banding** (strisce parallele di gradiente uguali) e i pixel isolati rumorosi ("orfani").
 - Le facce che si vedono di più (fronte, alto) meritano più dettaglio; quelle nascoste o il fondo meno.
 - Leggibilità a distanza: guarda il render piccolo; se i dettagli diventano poltiglia, semplifica.

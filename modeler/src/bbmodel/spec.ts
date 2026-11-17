@@ -124,6 +124,28 @@ export const PaintOp = z.discriminatedUnion("op", [
     margin: z.number().int().min(0).default(1).describe("pixel lasciati puliti ai bordi della faccia (per il filo)"),
     seed: z.number().int().default(1),
   }).describe("linee sottili ondulate quasi parallele (acciaio damascato/al crogiolo, venature): continue, 1px, senza macchie"),
+  z.object({
+    op: z.literal("feathers"),
+    target,
+    clear: z.boolean().default(true).describe("svuota la faccia (trasparente) prima di disegnare: la sagoma dell'ala nasce dalle piume"),
+    rows: z
+      .array(
+        z.object({
+          from: z.tuple([z.number(), z.number()]).describe("punto della faccia (pixel) dove si attacca la prima penna della fila"),
+          to: z.tuple([z.number(), z.number()]).describe("punto dove si attacca l'ultima penna della fila"),
+          count: z.number().int().min(1).max(40),
+          angleFrom: z.number().describe("direzione della prima penna in gradi: 0 = verso il basso, 90 = verso destra, -90 = verso sinistra"),
+          angleTo: z.number(),
+          lengthFrom: z.number().min(2),
+          lengthTo: z.number().min(2),
+          width: z.number().min(3).max(10).default(6).describe("larghezza della penna alla base in pixel (6–7 per remiganti e secondarie, 5 per copritrici); distanza tra le penne ≈ 0.6 × larghezza"),
+          colors: z.tuple([color, color, color]).describe("[ombra, base, luce]"),
+          outline: color.optional().describe("contorno scuro di 1 px attorno a ogni penna (separa le penne)"),
+        }),
+      )
+      .min(1)
+      .describe("file di penne disegnate in ordine: prima le remiganti lunghe (dietro), poi le secondarie, infine le copritrici corte vicino all'osso (davanti)"),
+  }).describe("ala piumata pulita: penne affusolate con bordo chiaro/scuro, rachide e base in ombra, a file sovrapposte; tutto ciò che non è penna resta trasparente"),
   z.object({ op: z.literal("erase"), target, x: z.number().int().optional(), y: z.number().int().optional(), w: z.number().int().optional(), h: z.number().int().optional() }),
 ]);
 export type PaintOp = z.infer<typeof PaintOp>;

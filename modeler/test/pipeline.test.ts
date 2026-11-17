@@ -280,3 +280,17 @@ describe("armature 2D", () => {
     expect(b.layout.arm_l.north).toMatchObject({ x: 44, y: 20, mirrored: true });
   });
 });
+
+describe("operazione feathers", () => {
+  it("disegna penne con sagoma trasparente attorno", () => {
+    const b = buildModel(ModelSpec.parse({ name: "w", format: "free", texture: { width: 64, height: 64 }, cubes: [{ name: "wing", from: [0, 0, 0], to: [40, 30, 0], hideFaces: ["south"] }] }));
+    const img = b.model.textures[0].img;
+    paint(img, b.layout, PaintProgram.parse({ ops: [{ op: "feathers", target: { cubes: "wing", faces: ["north"] }, rows: [{ from: [4, 2], to: [30, 4], count: 5, angleFrom: 0, angleTo: 30, lengthFrom: 12, lengthTo: 16, width: 6, colors: ["#808080", "#c0c0c0", "#ffffff"], outline: "#404040" }] }] }));
+    const r = b.layout.wing.north!;
+    let opaque = 0, transparent = 0;
+    for (let y = 0; y < r.h; y++) for (let x = 0; x < r.w; x++) (img.get(r.x + x, r.y + y)[3] ? opaque++ : transparent++);
+    expect(opaque).toBeGreaterThan(150);
+    expect(transparent).toBeGreaterThan(300);
+    expect(img.get(r.x + r.w - 1, r.y + r.h - 1)[3]).toBe(0);
+  });
+});

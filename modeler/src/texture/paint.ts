@@ -218,6 +218,44 @@ export function paint(img: Img, layout: UvLayout, program: PaintProgram): PaintR
           }
           break;
         }
+        case "feathers": {
+          if (op.clear) for (let y = 0; y < r.h; y++) for (let x = 0; x < r.w; x++) put(x, y, [0, 0, 0, 0]);
+          for (const row of op.rows) {
+            const [shadow, base, light] = row.colors.map(col);
+            const outline = row.outline ? col(row.outline) : null;
+            for (let i = 0; i < row.count; i++) {
+              const k = row.count === 1 ? 0 : i / (row.count - 1);
+              const ox = row.from[0] + (row.to[0] - row.from[0]) * k, oy = row.from[1] + (row.to[1] - row.from[1]) * k;
+              const ang = ((row.angleFrom + (row.angleTo - row.angleFrom) * k) * Math.PI) / 180;
+              const L = row.lengthFrom + (row.lengthTo - row.lengthFrom) * k;
+              // asse della penna (0° = verso il basso) e normale
+              const ax = Math.sin(ang), ay = Math.cos(ang), nx = ay, ny = -ax;
+              const hw0 = row.width / 2;
+              const halfWidth = (t: number) => hw0 * Math.sqrt(Math.max(0, 1 - Math.pow(t / L, 3))); // punta arrotondata-affusolata
+              const minX = Math.floor(Math.min(ox, ox + ax * L) - hw0 - 2), maxX = Math.ceil(Math.max(ox, ox + ax * L) + hw0 + 2);
+              const minY = Math.floor(Math.min(oy, oy + ay * L) - hw0 - 2), maxY = Math.ceil(Math.max(oy, oy + ay * L) + hw0 + 2);
+              for (let py = minY; py <= maxY; py++)
+                for (let px = minX; px <= maxX; px++) {
+                  const dx = px + 0.5 - ox, dy = py + 0.5 - oy;
+                  const t = dx * ax + dy * ay, s = dx * nx + dy * ny;
+                  if (t < -0.5 || t > L + 1) continue;
+                  const hw = halfWidth(Math.max(0, Math.min(t, L)));
+                  if (Math.abs(s) > hw || t > L) {
+                    // separazione: una linea scura solo sul lato in ombra e sulla punta, così le penne si staccano
+                    if (outline && ((s < -hw && s >= -hw - 1 && t <= L) || (t > L && t <= L + 1 && Math.abs(s) < 1))) put(px, py, outline);
+                    continue;
+                  }
+                  let c = base;
+                  if (s > hw - 1) c = light; // bordo in luce
+                  else if (s < -hw + 1.2) c = shadow; // bordo in ombra
+                  else if (row.width >= 6 && Math.abs(s) < 0.5 && t > L * 0.25 && t < L * 0.8) c = light; // rachide sulle penne larghe
+                  if (t < L * 0.2 && c === base) c = shadow; // radice in ombra
+                  put(px, py, c);
+                }
+            }
+          }
+          break;
+        }
         case "erase": {
           const x0 = op.x ?? 0, y0 = op.y ?? 0, w = op.w ?? r.w, h = op.h ?? r.h;
           for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) put(x, y, [0, 0, 0, 0]);

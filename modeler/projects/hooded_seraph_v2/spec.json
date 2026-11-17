@@ -1,0 +1,1525 @@
+{
+  "name": "hooded_seraph",
+  "output": "model",
+  "format": "bedrock",
+  "pixelsPerUnit": 1,
+  "texture": {
+    "width": 128,
+    "height": 128
+  },
+  "bones": [
+    {
+      "name": "Body",
+      "pivot": [
+        0,
+        18,
+        0
+      ]
+    },
+    {
+      "name": "Head",
+      "parent": "Body",
+      "pivot": [
+        0,
+        32,
+        0
+      ]
+    },
+    {
+      "name": "Hood",
+      "parent": "Head",
+      "pivot": [
+        0,
+        32,
+        0
+      ]
+    },
+    {
+      "name": "RightArm",
+      "parent": "Body",
+      "pivot": [
+        5.5,
+        30,
+        0
+      ],
+      "rotation": [
+        30,
+        0,
+        10
+      ]
+    },
+    {
+      "name": "Spear",
+      "parent": "RightArm",
+      "pivot": [
+        5.5,
+        17.5,
+        0
+      ],
+      "rotation": [
+        -30,
+        0,
+        -10
+      ]
+    },
+    {
+      "name": "LeftArm",
+      "parent": "Body",
+      "pivot": [
+        -5.5,
+        30,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -12
+      ]
+    },
+    {
+      "name": "RightWing",
+      "parent": "Body",
+      "pivot": [
+        2,
+        31,
+        4
+      ],
+      "rotation": [
+        0,
+        -25,
+        12
+      ]
+    },
+    {
+      "name": "LeftWing",
+      "parent": "Body",
+      "pivot": [
+        -2,
+        31,
+        4
+      ],
+      "rotation": [
+        0,
+        25,
+        -12
+      ]
+    },
+    {
+      "name": "RightLeg",
+      "pivot": [
+        2,
+        18,
+        0
+      ]
+    },
+    {
+      "name": "LeftLeg",
+      "pivot": [
+        -2,
+        18,
+        0
+      ]
+    }
+  ],
+  "cubes": [
+    {
+      "name": "chest",
+      "bone": "Body",
+      "from": [
+        -4,
+        25,
+        -2
+      ],
+      "to": [
+        4,
+        31,
+        2
+      ],
+      "hideFaces": [
+        "up"
+      ]
+    },
+    {
+      "name": "waist",
+      "bone": "Body",
+      "from": [
+        -3,
+        23,
+        -1.5
+      ],
+      "to": [
+        3,
+        25,
+        1.5
+      ],
+      "hideFaces": [
+        "up",
+        "down"
+      ]
+    },
+    {
+      "name": "belt",
+      "bone": "Body",
+      "from": [
+        -3.5,
+        21,
+        -2
+      ],
+      "to": [
+        3.5,
+        23,
+        2
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "buckle",
+      "bone": "Body",
+      "from": [
+        -1.5,
+        21,
+        -3
+      ],
+      "to": [
+        1.5,
+        24,
+        -2
+      ],
+      "hideFaces": [
+        "south",
+        "down",
+        "up"
+      ]
+    },
+    {
+      "name": "hips",
+      "bone": "Body",
+      "from": [
+        -4.5,
+        16,
+        -2.5
+      ],
+      "to": [
+        4.5,
+        21,
+        2.5
+      ]
+    },
+    {
+      "name": "mantle",
+      "bone": "Body",
+      "from": [
+        -6,
+        29,
+        -3.5
+      ],
+      "to": [
+        6,
+        33,
+        3.5
+      ]
+    },
+    {
+      "name": "mantle_bib",
+      "bone": "Body",
+      "from": [
+        -3,
+        26,
+        -3
+      ],
+      "to": [
+        3,
+        29,
+        -2
+      ],
+      "hideFaces": [
+        "south",
+        "up"
+      ]
+    },
+    {
+      "name": "mantle_point",
+      "bone": "Body",
+      "from": [
+        -1.5,
+        24,
+        -3
+      ],
+      "to": [
+        1.5,
+        26,
+        -2
+      ],
+      "hideFaces": [
+        "south",
+        "up",
+        "down"
+      ]
+    },
+    {
+      "name": "mantle_back",
+      "bone": "Body",
+      "from": [
+        -5,
+        24,
+        2.5
+      ],
+      "to": [
+        5,
+        29,
+        3.5
+      ],
+      "hideFaces": [
+        "north",
+        "up"
+      ]
+    },
+    {
+      "name": "tabard_front",
+      "bone": "Body",
+      "from": [
+        -2.5,
+        8,
+        -3.5
+      ],
+      "to": [
+        2.5,
+        21,
+        -2.5
+      ],
+      "hideFaces": [
+        "south",
+        "down"
+      ]
+    },
+    {
+      "name": "tabard_front_low",
+      "bone": "Body",
+      "from": [
+        -3.5,
+        2,
+        -3.5
+      ],
+      "to": [
+        3.5,
+        8,
+        -2.5
+      ],
+      "hideFaces": [
+        "south"
+      ]
+    },
+    {
+      "name": "tabard_back",
+      "bone": "Body",
+      "from": [
+        -2.5,
+        8,
+        2.5
+      ],
+      "to": [
+        2.5,
+        21,
+        3.5
+      ],
+      "hideFaces": [
+        "north",
+        "down"
+      ]
+    },
+    {
+      "name": "tabard_back_low",
+      "bone": "Body",
+      "from": [
+        -3.5,
+        2,
+        2.5
+      ],
+      "to": [
+        3.5,
+        8,
+        3.5
+      ],
+      "hideFaces": [
+        "north"
+      ]
+    },
+    {
+      "name": "robe_side_r",
+      "bone": "Body",
+      "from": [
+        4.5,
+        4,
+        -2
+      ],
+      "to": [
+        5.5,
+        20,
+        2
+      ],
+      "hideFaces": [
+        "west"
+      ]
+    },
+    {
+      "name": "robe_side_l",
+      "bone": "Body",
+      "from": [
+        -5.5,
+        4,
+        -2
+      ],
+      "to": [
+        -4.5,
+        20,
+        2
+      ],
+      "hideFaces": [
+        "east"
+      ],
+      "uvFrom": "robe_side_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "head",
+      "bone": "Head",
+      "from": [
+        -4,
+        32,
+        -2.5
+      ],
+      "to": [
+        4,
+        40,
+        5.5
+      ],
+      "hideFaces": [
+        "east",
+        "west",
+        "up",
+        "south",
+        "down"
+      ]
+    },
+    {
+      "name": "hood_crown",
+      "bone": "Hood",
+      "from": [
+        -5,
+        40,
+        -7
+      ],
+      "to": [
+        5,
+        43,
+        7
+      ]
+    },
+    {
+      "name": "hood_cap",
+      "bone": "Hood",
+      "from": [
+        -4,
+        43,
+        -5
+      ],
+      "to": [
+        4,
+        44,
+        6
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "hood_tip",
+      "bone": "Hood",
+      "from": [
+        -2,
+        43,
+        2
+      ],
+      "to": [
+        2,
+        47,
+        6
+      ],
+      "pivot": [
+        0,
+        43,
+        4
+      ],
+      "rotation": [
+        -22.5,
+        0,
+        0
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "hood_side_r",
+      "bone": "Hood",
+      "from": [
+        4,
+        30,
+        -6
+      ],
+      "to": [
+        5,
+        40,
+        6
+      ],
+      "hideFaces": [
+        "up",
+        "north",
+        "south"
+      ]
+    },
+    {
+      "name": "hood_side_l",
+      "bone": "Hood",
+      "from": [
+        -5,
+        30,
+        -6
+      ],
+      "to": [
+        -4,
+        40,
+        6
+      ],
+      "hideFaces": [
+        "up",
+        "north",
+        "south"
+      ],
+      "uvFrom": "hood_side_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "hood_back",
+      "bone": "Hood",
+      "from": [
+        -5,
+        30,
+        6
+      ],
+      "to": [
+        5,
+        40,
+        8
+      ],
+      "hideFaces": [
+        "north"
+      ]
+    },
+    {
+      "name": "hood_rim_r",
+      "bone": "Hood",
+      "from": [
+        3,
+        30,
+        -7
+      ],
+      "to": [
+        5,
+        40,
+        -6
+      ],
+      "hideFaces": [
+        "south",
+        "up"
+      ]
+    },
+    {
+      "name": "hood_rim_l",
+      "bone": "Hood",
+      "from": [
+        -5,
+        30,
+        -7
+      ],
+      "to": [
+        -3,
+        40,
+        -6
+      ],
+      "hideFaces": [
+        "south",
+        "up"
+      ],
+      "uvFrom": "hood_rim_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "hood_arch_r",
+      "bone": "Hood",
+      "from": [
+        2,
+        38,
+        -7
+      ],
+      "to": [
+        3,
+        40,
+        -6
+      ],
+      "hideFaces": [
+        "south",
+        "up",
+        "east"
+      ]
+    },
+    {
+      "name": "hood_arch_l",
+      "bone": "Hood",
+      "from": [
+        -3,
+        38,
+        -7
+      ],
+      "to": [
+        -2,
+        40,
+        -6
+      ],
+      "hideFaces": [
+        "south",
+        "up",
+        "west"
+      ],
+      "uvFrom": "hood_arch_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "arm_r",
+      "bone": "RightArm",
+      "from": [
+        4,
+        16,
+        -1.5
+      ],
+      "to": [
+        7,
+        31,
+        1.5
+      ],
+      "hideFaces": [
+        "up"
+      ]
+    },
+    {
+      "name": "bracer_r",
+      "bone": "RightArm",
+      "from": [
+        3.5,
+        17,
+        -2
+      ],
+      "to": [
+        7.5,
+        22,
+        2
+      ]
+    },
+    {
+      "name": "pauldron_r",
+      "bone": "RightArm",
+      "from": [
+        3.5,
+        29,
+        -3
+      ],
+      "to": [
+        8.5,
+        33,
+        3
+      ]
+    },
+    {
+      "name": "lame1_r",
+      "bone": "RightArm",
+      "from": [
+        4.5,
+        27,
+        -2.5
+      ],
+      "to": [
+        9.5,
+        29,
+        2.5
+      ]
+    },
+    {
+      "name": "lame2_r",
+      "bone": "RightArm",
+      "from": [
+        5.5,
+        25,
+        -2
+      ],
+      "to": [
+        9.5,
+        27,
+        2
+      ],
+      "hideFaces": [
+        "up"
+      ]
+    },
+    {
+      "name": "crest_r",
+      "bone": "RightArm",
+      "from": [
+        5,
+        33,
+        -1.5
+      ],
+      "to": [
+        8,
+        34,
+        1.5
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "arm_l",
+      "bone": "LeftArm",
+      "from": [
+        -7,
+        16,
+        -1.5
+      ],
+      "to": [
+        -4,
+        31,
+        1.5
+      ],
+      "hideFaces": [
+        "up"
+      ],
+      "uvFrom": "arm_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "bracer_l",
+      "bone": "LeftArm",
+      "from": [
+        -7.5,
+        17,
+        -2
+      ],
+      "to": [
+        -3.5,
+        22,
+        2
+      ],
+      "uvFrom": "bracer_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "pauldron_l",
+      "bone": "LeftArm",
+      "from": [
+        -8.5,
+        29,
+        -3
+      ],
+      "to": [
+        -3.5,
+        33,
+        3
+      ],
+      "uvFrom": "pauldron_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "lame1_l",
+      "bone": "LeftArm",
+      "from": [
+        -9.5,
+        27,
+        -2.5
+      ],
+      "to": [
+        -4.5,
+        29,
+        2.5
+      ],
+      "uvFrom": "lame1_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "lame2_l",
+      "bone": "LeftArm",
+      "from": [
+        -9.5,
+        25,
+        -2
+      ],
+      "to": [
+        -5.5,
+        27,
+        2
+      ],
+      "hideFaces": [
+        "up"
+      ],
+      "uvFrom": "lame2_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "crest_l",
+      "bone": "LeftArm",
+      "from": [
+        -8,
+        33,
+        -1.5
+      ],
+      "to": [
+        -5,
+        34,
+        1.5
+      ],
+      "hideFaces": [
+        "down"
+      ],
+      "uvFrom": "crest_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "leg_r",
+      "bone": "RightLeg",
+      "from": [
+        0,
+        3,
+        -2
+      ],
+      "to": [
+        4,
+        18,
+        2
+      ],
+      "hideFaces": [
+        "up",
+        "down",
+        "west"
+      ]
+    },
+    {
+      "name": "hem_r",
+      "bone": "RightLeg",
+      "from": [
+        0,
+        0,
+        -2.5
+      ],
+      "to": [
+        5,
+        3,
+        2.5
+      ],
+      "hideFaces": [
+        "west"
+      ]
+    },
+    {
+      "name": "leg_l",
+      "bone": "LeftLeg",
+      "from": [
+        -4,
+        3,
+        -2
+      ],
+      "to": [
+        0,
+        18,
+        2
+      ],
+      "hideFaces": [
+        "up",
+        "down",
+        "east"
+      ],
+      "uvFrom": "leg_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "hem_l",
+      "bone": "LeftLeg",
+      "from": [
+        -5,
+        0,
+        -2.5
+      ],
+      "to": [
+        0,
+        3,
+        2.5
+      ],
+      "hideFaces": [
+        "east"
+      ],
+      "uvFrom": "hem_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_bone1_r",
+      "bone": "RightWing",
+      "from": [
+        2,
+        30,
+        3
+      ],
+      "to": [
+        16,
+        32,
+        5
+      ],
+      "pivot": [
+        2,
+        31,
+        4
+      ],
+      "rotation": [
+        0,
+        0,
+        45
+      ]
+    },
+    {
+      "name": "wing_bone2_r",
+      "bone": "RightWing",
+      "from": [
+        11,
+        40,
+        2.5
+      ],
+      "to": [
+        24,
+        42,
+        5.5
+      ],
+      "pivot": [
+        12,
+        41,
+        4
+      ],
+      "rotation": [
+        0,
+        0,
+        22.5
+      ]
+    },
+    {
+      "name": "wing_bone3_r",
+      "bone": "RightWing",
+      "from": [
+        22,
+        44.5,
+        3
+      ],
+      "to": [
+        39,
+        46.5,
+        5
+      ],
+      "pivot": [
+        23,
+        45.5,
+        4
+      ],
+      "rotation": [
+        0,
+        0,
+        -22.5
+      ]
+    },
+    {
+      "name": "wing_r",
+      "bone": "RightWing",
+      "from": [
+        2,
+        21,
+        4
+      ],
+      "to": [
+        47,
+        46,
+        4
+      ]
+    },
+    {
+      "name": "wing_cov1b_r",
+      "bone": "RightWing",
+      "from": [
+        3,
+        25,
+        4.75
+      ],
+      "to": [
+        16,
+        31,
+        4.75
+      ],
+      "pivot": [
+        2,
+        31,
+        4.75
+      ],
+      "rotation": [
+        0,
+        0,
+        45
+      ],
+      "hideFaces": [
+        "north"
+      ]
+    },
+    {
+      "name": "wing_cov2b_r",
+      "bone": "RightWing",
+      "from": [
+        12,
+        35,
+        4.5
+      ],
+      "to": [
+        24,
+        41,
+        4.5
+      ],
+      "pivot": [
+        12,
+        41,
+        4.5
+      ],
+      "rotation": [
+        0,
+        0,
+        22.5
+      ],
+      "hideFaces": [
+        "north"
+      ]
+    },
+    {
+      "name": "wing_cov3b_r",
+      "bone": "RightWing",
+      "from": [
+        23,
+        39.5,
+        4.75
+      ],
+      "to": [
+        38,
+        45.5,
+        4.75
+      ],
+      "pivot": [
+        23,
+        45.5,
+        4.75
+      ],
+      "rotation": [
+        0,
+        0,
+        -22.5
+      ],
+      "hideFaces": [
+        "north"
+      ]
+    },
+    {
+      "name": "wing_cov1f_r",
+      "bone": "RightWing",
+      "from": [
+        3,
+        25,
+        3.25
+      ],
+      "to": [
+        16,
+        31,
+        3.25
+      ],
+      "pivot": [
+        2,
+        31,
+        3.25
+      ],
+      "rotation": [
+        0,
+        0,
+        45
+      ],
+      "hideFaces": [
+        "south"
+      ]
+    },
+    {
+      "name": "wing_cov2f_r",
+      "bone": "RightWing",
+      "from": [
+        12,
+        35,
+        3.5
+      ],
+      "to": [
+        24,
+        41,
+        3.5
+      ],
+      "pivot": [
+        12,
+        41,
+        3.5
+      ],
+      "rotation": [
+        0,
+        0,
+        22.5
+      ],
+      "hideFaces": [
+        "south"
+      ]
+    },
+    {
+      "name": "wing_cov3f_r",
+      "bone": "RightWing",
+      "from": [
+        23,
+        39.5,
+        3.25
+      ],
+      "to": [
+        38,
+        45.5,
+        3.25
+      ],
+      "pivot": [
+        23,
+        45.5,
+        3.25
+      ],
+      "rotation": [
+        0,
+        0,
+        -22.5
+      ],
+      "hideFaces": [
+        "south"
+      ]
+    },
+    {
+      "name": "wing_bone1_l",
+      "bone": "LeftWing",
+      "from": [
+        -16,
+        30,
+        3
+      ],
+      "to": [
+        -2,
+        32,
+        5
+      ],
+      "pivot": [
+        -2,
+        31,
+        4
+      ],
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "uvFrom": "wing_bone1_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_bone2_l",
+      "bone": "LeftWing",
+      "from": [
+        -24,
+        40,
+        2.5
+      ],
+      "to": [
+        -11,
+        42,
+        5.5
+      ],
+      "pivot": [
+        -12,
+        41,
+        4
+      ],
+      "rotation": [
+        0,
+        0,
+        -22.5
+      ],
+      "uvFrom": "wing_bone2_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_bone3_l",
+      "bone": "LeftWing",
+      "from": [
+        -39,
+        44.5,
+        3
+      ],
+      "to": [
+        -22,
+        46.5,
+        5
+      ],
+      "pivot": [
+        -23,
+        45.5,
+        4
+      ],
+      "rotation": [
+        0,
+        0,
+        22.5
+      ],
+      "uvFrom": "wing_bone3_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_l",
+      "bone": "LeftWing",
+      "from": [
+        -47,
+        21,
+        4
+      ],
+      "to": [
+        -2,
+        46,
+        4
+      ],
+      "uvFrom": "wing_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_cov1b_l",
+      "bone": "LeftWing",
+      "from": [
+        -16,
+        25,
+        4.75
+      ],
+      "to": [
+        -3,
+        31,
+        4.75
+      ],
+      "pivot": [
+        -2,
+        31,
+        4.75
+      ],
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "hideFaces": [
+        "north"
+      ],
+      "uvFrom": "wing_cov1b_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_cov2b_l",
+      "bone": "LeftWing",
+      "from": [
+        -24,
+        35,
+        4.5
+      ],
+      "to": [
+        -12,
+        41,
+        4.5
+      ],
+      "pivot": [
+        -12,
+        41,
+        4.5
+      ],
+      "rotation": [
+        0,
+        0,
+        -22.5
+      ],
+      "hideFaces": [
+        "north"
+      ],
+      "uvFrom": "wing_cov2b_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_cov3b_l",
+      "bone": "LeftWing",
+      "from": [
+        -38,
+        39.5,
+        4.75
+      ],
+      "to": [
+        -23,
+        45.5,
+        4.75
+      ],
+      "pivot": [
+        -23,
+        45.5,
+        4.75
+      ],
+      "rotation": [
+        0,
+        0,
+        22.5
+      ],
+      "hideFaces": [
+        "north"
+      ],
+      "uvFrom": "wing_cov3b_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_cov1f_l",
+      "bone": "LeftWing",
+      "from": [
+        -16,
+        25,
+        3.25
+      ],
+      "to": [
+        -3,
+        31,
+        3.25
+      ],
+      "pivot": [
+        -2,
+        31,
+        3.25
+      ],
+      "rotation": [
+        0,
+        0,
+        -45
+      ],
+      "hideFaces": [
+        "south"
+      ],
+      "uvFrom": "wing_cov1f_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_cov2f_l",
+      "bone": "LeftWing",
+      "from": [
+        -24,
+        35,
+        3.5
+      ],
+      "to": [
+        -12,
+        41,
+        3.5
+      ],
+      "pivot": [
+        -12,
+        41,
+        3.5
+      ],
+      "rotation": [
+        0,
+        0,
+        -22.5
+      ],
+      "hideFaces": [
+        "south"
+      ],
+      "uvFrom": "wing_cov2f_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_cov3f_l",
+      "bone": "LeftWing",
+      "from": [
+        -38,
+        39.5,
+        3.25
+      ],
+      "to": [
+        -23,
+        45.5,
+        3.25
+      ],
+      "pivot": [
+        -23,
+        45.5,
+        3.25
+      ],
+      "rotation": [
+        0,
+        0,
+        22.5
+      ],
+      "hideFaces": [
+        "south"
+      ],
+      "uvFrom": "wing_cov3f_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "spear_butt",
+      "bone": "Spear",
+      "from": [
+        4,
+        -1,
+        -1.5
+      ],
+      "to": [
+        7,
+        1,
+        1.5
+      ]
+    },
+    {
+      "name": "spear_shaft",
+      "bone": "Spear",
+      "from": [
+        4.5,
+        1,
+        -1
+      ],
+      "to": [
+        6.5,
+        43,
+        1
+      ],
+      "hideFaces": [
+        "up",
+        "down"
+      ]
+    },
+    {
+      "name": "spear_collar",
+      "bone": "Spear",
+      "from": [
+        4,
+        42,
+        -1.5
+      ],
+      "to": [
+        7,
+        45,
+        1.5
+      ]
+    },
+    {
+      "name": "spear_crystal",
+      "bone": "Spear",
+      "from": [
+        4.5,
+        45.4,
+        -2
+      ],
+      "to": [
+        6.5,
+        47.4,
+        2
+      ],
+      "pivot": [
+        5.5,
+        46.4,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        45
+      ]
+    },
+    {
+      "name": "spear_ridge",
+      "bone": "Spear",
+      "from": [
+        4.5,
+        45,
+        -1
+      ],
+      "to": [
+        6.5,
+        57,
+        1
+      ],
+      "hideFaces": [
+        "down"
+      ]
+    },
+    {
+      "name": "spear_blade",
+      "bone": "Spear",
+      "from": [
+        3,
+        49,
+        -0.5
+      ],
+      "to": [
+        8,
+        54,
+        0.5
+      ],
+      "pivot": [
+        5.5,
+        51.5,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        45
+      ]
+    },
+    {
+      "name": "spear_tip",
+      "bone": "Spear",
+      "from": [
+        4.5,
+        56,
+        -0.5
+      ],
+      "to": [
+        6.5,
+        58,
+        0.5
+      ],
+      "pivot": [
+        5.5,
+        57,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        45
+      ]
+    }
+  ]
+}

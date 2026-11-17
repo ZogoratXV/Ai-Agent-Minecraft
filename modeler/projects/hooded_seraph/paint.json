@@ -31,16 +31,16 @@
     "k1": "#6aa2ad",
     "k2": "#a6d6d8",
     "k3": "#e6faf6",
-    "wa": "#8b8790",
     "wb": "#b4afb0",
     "wc": "#d9d2c6",
     "wd": "#eee8db",
     "we": "#fffaf0",
-    "na": "#7d7985",
     "nb": "#a29ea4",
     "nc": "#cbc5bc",
     "nd": "#e2dccf",
-    "ne": "#f5f0e4"
+    "ne": "#f5f0e4",
+    "wl": "#a39d99",
+    "nl": "#928d94"
   },
   "ramps": {},
   "ops": [
@@ -50,417 +50,6 @@
         "cubes": "*"
       },
       "color": "i4"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": "wing_r"
-      }
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "....................Ld.......................",
-        ".................LdMLdMLd....................",
-        "...............LdMLdMLdMLdL..................",
-        ".............dMLdMLdMLdMLdMLdL...............",
-        "..........LdMLdMLdMLdMLdMLdMLdLL.............",
-        ".........MLdMLdMLdMLdMLdMLddMLdMLL...........",
-        "........LdMLdMLdMLdMLdMLdMLddMLdMMLL.........",
-        ".......MLdMLdMLdMLdMLdMLdMLdLdMLddMMLL.......",
-        "......LdMLdMLdMLdMLdMLdMLdMLdLdMLdddMMLL.....",
-        ".....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLddMMLL...",
-        "....LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLLddMMLL.",
-        "...MLdMLdMLdMLdMLdMLdMLdMLdMLddMLdMLdMLLddMML",
-        "..LdMLdMLdMLdMLdMLdMLdMLdMLdMLddMLdMLdMMLLd..",
-        ".MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLdMLdMLddMMLL.",
-        "LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdLdMLdMLdddM..",
-        "LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdL...",
-        "MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLdML.MLddM....",
-        ".LdMLdMLdMLdMLdMLdMLdMLdMLdMLdMLddML..L......",
-        "....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLd.ML........",
-        ".....L.MLdMLdMLdMLdMLdMLdMLdMLdMLdL..L.......",
-        ".........LdML.MLdMLdMLdMLdMLdML.ML.L.........",
-        "...........ML..LdMLdMLdMLdML.ML..L...........",
-        ".............L....MLdML.MLdML..L.............",
-        "...................L.ML..L.ML................",
-        ".......................L.....L..............."
-      ],
-      "key": {
-        "d": "wc",
-        "M": "wd",
-        "L": "we"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "....................Ld.......................",
-        ".................LdMLdMLd....................",
-        "...............LdMLdMLdMLdL..................",
-        ".............dMLdMLdMLdMLdMLdL...............",
-        "..........LdMLdMLdMLdMLdMLdMLdLL.............",
-        ".........MLdMLdMLdMLdMLdMLddMLdMLL...........",
-        "........LdMLdMLdMLdMLdMLdMLddMLdMMLL.........",
-        ".......MLdMLdMLdMLdMLdMLdMLdLdMLddMM.........",
-        "......LdMLdMLdMLdMLdMLdMLdMLdLdMLddd.........",
-        ".....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdL.........",
-        "....LdMLdMLdMLdMLdML....MLdMLdMLdMLd.........",
-        "...MLdMLdMLdMLdML..........MLddMLdML.........",
-        "..LdMLdMLdMLd.................ddMLdM.........",
-        ".MLdMLdMLd..................................."
-      ],
-      "key": {
-        "d": "wa",
-        "M": "wc",
-        "L": "wd"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        ".....................................dMMLL...",
-        ".....................................LddMMLL.",
-        ".....................................MLLddMML",
-        ".....................................dMMLLd..",
-        ".....................................LddMMLL.",
-        ".....................................MLdddM..",
-        "LdMLdMLdML.....................dMLdMLdMLdL...",
-        "MLdMLdMLdM.....................LdML.MLddM....",
-        ".LdMLdMLdM.....................LddML..L......",
-        "....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLd.ML........",
-        ".....L.MLdMLdMLdMLdMLdMLdMLdMLdMLdL..L.......",
-        ".........LdML.MLdMLdMLdMLdMLdML.ML.L.........",
-        "...........ML..LdMLdMLdMLdML.ML..L...........",
-        ".............L....MLdML.MLdML..L.............",
-        "...................L.ML..L.ML................",
-        ".......................L.....L..............."
-      ],
-      "key": {
-        "d": "wc",
-        "M": "we",
-        "L": "we"
-      },
-      "x": 0,
-      "y": 9,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        ".......................dL....................",
-        "....................dLMdLMdL.................",
-        "..................LdLMdLMdLMdL...............",
-        "...............LdLMdLMdLMdLMdLMd.............",
-        ".............LLdLMdLMdLMdLMdLMdLMdL..........",
-        "...........LLMdLMddLMdLMdLMdLMdLMdLM.........",
-        ".........LLMMdLMddLMdLMdLMdLMdLMdLMdL........",
-        ".......LLMMddLMdLdLMdLMdLMdLMdLMdLMdLM.......",
-        ".....LLMMdddLMdLdLMdLMdLMdLMdLMdLMdLMdL......",
-        "...LLMMddLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.....",
-        ".LLMMddLLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL....",
-        "LMMddLLMdLMdLMddLMdLMdLMdLMdLMdLMdLMdLMdLM...",
-        "..dLLMMdLMdLMddLMdLMdLMdLMdLMdLMdLMdLMdLMdL..",
-        ".LLMMddLMdLMdLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.",
-        "..MdddLMdLMdLdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL",
-        "...LdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL",
-        "....MddLM.LMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM",
-        "......L..LMddLMdLMdLMdLMdLMdLMdLMdLMdLMdLMdL.",
-        "........LM.dLMdLMdLMdLMdLMdLMdLMdLMdLMdLM....",
-        ".......L..LdLMdLMdLMdLMdLMdLMdLMdLMdLM.L.....",
-        ".........L.LM.LMdLMdLMdLMdLMdLM.LMdL.........",
-        "...........L..LM.LMdLMdLMdLMdL..LM...........",
-        ".............L..LMdLM.LMdLM....L.............",
-        "................LM.L..LM.L...................",
-        "...............L.....L......................."
-      ],
-      "key": {
-        "d": "nc",
-        "M": "nd",
-        "L": "ne"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        ".......................dL....................",
-        "....................dLMdLMdL.................",
-        "..................LdLMdLMdLMdL...............",
-        "...............LdLMdLMdLMdLMdLMd.............",
-        ".............LLdLMdLMdLMdLMdLMdLMdL..........",
-        "...........LLMdLMddLMdLMdLMdLMdLMdLM.........",
-        ".........LLMMdLMddLMdLMdLMdLMdLMdLMdL........",
-        ".........MMddLMdLdLMdLMdLMdLMdLMdLMdLM.......",
-        ".........dddLMdLdLMdLMdLMdLMdLMdLMdLMdL......",
-        ".........LdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.....",
-        ".........dLMdLMdLMdLM....LMdLMdLMdLMdLMdL....",
-        ".........LMdLMddLM..........LMdLMdLMdLMdLM...",
-        ".........MdLMdd.................dLMdLMdLMdL..",
-        "...................................dLMdLMdLM."
-      ],
-      "key": {
-        "d": "na",
-        "M": "nc",
-        "L": "nd"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        "...LLMMd.....................................",
-        ".LLMMddL.....................................",
-        "LMMddLLM.....................................",
-        "..dLLMMd.....................................",
-        ".LLMMddL.....................................",
-        "..MdddLM.....................................",
-        "...LdLMdLMdLMd.....................LMdLMdLMdL",
-        "....MddLM.LMdL.....................MdLMdLMdLM",
-        "......L..LMddL.....................MdLMdLMdL.",
-        "........LM.dLMdLMdLMdLMdLMdLMdLMdLMdLMdLM....",
-        ".......L..LdLMdLMdLMdLMdLMdLMdLMdLMdLM.L.....",
-        ".........L.LM.LMdLMdLMdLMdLMdLM.LMdL.........",
-        "...........L..LM.LMdLMdLMdLMdL..LM...........",
-        ".............L..LMdLM.LMdLM....L.............",
-        "................LM.L..LM.L...................",
-        "...............L.....L......................."
-      ],
-      "key": {
-        "d": "nc",
-        "M": "ne",
-        "L": "ne"
-      },
-      "x": 0,
-      "y": 9,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "erase",
-      "target": {
-        "cubes": [
-          "wing_cov1b_r",
-          "wing_cov2b_r",
-          "wing_cov3b_r",
-          "wing_cov1f_r",
-          "wing_cov2f_r",
-          "wing_cov3f_r"
-        ]
-      }
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_cov1b_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "ccccccccccccc",
-        "wcbwcbwcbwcbw",
-        "bewbewbewbewb",
-        "ebwebwebwebwe",
-        "ebwe.webwe.we",
-        "..w.....w...."
-      ],
-      "key": {
-        "b": "i2",
-        "c": "i4",
-        "w": "i5",
-        "e": "i6"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_cov2b_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "cccccccccccc",
-        "wcbwcbwcbwcb",
-        "bewbewbewbew",
-        "ebwebwebwebw",
-        "ebwe.webwe.w",
-        "..w.....w..."
-      ],
-      "key": {
-        "b": "i2",
-        "c": "i4",
-        "w": "i5",
-        "e": "i6"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_cov3b_r",
-        "faces": [
-          "south"
-        ]
-      },
-      "rows": [
-        "ccccccccccccccc",
-        "wcbwcbwcbwcbwcb",
-        "bewbewbewbewbew",
-        "ebwebwebwebwebw",
-        ".ebwe.webwe.web",
-        "....we....we..."
-      ],
-      "key": {
-        "b": "i2",
-        "c": "i4",
-        "w": "i5",
-        "e": "i6"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_cov1f_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        "ccccccccccccc",
-        "wbcwbcwbcwbcw",
-        "bwebwebwebweb",
-        "ewbewbewbewbe",
-        "ew.ewbew.ewbe",
-        "....w.....w.."
-      ],
-      "key": {
-        "b": "i2",
-        "c": "i3",
-        "w": "i4",
-        "e": "i5"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_cov2f_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        "cccccccccccc",
-        "bcwbcwbcwbcw",
-        "wbewbewbewbe",
-        "wbewbewbewbe",
-        "w.ewbew.ewbe",
-        "...w.....w.."
-      ],
-      "key": {
-        "b": "i2",
-        "c": "i3",
-        "w": "i4",
-        "e": "i5"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_cov3f_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        "ccccccccccccccc",
-        "bcwbcwbcwbcwbcw",
-        "webwebwebwebweb",
-        "wbewbewbewbewbe",
-        "bew.ewbew.ewbe.",
-        "...ew....ew...."
-      ],
-      "key": {
-        "b": "i2",
-        "c": "i3",
-        "w": "i4",
-        "e": "i5"
-      },
-      "x": 0,
-      "y": 0,
-      "tile": false,
-      "anchor": "top-left"
     },
     {
       "op": "pattern",
@@ -3019,58 +2608,204 @@
       "color": "g5"
     },
     {
-      "op": "pattern",
-      "target": {
-        "cubes": "wing_r",
-        "faces": [
-          "north"
-        ]
-      },
-      "rows": [
-        ".........MMddLMdLdLMdLMdLMdLMdLMdLMdLM.......",
-        ".........dddLMdLdLMdLMdLMdLMdLMdLMdLMdL......",
-        ".........LdLMdLMdLMdLMdLMdLMdLMdLMdLMdLM.....",
-        ".........dLMdLMdLMdLM....LMdLMdLMdLMdLMdL....",
-        ".........LMdLMddLM..........LMdLMdLMdLMdLM...",
-        ".........MdLMdd.................dLMdLMdLMdL..",
-        "...................................dLMdLMdLM."
-      ],
-      "key": {
-        "d": "nb",
-        "M": "nc",
-        "L": "nd"
-      },
-      "x": 0,
-      "y": 7,
-      "tile": false,
-      "anchor": "top-left"
-    },
-    {
-      "op": "pattern",
+      "op": "feathers",
       "target": {
         "cubes": "wing_r",
         "faces": [
           "south"
         ]
       },
+      "clear": true,
       "rows": [
-        ".......MLdMLdMLdMLdMLdMLdMLdLdMLddMM.........",
-        "......LdMLdMLdMLdMLdMLdMLdMLdLdMLddd.........",
-        ".....MLdMLdMLdMLdMLdMLdMLdMLdMLdMLdL.........",
-        "....LdMLdMLdMLdMLdML....MLdMLdMLdMLd.........",
-        "...MLdMLdMLdMLdML..........MLddMLdML.........",
-        "..LdMLdMLdMLd.................ddMLdM.........",
-        ".MLdMLdMLd..................................."
-      ],
-      "key": {
-        "d": "wb",
-        "M": "wc",
-        "L": "wd"
+        {
+          "from": [
+            15,
+            5
+          ],
+          "to": [
+            38,
+            11
+          ],
+          "count": 7,
+          "angleFrom": 8,
+          "angleTo": 42,
+          "lengthFrom": 28,
+          "lengthTo": 31,
+          "width": 7,
+          "colors": [
+            "wb",
+            "wc",
+            "we"
+          ],
+          "outline": "wl"
+        },
+        {
+          "from": [
+            5,
+            14
+          ],
+          "to": [
+            18,
+            5
+          ],
+          "count": 5,
+          "angleFrom": 2,
+          "angleTo": 10,
+          "lengthFrom": 24,
+          "lengthTo": 27,
+          "width": 7,
+          "colors": [
+            "wb",
+            "wd",
+            "we"
+          ],
+          "outline": "wl"
+        },
+        {
+          "from": [
+            4,
+            15
+          ],
+          "to": [
+            21,
+            4
+          ],
+          "count": 7,
+          "angleFrom": 4,
+          "angleTo": 18,
+          "lengthFrom": 9,
+          "lengthTo": 10,
+          "width": 5.5,
+          "colors": [
+            "wc",
+            "wd",
+            "we"
+          ],
+          "outline": "wl"
+        },
+        {
+          "from": [
+            24,
+            4
+          ],
+          "to": [
+            37,
+            10
+          ],
+          "count": 5,
+          "angleFrom": 22,
+          "angleTo": 36,
+          "lengthFrom": 10,
+          "lengthTo": 11,
+          "width": 5.5,
+          "colors": [
+            "wc",
+            "wd",
+            "we"
+          ],
+          "outline": "wl"
+        }
+      ]
+    },
+    {
+      "op": "feathers",
+      "target": {
+        "cubes": "wing_r",
+        "faces": [
+          "north"
+        ]
       },
-      "x": 0,
-      "y": 7,
-      "tile": false,
-      "anchor": "top-left"
+      "clear": true,
+      "rows": [
+        {
+          "from": [
+            47,
+            5
+          ],
+          "to": [
+            24,
+            11
+          ],
+          "count": 7,
+          "angleFrom": -8,
+          "angleTo": -42,
+          "lengthFrom": 28,
+          "lengthTo": 31,
+          "width": 7,
+          "colors": [
+            "nb",
+            "nc",
+            "ne"
+          ],
+          "outline": "nl"
+        },
+        {
+          "from": [
+            57,
+            14
+          ],
+          "to": [
+            44,
+            5
+          ],
+          "count": 5,
+          "angleFrom": -2,
+          "angleTo": -10,
+          "lengthFrom": 24,
+          "lengthTo": 27,
+          "width": 7,
+          "colors": [
+            "nb",
+            "nd",
+            "ne"
+          ],
+          "outline": "nl"
+        },
+        {
+          "from": [
+            58,
+            15
+          ],
+          "to": [
+            41,
+            4
+          ],
+          "count": 7,
+          "angleFrom": -4,
+          "angleTo": -18,
+          "lengthFrom": 9,
+          "lengthTo": 10,
+          "width": 5.5,
+          "colors": [
+            "nc",
+            "nd",
+            "ne"
+          ],
+          "outline": "nl"
+        },
+        {
+          "from": [
+            38,
+            4
+          ],
+          "to": [
+            25,
+            10
+          ],
+          "count": 5,
+          "angleFrom": -22,
+          "angleTo": -36,
+          "lengthFrom": 10,
+          "lengthTo": 11,
+          "width": 5.5,
+          "colors": [
+            "nc",
+            "nd",
+            "ne"
+          ],
+          "outline": "nl"
+        }
+      ]
     }
   ]
 }

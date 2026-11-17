@@ -86,7 +86,7 @@ export function buildModel(spec: ModelSpec): BuildResult {
   }
   const islands: Island[] = [];
   for (const c of spec.cubes) {
-    if (c.uvFrom) continue;
+    if (c.uvFrom || c.uvRegionOf) continue;
     const d = [0, 1, 2].map((i) => Math.abs(c.to[i] - c.from[i]) * ppu);
     for (const [i, v] of d.entries())
       if (v > 0 && Math.abs(v - Math.round(v)) > 0.01)
@@ -121,6 +121,35 @@ export function buildModel(spec: ModelSpec): BuildResult {
     const [ox, oy] = pos.get(is.cube)!;
     layout[is.cube] = {};
     for (const [d, r] of Object.entries(is.faces) as [FaceDir, Rect][]) layout[is.cube][d] = { x: ox + r.x, y: oy + r.y, w: r.w, h: r.h };
+  }
+  // porzioni della texture di un altro cubo: stessa convenzione delle UV di Blockbench/Minecraft per ogni faccia
+  for (const c of spec.cubes) {
+    if (!c.uvRegionOf) continue;
+    const srcSpec = spec.cubes.find((s) => s.name === c.uvRegionOf);
+    const src = layout[c.uvRegionOf];
+    if (!srcSpec || !src) throw new Error(`${c.name}: uvRegionOf '${c.uvRegionOf}' non esiste o non ha UV proprie`);
+    const lo = (v: number[], w: number[]) => [0, 1, 2].map((i) => Math.min(v[i], w[i]));
+    const hi = (v: number[], w: number[]) => [0, 1, 2].map((i) => Math.max(v[i], w[i]));
+    const sf = lo(srcSpec.from, srcSpec.to), st = hi(srcSpec.from, srcSpec.to), f = lo(c.from, c.to), t = hi(c.from, c.to);
+    if ([0, 1, 2].some((i) => f[i] < sf[i] - 1e-6 || t[i] > st[i] + 1e-6)) warnings.push(`${c.name}: esce dai limiti di '${c.uvRegionOf}' (uvRegionOf)`);
+    const P = (v: number) => Math.round(v * ppu);
+    const span: Record<FaceDir, [number, number, number, number]> = {
+      // [u0, u1, v0, v1] in pixel locali alla faccia della sorgente
+      north: [st[0] - t[0], st[0] - f[0], st[1] - t[1], st[1] - f[1]],
+      south: [f[0] - sf[0], t[0] - sf[0], st[1] - t[1], st[1] - f[1]],
+      east: [st[2] - t[2], st[2] - f[2], st[1] - t[1], st[1] - f[1]],
+      west: [f[2] - sf[2], t[2] - sf[2], st[1] - t[1], st[1] - f[1]],
+      up: [f[0] - sf[0], t[0] - sf[0], f[2] - sf[2], t[2] - sf[2]],
+      down: [f[0] - sf[0], t[0] - sf[0], st[2] - t[2], st[2] - f[2]],
+    };
+    layout[c.name] = {};
+    for (const d of FACE_DIRS) {
+      const r = src[d];
+      if (!r || c.hideFaces?.includes(d)) continue;
+      const [u0, u1, v0, v1] = span[d].map(P);
+      if (u1 - u0 <= 0 || v1 - v0 <= 0) continue;
+      layout[c.name][d] = { x: r.x + u0, y: r.y + v0, w: u1 - u0, h: v1 - v0 };
+    }
   }
   for (const c of spec.cubes) {
     if (!c.uvFrom) continue;
@@ -173,6 +202,7 @@ export function buildModel(spec: ModelSpec): BuildResult {
       faces,
     };
     const node: OutlineNode = { kind: "cube", cube };
+    if (c.uvOnly) continue; // solo tela di pittura
     if (c.bone) {
       const g = groups.get(c.bone);
       if (!g) throw new Error(`Cubo ${c.name}: bone '${c.bone}' inesistente`);

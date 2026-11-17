@@ -21,6 +21,11 @@ export const CubeSpec = z.object({
   hideFaces: z.array(faceDir).optional().describe("facce non visibili da non texturizzare (risparmiano spazio UV)"),
   uvFrom: z.string().optional().describe("riusa le UV di un altro cubo della stessa dimensione (es. gamba sinistra = destra)"),
   mirrorUv: z.boolean().optional().describe("con uvFrom: specchia la texture orizzontalmente"),
+  uvOnly: z.boolean().optional().describe("cubo usato solo come tela di pittura: ha UV e si dipinge, ma non compare nel modello (vedi uvRegionOf)"),
+  uvRegionOf: z
+    .string()
+    .optional()
+    .describe("usa la porzione della texture di un altro cubo (di solito uvOnly) che corrisponde alla propria posizione dentro di esso: per dividere un pezzo dipinto in più parti articolate (es. ala divisa al gomito) senza spezzare il disegno"),
   uvOffset: z
     .tuple([z.number().int(), z.number().int()])
     .optional()

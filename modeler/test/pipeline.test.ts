@@ -311,3 +311,18 @@ describe("animazioni", () => {
     expect(animator.keyframes).toHaveLength(3);
   });
 });
+
+describe("uvRegionOf", () => {
+  it("divide una faccia dipinta in due pezzi contigui senza spezzare il disegno", () => {
+    const b = buildModel(ModelSpec.parse({ name: "s", format: "free", cubes: [
+      { name: "canvas", uvOnly: true, from: [0, 0, 0], to: [20, 10, 0], hideFaces: ["south"] },
+      { name: "a", from: [0, 0, 0], to: [8, 10, 0], uvRegionOf: "canvas", hideFaces: ["south"] },
+      { name: "b", from: [8, 0, 0], to: [20, 10, 0], uvRegionOf: "canvas", hideFaces: ["south"] },
+    ] }));
+    const c = b.layout.canvas.north!, la = b.layout.a.north!, lb = b.layout.b.north!;
+    // faccia north: la u cresce verso -X, quindi il pezzo "b" (x alta) sta a sinistra nella texture
+    expect(lb).toMatchObject({ x: c.x, w: 12, h: 10 });
+    expect(la).toMatchObject({ x: c.x + 12, w: 8 });
+    expect(allCubes(b.model.outline).map((x) => x.name)).toEqual(["a", "b"]);
+  });
+});

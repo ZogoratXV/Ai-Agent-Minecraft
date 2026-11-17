@@ -91,6 +91,15 @@
       ]
     },
     {
+      "name": "RightWingTip",
+      "parent": "RightWing",
+      "pivot": [
+        24,
+        45,
+        4
+      ]
+    },
+    {
       "name": "LeftWing",
       "parent": "Body",
       "pivot": [
@@ -102,6 +111,15 @@
         0,
         25,
         -12
+      ]
+    },
+    {
+      "name": "LeftWingTip",
+      "parent": "LeftWing",
+      "pivot": [
+        -24,
+        45,
+        4
       ]
     },
     {
@@ -920,7 +938,7 @@
     },
     {
       "name": "wing_bone3_r",
-      "bone": "RightWing",
+      "bone": "RightWingTip",
       "from": [
         22,
         44.5,
@@ -954,7 +972,70 @@
         64,
         49,
         4
-      ]
+      ],
+      "uvOnly": true
+    },
+    {
+      "name": "wing_in_r",
+      "bone": "RightWing",
+      "from": [
+        2,
+        5,
+        4
+      ],
+      "to": [
+        24,
+        49,
+        4
+      ],
+      "uvRegionOf": "wing_r"
+    },
+    {
+      "name": "wing_out_r",
+      "bone": "RightWingTip",
+      "from": [
+        24,
+        5,
+        4
+      ],
+      "to": [
+        64,
+        49,
+        4
+      ],
+      "uvRegionOf": "wing_r"
+    },
+    {
+      "name": "wing_in_l",
+      "bone": "LeftWing",
+      "from": [
+        -24,
+        5,
+        4
+      ],
+      "to": [
+        -2,
+        49,
+        4
+      ],
+      "uvFrom": "wing_in_r",
+      "mirrorUv": true
+    },
+    {
+      "name": "wing_out_l",
+      "bone": "LeftWingTip",
+      "from": [
+        -64,
+        5,
+        4
+      ],
+      "to": [
+        -24,
+        49,
+        4
+      ],
+      "uvFrom": "wing_out_r",
+      "mirrorUv": true
     },
     {
       "name": "wing_bone1_l",
@@ -1010,7 +1091,7 @@
     },
     {
       "name": "wing_bone3_l",
-      "bone": "LeftWing",
+      "bone": "LeftWingTip",
       "from": [
         -39,
         44.5,
@@ -1032,22 +1113,6 @@
         22.5
       ],
       "uvFrom": "wing_bone3_r",
-      "mirrorUv": true
-    },
-    {
-      "name": "wing_l",
-      "bone": "LeftWing",
-      "from": [
-        -64,
-        5,
-        4
-      ],
-      "to": [
-        -2,
-        49,
-        4
-      ],
-      "uvFrom": "wing_r",
       "mirrorUv": true
     },
     {

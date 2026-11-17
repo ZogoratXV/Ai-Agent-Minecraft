@@ -1,0 +1,3324 @@
+[
+  {
+    "name": "walk",
+    "loop": "loop",
+    "length": 1,
+    "bones": {
+      "Body": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              1,
+              -3,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.25,
+            "value": [
+              1.5,
+              0,
+              1.5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              1,
+              3,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.75,
+            "value": [
+              1.5,
+              0,
+              -1.5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              1,
+              -3,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.25,
+            "value": [
+              0,
+              0.6,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.75,
+            "value": [
+              0,
+              0.6,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Head": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              2,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              1,
+              0,
+              -1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              -2,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.8,
+            "value": [
+              1,
+              0,
+              1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              2,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Hood": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.15,
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.4,
+            "value": [
+              -0.5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.65,
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.9,
+            "value": [
+              -0.5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              -12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              -12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              -12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              -14,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.08,
+            "value": [
+              -15,
+              0,
+              -1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              14,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.58,
+            "value": [
+              15,
+              0,
+              -1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              -14,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              -3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Spear": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              -1,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              1.5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              -1,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              18,
+              -4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.1,
+            "value": [
+              0,
+              19,
+              -7
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.35,
+            "value": [
+              0,
+              17,
+              -1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              18,
+              -4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              0,
+              19,
+              -7
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.85,
+            "value": [
+              0,
+              17,
+              -1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              18,
+              -4
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              -18,
+              4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.1,
+            "value": [
+              0,
+              -19,
+              7
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.35,
+            "value": [
+              0,
+              -17,
+              1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              -18,
+              4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              0,
+              -19,
+              7
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.85,
+            "value": [
+              0,
+              -17,
+              1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              -18,
+              4
+            ],
+            "interp": "smooth"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "death",
+    "loop": "hold",
+    "length": 2,
+    "bones": {
+      "Body": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.2,
+            "value": [
+              -8,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.7,
+            "value": [
+              8,
+              0,
+              3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              20,
+              0,
+              4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              24,
+              0,
+              4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              22,
+              0,
+              4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              22,
+              0,
+              4
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.2,
+            "value": [
+              0,
+              0.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.7,
+            "value": [
+              0,
+              -1,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              0,
+              -3,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.2,
+            "value": [
+              -3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.7,
+            "value": [
+              14,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              28,
+              0,
+              3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              32,
+              0,
+              3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              30,
+              0,
+              3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              30,
+              0,
+              3
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.2,
+            "value": [
+              0,
+              0.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.7,
+            "value": [
+              0,
+              -1,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              0,
+              -3,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.2,
+            "value": [
+              -2,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.75,
+            "value": [
+              10,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.35,
+            "value": [
+              24,
+              0,
+              -3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.55,
+            "value": [
+              28,
+              0,
+              -3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.75,
+            "value": [
+              26,
+              0,
+              -3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              26,
+              0,
+              -3
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.2,
+            "value": [
+              0,
+              0.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.7,
+            "value": [
+              0,
+              -1,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              0,
+              -3,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              0,
+              -2.5,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Head": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.2,
+            "value": [
+              -12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.8,
+            "value": [
+              5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.45,
+            "value": [
+              38,
+              0,
+              8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.6,
+            "value": [
+              44,
+              0,
+              8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.8,
+            "value": [
+              40,
+              0,
+              8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              40,
+              0,
+              8
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Hood": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              -3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.9,
+            "value": [
+              2,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.6,
+            "value": [
+              5,
+              0,
+              2
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              4,
+              0,
+              2
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.25,
+            "value": [
+              -10,
+              0,
+              8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.8,
+            "value": [
+              5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.4,
+            "value": [
+              -12,
+              0,
+              -4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              -12,
+              0,
+              -4
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Spear": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              40,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.65,
+            "value": [
+              45,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              43,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.25,
+            "value": [
+              -10,
+              0,
+              -10
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.8,
+            "value": [
+              5,
+              0,
+              -3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.4,
+            "value": [
+              -16,
+              0,
+              6
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              -16,
+              0,
+              6
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.25,
+            "value": [
+              -3,
+              -8,
+              10
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.9,
+            "value": [
+              -8,
+              3,
+              -5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.55,
+            "value": [
+              -32,
+              10,
+              -30
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.75,
+            "value": [
+              -35,
+              11,
+              -34
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              -34,
+              10,
+              -32
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.25,
+            "value": [
+              -3,
+              8,
+              -10
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.9,
+            "value": [
+              -8,
+              -3,
+              5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.55,
+            "value": [
+              -32,
+              -10,
+              30
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.75,
+            "value": [
+              -35,
+              -11,
+              34
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              -34,
+              -10,
+              32
+            ],
+            "interp": "smooth"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "spawn",
+    "loop": "once",
+    "length": 2.6,
+    "bones": {
+      "Body": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              18,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              17,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              -4,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.25,
+            "value": [
+              -8,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              -3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.2,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              -1.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              -1.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.25,
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              22,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              22,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              -1.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              -1.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              30,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              30,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              -1.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              -1.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Head": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              40,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              40,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.15,
+            "value": [
+              8,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              -12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.8,
+            "value": [
+              -2,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Hood": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              4,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.45,
+            "value": [
+              -3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.9,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              28,
+              -40
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.9,
+            "value": [
+              0,
+              27,
+              -38
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.05,
+            "value": [
+              0,
+              31,
+              -42
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              0,
+              -18,
+              32
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.55,
+            "value": [
+              0,
+              6,
+              -6
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.8,
+            "value": [
+              0,
+              -4,
+              6
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              -28,
+              40
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.9,
+            "value": [
+              0,
+              -27,
+              38
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.05,
+            "value": [
+              0,
+              -31,
+              42
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              0,
+              18,
+              -32
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.55,
+            "value": [
+              0,
+              -6,
+              6
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.8,
+            "value": [
+              0,
+              4,
+              -6
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              5,
+              0,
+              4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.6,
+            "value": [
+              -105,
+              0,
+              -5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              -100,
+              0,
+              -4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              -98,
+              0,
+              -4
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Spear": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              -12,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.65,
+            "value": [
+              100,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.75,
+            "value": [
+              96,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2,
+            "value": [
+              98,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              8,
+              0,
+              8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              -20,
+              0,
+              -25
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              -5,
+              0,
+              -8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.2,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.6,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "attack",
+    "loop": "once",
+    "length": 1,
+    "bones": {
+      "Body": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              -6,
+              15,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.42,
+            "value": [
+              12,
+              -15,
+              0
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.55,
+            "value": [
+              13,
+              -16,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              0,
+              0,
+              0.5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.42,
+            "value": [
+              0,
+              -1,
+              -1
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.55,
+            "value": [
+              0,
+              -1,
+              -1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Head": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              -3,
+              -10,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.44,
+            "value": [
+              6,
+              12,
+              0
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              6,
+              12,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Hood": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.34,
+            "value": [
+              -2,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.48,
+            "value": [
+              3,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.65,
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              30,
+              0,
+              5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.4,
+            "value": [
+              -48,
+              0,
+              -3
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.55,
+            "value": [
+              -50,
+              0,
+              -3
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Spear": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              8,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.43,
+            "value": [
+              108,
+              0,
+              0
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.58,
+            "value": [
+              110,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              -15,
+              0,
+              -8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.44,
+            "value": [
+              25,
+              0,
+              -15
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              24,
+              0,
+              -14
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.35,
+            "value": [
+              0,
+              -15,
+              20
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              -5,
+              8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.65,
+            "value": [
+              0,
+              -8,
+              12
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.35,
+            "value": [
+              0,
+              15,
+              -20
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              5,
+              -8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.65,
+            "value": [
+              0,
+              8,
+              -12
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              4,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.42,
+            "value": [
+              -14,
+              0,
+              0
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.55,
+            "value": [
+              -14,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              -2,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.42,
+            "value": [
+              10,
+              0,
+              0
+            ],
+            "interp": "linear"
+          },
+          {
+            "time": 0.55,
+            "value": [
+              10,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "idle",
+    "loop": "loop",
+    "length": 2.4,
+    "bones": {
+      "Body": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              -2,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              0,
+              0.6,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Head": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              1.5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.4,
+            "value": [
+              2,
+              1,
+              -1.5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              -2,
+              -1,
+              2
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              1.5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Hood": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              1.2,
+              0,
+              -1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.7,
+            "value": [
+              -1,
+              0,
+              1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              0,
+              0.8,
+              -0.8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              0,
+              -8,
+              6
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.3,
+            "value": [
+              0,
+              -0.8,
+              0.8
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              0,
+              8,
+              -6
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.3,
+            "value": [
+              -3,
+              0,
+              1.5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Spear": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.5,
+            "value": [
+              2,
+              0,
+              -1.5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.25,
+            "value": [
+              -2,
+              0,
+              -2.5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 2.4,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "fly",
+    "loop": "loop",
+    "length": 1.2,
+    "bones": {
+      "Body": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              24,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.45,
+            "value": [
+              27,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              24,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              3.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              33,
+              0,
+              2
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.65,
+            "value": [
+              41,
+              0,
+              2
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              33,
+              0,
+              2
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              3.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftLeg": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              31,
+              0,
+              -2
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.75,
+            "value": [
+              39,
+              0,
+              -2
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              31,
+              0,
+              -2
+            ],
+            "interp": "smooth"
+          }
+        ],
+        "position": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              3.5,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Head": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              -16,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.55,
+            "value": [
+              -19,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              -16,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Hood": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.65,
+            "value": [
+              -1.5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              -5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.6,
+            "value": [
+              -2,
+              0,
+              1
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              -5,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "Spear": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              -8,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.7,
+            "value": [
+              -6,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              -8,
+              0,
+              0
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftArm": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              20,
+              0,
+              -5
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.65,
+            "value": [
+              26,
+              0,
+              -7
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              20,
+              0,
+              -5
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "RightWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              10,
+              33
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.4,
+            "value": [
+              0,
+              -12,
+              -25
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              -10,
+              -28
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              0,
+              10,
+              33
+            ],
+            "interp": "smooth"
+          }
+        ]
+      },
+      "LeftWing": {
+        "rotation": [
+          {
+            "time": 0,
+            "value": [
+              0,
+              -10,
+              -33
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.4,
+            "value": [
+              0,
+              12,
+              25
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 0.5,
+            "value": [
+              0,
+              10,
+              28
+            ],
+            "interp": "smooth"
+          },
+          {
+            "time": 1.2,
+            "value": [
+              0,
+              -10,
+              -33
+            ],
+            "interp": "smooth"
+          }
+        ]
+      }
+    }
+  }
+]

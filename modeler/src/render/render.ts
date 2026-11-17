@@ -6,7 +6,10 @@ import type { Model } from "../bbmodel/model";
 import { faceRects } from "../bbmodel/build";
 import { buildMeshes, type MeshData } from "./geometry";
 import { Img } from "../core/image";
-import { uuid, type Cube, type FaceDir, type OutlineNode } from "../bbmodel/model";
+import { uuid, type Animation, type Cube, type FaceDir, type OutlineNode } from "../bbmodel/model";
+import { poseModel } from "../anim/animate";
+import gifenc from "gifenc";
+const { GIFEncoder, applyPalette, quantize } = gifenc;
 import { apply, applyDir, multiply, type Mat4, type Vec3 } from "../core/math";
 
 const require = createRequire(import.meta.url);
@@ -125,9 +128,9 @@ export const STANDARD_VIEWS: View[] = [
 
 const fromDataUrl = (s: string) => Buffer.from(s.split(",")[1], "base64");
 
-export async function renderViews(m: Model, opts: { views?: View[]; cell?: number; cols?: number; background?: string; radius?: number } = {}): Promise<Buffer> {
+export async function renderViews(m: Model, opts: { views?: View[]; cell?: number; cols?: number; background?: string; radius?: number; bounds?: { min: number[]; max: number[] } } = {}): Promise<Buffer> {
   const { meshes, min, max } = buildMeshes(m);
-  return renderMeshes(meshes, m.textures.map((t) => t.img.toDataUri()), min, max, opts);
+  return renderMeshes(meshes, m.textures.map((t) => t.img.toDataUri()), opts.bounds?.min ?? min, opts.bounds?.max ?? max, opts);
 }
 
 async function renderMeshes(
@@ -135,7 +138,7 @@ async function renderMeshes(
   textures: string[],
   min: number[],
   max: number[],
-  opts: { views?: View[]; cell?: number; cols?: number; background?: string; radius?: number } = {},
+  opts: { views?: View[]; cell?: number; cols?: number; background?: string; radius?: number; bounds?: { min: number[]; max: number[] } } = {},
 ): Promise<Buffer> {
   const p = await getPage();
   const views = opts.views ?? STANDARD_VIEWS;
@@ -347,4 +350,47 @@ export async function renderOnHead(m: Model): Promise<Buffer> {
     cols: 3,
     cell: 340,
   });
+}
+
+
+/* ---------- animazioni ---------- */
+
+/**
+ * Anteprima di un'animazione: un foglio con 8 fotogrammi (per giudicare il movimento) e una GIF animata.
+ * Inquadratura fissa per tutta l'animazione, così si vede anche lo spostamento.
+ */
+export async function renderAnimation(
+  m: Model,
+  anim: Animation,
+  opts: { view?: View; cell?: number; fps?: number } = {},
+): Promise<{ sheet: Buffer; gif: Buffer; frames: number }> {
+  const view = opts.view ?? { label: "3/4", dir: [-1, 0.35, -1] as [number, number, number] };
+  const fps = opts.fps ?? 15;
+  const n = Math.max(2, Math.min(72, Math.round(anim.length * fps)));
+  const times = Array.from({ length: n }, (_, i) => (anim.loop === "loop" ? (i / n) * anim.length : (i / (n - 1)) * anim.length));
+  const posed = times.map((t) => poseModel(m, anim, t));
+  const min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
+  for (const p of posed) {
+    const b = buildMeshes(p);
+    for (let k = 0; k < 3; k++) { min[k] = Math.min(min[k], b.min[k]); max[k] = Math.max(max[k], b.max[k]); }
+  }
+  const cell = opts.cell ?? 300;
+  const frames: Img[] = [];
+  for (let i = 0; i < n; i++)
+    frames.push(Img.fromPng(await renderViews(posed[i], { views: [{ label: `${anim.name} t=${times[i].toFixed(2)}s`, dir: view.dir }], cols: 1, cell, bounds: { min, max }, background: "#2b2f38" })));
+  // foglio di 8 fotogrammi
+  const pick = Array.from({ length: 8 }, (_, i) => Math.round((i * (n - 1)) / 7));
+  const sheet = new Img(cell * 4, cell * 2);
+  pick.forEach((fi, k) => {
+    const f = frames[fi];
+    for (let y = 0; y < cell; y++) for (let x = 0; x < cell; x++) sheet.set((k % 4) * cell + x, Math.floor(k / 4) * cell + y, f.get(x, y));
+  });
+  // GIF
+  const gif = GIFEncoder();
+  for (const f of frames) {
+    const palette = quantize(f.data, 256);
+    gif.writeFrame(applyPalette(f.data, palette), f.width, f.height, { palette, delay: Math.round(1000 / fps) });
+  }
+  gif.finish();
+  return { sheet: sheet.toPng(), gif: Buffer.from(gif.bytes()), frames: n };
 }

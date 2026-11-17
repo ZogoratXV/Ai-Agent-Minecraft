@@ -55,6 +55,21 @@ export const ModelSpec = z.object({
 });
 
 export type ModelSpec = z.infer<typeof ModelSpec>;
+
+const keyframe = z.object({
+  time: z.number().min(0).describe("secondi"),
+  value: vec3.describe("rotazione in gradi / posizione in pixel / scala (1 = normale), come nella timeline di Blockbench"),
+  interp: z.enum(["linear", "smooth", "step"]).default("smooth").describe("smooth = catmullrom (morbido), linear, step (scatto)"),
+});
+export const AnimationSpec = z.object({
+  name: z.string().describe("nome dell'animazione: per ModelEngine/BetterModel usa nomi standard come idle, walk, attack, death, spawn (verifica sul plugin)"),
+  loop: z.enum(["loop", "once", "hold"]).default("loop"),
+  length: z.number().positive().describe("durata in secondi"),
+  bones: z
+    .record(z.string(), z.object({ rotation: z.array(keyframe).optional(), position: z.array(keyframe).optional(), scale: z.array(keyframe).optional() }))
+    .describe("nome del bone -> canali con keyframe. Valori relativi alla posa di riposo"),
+});
+export type AnimationSpec = z.infer<typeof AnimationSpec>;
 export type CubeSpec = z.infer<typeof CubeSpec>;
 
 const color = z.string().describe("'#rrggbb', '#rrggbbaa' o nome della palette (es. 'wood2')");

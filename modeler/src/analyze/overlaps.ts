@@ -1,7 +1,7 @@
 import { apply, applyDir, identity, multiply, rotateAround, type Mat4, type Vec3 } from "../core/math";
 import { walkCubes, type FaceDir, type Model } from "../bbmodel/model";
 import { faceRects } from "../bbmodel/build";
-import { corners } from "../render/geometry";
+import { corners, groupMatrix } from "../render/geometry";
 
 const NORMALS: Record<FaceDir, Vec3> = {
   north: [0, 0, -1],
@@ -32,7 +32,7 @@ export function worldFaces(m: Model): WorldFace[] {
   const out: WorldFace[] = [];
   walkCubes(m.outline, (c, chain) => {
     let mat: Mat4 = identity();
-    for (const g of chain) mat = multiply(mat, rotateAround(g.origin, g.rotation));
+    for (const g of chain) mat = multiply(mat, groupMatrix(g));
     mat = multiply(mat, rotateAround(c.origin, c.rotation));
     const i = c.inflate;
     const f: Vec3 = [0, 1, 2].map((k) => Math.min(c.from[k], c.to[k]) - i) as Vec3;

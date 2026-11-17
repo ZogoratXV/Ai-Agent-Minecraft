@@ -1,5 +1,16 @@
-import { apply, applyDir, identity, multiply, rotateAround, type Mat4, type Vec3 } from "../core/math";
+import { apply, applyDir, identity, multiply, rotateAround, translate, type Mat4, type Vec3 } from "../core/math";
 import { walkCubes, type FaceDir, type Model } from "../bbmodel/model";
+
+/** Trasformazione di un bone: spostamento animato, rotazione attorno al pivot, scala attorno al pivot. */
+export function groupMatrix(g: { origin: Vec3; rotation: Vec3; offset?: Vec3; scale?: Vec3 }): Mat4 {
+  let m = rotateAround(g.origin, g.rotation);
+  if (g.scale && (g.scale[0] !== 1 || g.scale[1] !== 1 || g.scale[2] !== 1)) {
+    const S: Mat4 = [g.scale[0], 0, 0, 0, 0, g.scale[1], 0, 0, 0, 0, g.scale[2], 0, 0, 0, 0, 1];
+    m = multiply(m, multiply(translate(g.origin), multiply(S, translate([-g.origin[0], -g.origin[1], -g.origin[2]]))));
+  }
+  if (g.offset) m = multiply(translate(g.offset), m);
+  return m;
+}
 
 export interface MeshData {
   texture: number;
@@ -40,7 +51,7 @@ export function buildMeshes(m: Model): { meshes: MeshData[]; min: Vec3; max: Vec
 
   walkCubes(m.outline, (c, chain) => {
     let mat: Mat4 = identity();
-    for (const g of chain) mat = multiply(mat, rotateAround(g.origin, g.rotation));
+    for (const g of chain) mat = multiply(mat, groupMatrix(g));
     mat = multiply(mat, rotateAround(c.origin, c.rotation));
     const inf = c.inflate;
     const f: Vec3 = [Math.min(c.from[0], c.to[0]) - inf, Math.min(c.from[1], c.to[1]) - inf, Math.min(c.from[2], c.to[2]) - inf];

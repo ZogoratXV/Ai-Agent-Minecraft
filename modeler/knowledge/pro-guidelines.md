@@ -80,3 +80,14 @@ stile specifico (`styles/<stile>/notes.md`) hanno sempre la precedenza su queste
 6. I materiali si distinguono? I dettagli importanti si vedono da lontano?
 7. Le cuciture fra facce adiacenti sono continue (bordi che combaciano)?
 8. Lo metteresti accanto ai riferimenti senza che si noti la differenza? Se no, cosa lo tradisce?
+
+## Animazioni (mob con bone)
+- Principi: **anticipazione** (carica prima del colpo), **azione**, **recupero** con leggero **overshoot**; **follow-through**
+  e **azione sovrapposta** (ali, mantello e lancia arrivano con un piccolo ritardo rispetto al corpo); easing morbido
+  (interp smooth) tranne negli impatti (linear/step brevi).
+- Loop (idle, walk, fly): primo e ultimo keyframe identici, ritmi pari (es. 1.6–2.4 s idle, 0.8–1.2 s walk); niente
+  movimenti meccanici tutti in fase: sfasa i bone di 1–2 frame.
+- Animazioni una tantum (attack, spawn, death): durate leggibili in gioco (attack 0.6–1.2 s, spawn 2–3 s, death 1.5–2.5 s).
+- Nomi standard per i plugin (ModelEngine/BetterModel): idle, walk, attack, death, spawn; altri (fly) per uso custom.
+- Controlla sempre con preview_animation (lato e 3/4) che non ci siano compenetrazioni evidenti (braccia nel busto,
+  ali nel corpo) e che le pose chiave si leggano da sole.

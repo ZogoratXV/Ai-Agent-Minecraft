@@ -5,7 +5,7 @@ import { ModelSpec, PaintProgram } from "./bbmodel/spec";
 import { writeBBModel, writeJavaModel } from "./bbmodel/write";
 import { paint, resolvePalette, type PaintReport } from "./texture/paint";
 import { ROOT } from "./analyze/style";
-import { allCubes, outlineDepth, type Model, type OutlineNode } from "./bbmodel/model";
+import { allCubes, outlineDepth, type Animation, type Model, type OutlineNode } from "./bbmodel/model";
 
 export const PROJECTS_DIR = path.join(ROOT, "projects");
 
@@ -23,6 +23,15 @@ export function loadSpec(project: string): ModelSpec | null {
 
 export function loadPaint(project: string): PaintProgram {
   return PaintProgram.parse(readJson(path.join(projectDir(project), "paint.json")) ?? {});
+}
+
+export function loadAnimations(project: string): Animation[] {
+  return readJson(path.join(projectDir(project), "animations.json")) ?? [];
+}
+
+export function saveAnimations(project: string, a: Animation[]) {
+  fs.mkdirSync(projectDir(project), { recursive: true });
+  fs.writeFileSync(path.join(projectDir(project), "animations.json"), JSON.stringify(a, null, 2));
 }
 
 export function saveSpec(project: string, spec: ModelSpec) {
@@ -47,6 +56,8 @@ export function buildProject(project: string): ProjectState {
   const program = loadPaint(project);
   const b = buildModel(spec);
   const report = paint(b.model.textures[0].img, b.layout, program);
+  const anims = loadAnimations(project);
+  if (anims.length) b.model.animations = anims;
   return { ...b, paint: report, palette: resolvePalette(program) };
 }
 

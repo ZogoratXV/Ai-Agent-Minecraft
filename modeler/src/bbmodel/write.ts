@@ -1,5 +1,5 @@
 import { isZero } from "../core/math";
-import { FACE_DIRS, allCubes, type Model, type OutlineNode } from "./model";
+import { FACE_DIRS, allCubes, uuid, type Model, type OutlineNode } from "./model";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -51,8 +51,48 @@ export function writeBBModel(m: Model): any {
           },
     );
 
+  const groupUuid = new Map<string, string>();
+  const collect = (ns: OutlineNode[]) => ns.forEach((n) => { if (n.kind === "group") { groupUuid.set(n.group.name, n.group.uuid); collect(n.children); } });
+  collect(m.outline);
+  const interp = (i?: string) => (i === "linear" ? "linear" : i === "step" ? "step" : "catmullrom");
+  const animations = (m.animations ?? []).map((a) => ({
+    uuid: uuid(),
+    name: a.name,
+    loop: a.loop,
+    override: false,
+    length: a.length,
+    snapping: 20,
+    selected: false,
+    anim_time_update: "",
+    blend_weight: "",
+    start_delay: "",
+    loop_delay: "",
+    animators: Object.fromEntries(
+      Object.entries(a.bones)
+        .filter(([bone]) => groupUuid.has(bone))
+        .map(([bone, tr]) => [
+          groupUuid.get(bone)!,
+          {
+            name: bone,
+            type: "bone",
+            keyframes: (["rotation", "position", "scale"] as const).flatMap((ch) =>
+              (tr[ch] ?? []).map((k) => ({
+                channel: ch,
+                data_points: [{ x: k.value[0], y: k.value[1], z: k.value[2] }],
+                uuid: uuid(),
+                time: k.time,
+                color: -1,
+                interpolation: interp(k.interp),
+              })),
+            ),
+          },
+        ]),
+    ),
+  }));
+
   return {
     meta: { format_version: "4.10", model_format: m.format, box_uv: false },
+    ...(animations.length ? { animations } : {}),
     name: m.name,
     model_identifier: m.format === "bedrock" ? m.name : "",
     ...(m.display ? { display: m.display } : {}),

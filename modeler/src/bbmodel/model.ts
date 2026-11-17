@@ -31,6 +31,27 @@ export interface Group {
   uuid: string;
   origin: Vec3;
   rotation: Vec3;
+  /** solo per le pose animate: spostamento e scala del bone */
+  offset?: Vec3;
+  scale?: Vec3;
+}
+
+export type Interp = "linear" | "smooth" | "step";
+export interface Keyframe {
+  time: number;
+  value: Vec3;
+  interp?: Interp;
+}
+export interface BoneTrack {
+  rotation?: Keyframe[];
+  position?: Keyframe[];
+  scale?: Keyframe[];
+}
+export interface Animation {
+  name: string;
+  loop: "loop" | "once" | "hold";
+  length: number;
+  bones: Record<string, BoneTrack>;
 }
 
 export type OutlineNode = { kind: "group"; group: Group; children: OutlineNode[] } | { kind: "cube"; cube: Cube };
@@ -52,6 +73,7 @@ export interface Model {
   textures: Texture[];
   /** elementi non-cubo (mesh, locator...) presenti ma non gestiti. */
   unsupportedElements: number;
+  animations?: Animation[];
   /** impostazioni di visualizzazione degli item (mano, GUI, terra...), formato Java/Blockbench */
   display?: Record<string, DisplayTransform>;
 }

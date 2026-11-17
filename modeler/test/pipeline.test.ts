@@ -294,3 +294,20 @@ describe("operazione feathers", () => {
     expect(img.get(r.x + r.w - 1, r.y + r.h - 1)[3]).toBe(0);
   });
 });
+
+describe("animazioni", () => {
+  it("interpola i keyframe ed esporta le animazioni nel .bbmodel", async () => {
+    const { sample, poseModel } = await import("../src/anim/animate");
+    expect(sample([{ time: 0, value: [0, 0, 0], interp: "linear" }, { time: 1, value: [10, 0, 0], interp: "linear" }], 0.5, [0, 0, 0])).toEqual([5, 0, 0]);
+    const b = buildModel(ModelSpec.parse({ name: "a", format: "bedrock", bones: [{ name: "arm", pivot: [5, 22, 0] }], cubes: [{ name: "c", bone: "arm", from: [4, 12, -2], to: [8, 24, 2] }] }));
+    const anim = { name: "wave", loop: "loop" as const, length: 1, bones: { arm: { rotation: [{ time: 0, value: [0, 0, 0] as [number, number, number] }, { time: 0.5, value: [-90, 0, 0] as [number, number, number] }, { time: 1, value: [0, 0, 0] as [number, number, number] }] } } };
+    b.model.animations = [anim];
+    const posed = poseModel(b.model, anim, 0.5);
+    expect((posed.outline[0] as { group: { rotation: number[] } }).group.rotation[0]).toBeCloseTo(90);
+    const bb = writeBBModel(b.model);
+    expect(bb.animations[0].name).toBe("wave");
+    const animator = Object.values(bb.animations[0].animators)[0] as { name: string; keyframes: unknown[] };
+    expect(animator.name).toBe("arm");
+    expect(animator.keyframes).toHaveLength(3);
+  });
+});

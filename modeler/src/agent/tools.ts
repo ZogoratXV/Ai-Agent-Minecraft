@@ -2,12 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 import { tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
-import { ModelSpec, PaintOp, RampSpec } from "../bbmodel/spec";
-import type { OutlineNode } from "../bbmodel/model";
+import { AnimationSpec, ModelSpec, PaintOp, RampSpec } from "../bbmodel/spec";
+import { checkAnimation } from "../anim/animate";
+import type { Animation, OutlineNode } from "../bbmodel/model";
 import { listStyles, loadReference, readIndex, readProfile, styleDir } from "../analyze/style";
 import { validate } from "../analyze/validate";
-import { buildProject, describeModel, exportProject, loadPaint, loadSpec, projectDir, savePaint, saveSpec } from "../project";
-import { renderCompare, renderInHand, renderOnHead, renderOnPlayer, renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
+import { buildProject, describeModel, exportProject, loadAnimations, loadPaint, loadSpec, projectDir, saveAnimations, savePaint, saveSpec } from "../project";
+import { renderAnimation, renderCompare, renderInHand, renderOnHead, renderOnPlayer, renderTexture, renderViews, STANDARD_VIEWS } from "../render/render";
 
 type Content = { type: "text"; text: string } | { type: "image"; data: string; mimeType: string };
 const text = (t: string): { content: Content[] } => ({ content: [{ type: "text", text: t }] });
@@ -247,6 +248,48 @@ export function artistTools() {
       },
     ),
 
+    tool(
+      "set_animations",
+      "Scrive le animazioni del mob (salvate nel .bbmodel, lette da ModelEngine/BetterModel/GeckoLib tramite Blockbench). mode='upsert' aggiunge o sostituisce per nome, 'replace' sostituisce tutto. Valori come nella timeline di Blockbench in formato Bedrock: rotazioni in gradi relative alla posa di riposo (X positiva = il bone ruota in avanti/verso il basso davanti, verifica sempre con preview_animation), posizioni in pixel, scala 1 = normale. Nei loop il primo e l'ultimo keyframe devono coincidere.",
+      { project: z.string(), mode: z.enum(["upsert", "replace"]).default("upsert"), animations: z.array(AnimationSpec).min(1) },
+      async ({ project, mode, animations }) => {
+        try {
+          const st = buildProject(project);
+          const parsed = animations.map((a) => AnimationSpec.parse(a)) as Animation[];
+          const problems = parsed.flatMap((a) => checkAnimation(st.model, a));
+          const prev = mode === "replace" ? [] : loadAnimations(project).filter((a) => !parsed.some((p) => p.name === a.name));
+          saveAnimations(project, [...prev, ...parsed]);
+          return text(
+            `OK: ${[...prev, ...parsed].map((a) => `${a.name} (${a.length}s, ${a.loop})`).join(", ")}\n` + (problems.length ? problems.map((p) => "⚠ " + p).join("\n") : "Nessun problema rilevato."),
+          );
+        } catch (e) {
+          return fail(e);
+        }
+      },
+    ),
+
+    tool(
+      "preview_animation",
+      "Anteprima di un'animazione: foglio di 8 fotogrammi distribuiti nel tempo (inquadratura fissa) e GIF salvata in renders/anim_<nome>.gif. GUARDA i fotogrammi: il movimento deve essere leggibile, con anticipazione e ritorno, senza compenetrazioni evidenti né scatti.",
+      { project: z.string(), name: z.string(), view: z.enum(["3/4", "front", "side", "back"]).default("3/4") },
+      async ({ project, name, view }) => {
+        try {
+          const st = buildProject(project);
+          const anim = (st.model.animations ?? []).find((a) => a.name === name);
+          if (!anim) throw new Error(`Animazione '${name}' inesistente`);
+          const dirs = { "3/4": [-1, 0.35, -1], front: [0, 0.1, -1], side: [1, 0.1, 0], back: [0, 0.1, 1] } as const;
+          const r = await renderAnimation(st.model, anim, { view: { label: view, dir: [...dirs[view ?? "3/4"]] as [number, number, number] } });
+          const dir = path.join(projectDir(project), "renders");
+          fs.mkdirSync(dir, { recursive: true });
+          fs.writeFileSync(path.join(dir, `anim_${name}.gif`), r.gif);
+          fs.writeFileSync(path.join(dir, `anim_${name}.png`), r.sheet);
+          return { content: [img(r.sheet), { type: "text", text: `${r.frames} fotogrammi, GIF salvata in renders/anim_${name}.gif` }] };
+        } catch (e) {
+          return fail(e);
+        }
+      },
+    ),
+
     tool("show_project", "Mostra spec.json e paint.json correnti del progetto.", { project: z.string() }, async ({ project }) =>
       text(`spec.json:\n${JSON.stringify(loadSpec(project))}\n\npaint.json:\n${JSON.stringify(loadPaint(project))}`),
     ),
@@ -278,6 +321,6 @@ export function artistTools() {
   ];
 }
 
-export const TOOL_NAMES = ["list_styles", "get_style", "list_references", "view_reference", "set_model", "paint", "render", "validate", "compare_with_references", "show_project", "export", "record_lesson"];
+export const TOOL_NAMES = ["list_styles", "get_style", "list_references", "view_reference", "set_model", "paint", "render", "validate", "compare_with_references", "set_animations", "preview_animation", "show_project", "export", "record_lesson"];
 
 export const createArtistServer = () => createSdkMcpServer({ name: "artist", version: "1.0.0", tools: artistTools() });

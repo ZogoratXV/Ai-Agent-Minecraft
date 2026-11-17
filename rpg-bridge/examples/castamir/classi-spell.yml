@@ -1,0 +1,41 @@
+# Castamir (16-17 novembre 2026): spell per classe e per sigillo. Sezione "spell" di config/rpgbridge/classi.yml:
+# sostituisce la sezione "spell" del kit Mago Nero (che resta coperto dalle prime regole).
+# Decisioni di Fabio: niente spell nuove per le altre classi, si usano i tomi delle mod; tier 2 delle mod = Novizio,
+# tier 3 = Esperto, tier 4 = Maestro; tomi dei Wizards (arcano, fuoco, gelo) vietati a tutti. Le spell base delle armi
+# (staffe Wizards e Paladins, staffe di CastigoEquipaggiamento) restano libere.
+spell:
+  messaggio: "&cPer questa spell serve {requisito}"
+  messaggio-classe: "&cQuesta spell è riservata a: {classi}"
+  messaggio-vietata: "&cQuesta spell non si usa su questo server"
+  blocchi: {}
+  regole:
+    # Mago Nero: kit castamir (Dardo d'Ombra libero sul bastone)
+    - {spell: ["castamir:dardo_ombra"], classi: [MAGO_NERO]}
+    - {spell: ["castamir:drenaggio_vitale", "castamir:maledizione"], classi: [MAGO_NERO], blocco: 1}
+    - {spell: ["castamir:globo_ombra", "castamir:nube_tenebra"], classi: [MAGO_NERO], blocco: 2}
+    - {spell: ["castamir:raggio_abisso", "castamir:marchio_rovina"], classi: [MAGO_NERO], blocco: 3}
+    # Mago Bianco: tomo Priest (Paladins)
+    - {spell: ["paladins:holy_beam", "paladins:levitate"], classi: [MAGO_BIANCO], blocco: 1}
+    - {spell: ["paladins:circle_of_healing", "paladins:penance"], classi: [MAGO_BIANCO], blocco: 2}
+    - {spell: ["paladins:barrier", "paladins:lightwell"], classi: [MAGO_BIANCO], blocco: 3}
+    # Difensore: tomo Paladin (Paladins)
+    - {spell: ["paladins:flash_heal", "paladins:blessed_strikes"], classi: [DIFENSORE], blocco: 1}
+    - {spell: ["paladins:divine_protection", "paladins:judgement"], classi: [DIFENSORE], blocco: 2}
+    - {spell: ["paladins:battle_banner", "paladins:immolation"], classi: [DIFENSORE], blocco: 3}
+    # Assassino: tomo Rogue (Rogues)
+    - {spell: ["rogues:slice_and_dice", "rogues:shock_powder"], classi: [ASSASSINO], blocco: 1}
+    - {spell: ["rogues:shadow_step", "rogues:bear_trap"], classi: [ASSASSINO], blocco: 2}
+    - {spell: ["rogues:vanish", "rogues:mutilate"], classi: [ASSASSINO], blocco: 3}
+    # Guerriero: tomo Warrior (Rogues)
+    - {spell: ["rogues:throw", "rogues:throw_net"], classi: [GUERRIERO], blocco: 1}
+    - {spell: ["rogues:charge", "rogues:shout"], classi: [GUERRIERO], blocco: 2}
+    - {spell: ["rogues:last_stand", "rogues:mortal_strike"], classi: [GUERRIERO], blocco: 3}
+    # Arciere: tomo Archer (Archers)
+    - {spell: ["archers:power_shot", "archers:entangling_roots"], classi: [ARCIERE], blocco: 1}
+    - {spell: ["archers:barrage", "archers:spirit_wolf"], classi: [ARCIERE], blocco: 2}
+    - {spell: ["archers:rain_of_arrows", "archers:magic_arrow"], classi: [ARCIERE], blocco: 3}
+    # Tomi dei Wizards: vietati a tutti
+    - spell: ["wizards:arcane_missile", "wizards:arcane_explosion", "wizards:arcane_beam", "wizards:arcane_barrage", "wizards:arcane_blink", "wizards:arcane_evocation",
+              "wizards:fire_breath", "wizards:fire_slash", "wizards:fire_meteor", "wizards:fire_storm", "wizards:fire_wall", "wizards:fire_hydra",
+              "wizards:frost_nova", "wizards:frost_spikes", "wizards:frost_shield", "wizards:frost_lance", "wizards:frost_blizzard", "wizards:frost_elemental"]
+      vietata: true

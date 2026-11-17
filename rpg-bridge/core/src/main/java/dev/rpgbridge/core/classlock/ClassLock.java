@@ -93,6 +93,11 @@ public final class ClassLock {
 			#    castamir:nube_tenebra: 2
 			#    castamir:raggio_abisso: 3
 			#    castamir:marchio_rovina: 3
+			# Regole per classe (la prima che corrisponde vale; * = qualsiasi testo): spell, classi ammesse (vuoto = tutte),
+			# blocco minimo, vietata: true per chiuderla a tutti. Hanno la precedenza su "blocchi".
+			#  regole:
+			#    - {spell: ["paladins:holy_beam", "paladins:levitate"], classi: [MAGO_BIANCO], blocco: 1}
+			#    - {spell: ["wizards:arcane_missile"], vietata: true}
 			#regole:
 			#  - oggetti: ["wizards:*", "mmoitems:STAFF:*"]
 			#    classi: [MAGE, ARCANE_MAGE]
@@ -121,6 +126,12 @@ public final class ClassLock {
 	/** Spell da apprendere per blocco (id spell → blocco minimo di CastigoBellica, sezione "spell" di classi.yml). */
 	private static volatile Map<String, Integer> spellBlocks = Map.of();
 	private static volatile String spellMessage = "§cPer questa spell serve {requisito}";
+	/** Regola di una spell: id (con *), classi ammesse (vuoto = tutte), blocco minimo, oppure vietata a tutti. */
+	record SpellRule(List<Pattern> spells, List<String> classes, int block, boolean forbidden) {
+	}
+	private static volatile List<SpellRule> spellRules = List.of();
+	private static volatile String spellClassMessage = "§cQuesta spell è riservata a: {classi}";
+	private static volatile String spellForbiddenMessage = "§cQuesta spell non si usa su questo server";
 
 	private static volatile boolean loaded;
 	private static volatile boolean enabled;
@@ -162,6 +173,21 @@ public final class ClassLock {
 			var blocchi = spellSection == null ? null : spellSection.getConfigurationSection("blocchi");
 			if (blocchi != null) for (String id : blocchi.getKeys(false)) parsedSpells.put(id.toLowerCase(Locale.ROOT), Math.max(1, Math.min(4, blocchi.getInt(id, 1))));
 			spellBlocks = Map.copyOf(parsedSpells);
+			var parsedRules = new ArrayList<SpellRule>();
+			if (spellSection != null) {
+				for (Map<?, ?> map : spellSection.getMapList("regole")) {
+					List<Pattern> ids = new ArrayList<>();
+					for (Object o : asList(map.get("spell"))) ids.add(glob(String.valueOf(o)));
+					List<String> classes = new ArrayList<>();
+					for (Object o : asList(map.get("classi"))) classes.add(String.valueOf(o).trim());
+					int block = map.get("blocco") instanceof Number n ? Math.max(1, Math.min(4, n.intValue())) : 1;
+					boolean forbidden = Boolean.TRUE.equals(map.get("vietata"));
+					if (!ids.isEmpty()) parsedRules.add(new SpellRule(List.copyOf(ids), List.copyOf(classes), block, forbidden));
+				}
+				spellClassMessage = spellSection.getString("messaggio-classe", "&cQuesta spell è riservata a: {classi}").replace('&', '§');
+				spellForbiddenMessage = spellSection.getString("messaggio-vietata", "&cQuesta spell non si usa su questo server").replace('&', '§');
+			}
+			spellRules = List.copyOf(parsedRules);
 			var tierSection = yaml.getConfigurationSection("tier");
 			tiersEnabled = tierSection == null || tierSection.getBoolean("attivo", true);
 			tierMessage = (tierSection == null ? "&cPer un oggetto {tier} serve {requisito}"
@@ -182,7 +208,7 @@ public final class ClassLock {
 			message = yaml.getString("messaggio", "&cQuesto oggetto e' riservato a: &f{classi}").replace('&', '§');
 			loaded = true;
 			String summary = "blocco per classe " + (enabled ? "attivo" : "disattivato") + ", " + rules.size() + " regole, MMOItems "
-					+ (mmoItemsRequiredClass ? "si" : "no") + ", tier " + (tiersEnabled ? tiers.size() + " requisiti" : "spento") + ", spell per blocco " + spellBlocks.size() + ", classi da " + (classProvider().isEmpty() ? "nessuno (blocco inattivo finché CastigoBellica o MMOCore non sono attivi)" : classProvider());
+					+ (mmoItemsRequiredClass ? "si" : "no") + ", tier " + (tiersEnabled ? tiers.size() + " requisiti" : "spento") + ", spell per blocco " + spellBlocks.size() + ", regole spell " + spellRules.size() + ", classi da " + (classProvider().isEmpty() ? "nessuno (blocco inattivo finché CastigoBellica o MMOCore non sono attivi)" : classProvider());
 			RpgBridgeMod.LOGGER.info("[ClassLock] {} ({})", summary, file);
 			return summary;
 		} catch (IOException | RuntimeException e) {
@@ -305,31 +331,62 @@ public final class ClassLock {
 		return hasPermission(player, BYPASS_PERMISSION, "Ignora il blocco degli oggetti per classe di RPG Bridge");
 	}
 
-	/** Blocco minimo per la spell (sezione "spell" di classi.yml), 1 se non elencata. */
+	/** Prima regola della sezione "spell.regole" che corrisponde alla spell, oppure null. */
+	static SpellRule spellRule(String spellId) {
+		if (!loaded) reload();
+		if (spellId == null) return null;
+		for (SpellRule rule : spellRules) for (Pattern p : rule.spells()) if (p.matcher(spellId).matches()) return rule;
+		return null;
+	}
+
+	/** Blocco minimo per la spell: dalla regola, altrimenti da "spell.blocchi"; 1 se non elencata. */
 	public static int spellBlock(String spellId) {
 		if (!loaded) reload();
+		SpellRule rule = spellRule(spellId);
+		if (rule != null) return rule.block();
 		return spellId == null ? 1 : spellBlocks.getOrDefault(spellId.toLowerCase(Locale.ROOT), 1);
 	}
 
-	/** Spell da apprendere per blocco: lanciabile solo col blocco (sigillo) richiesto. Senza CastigoBellica sempre ammessa. */
-	public static boolean spellAllowed(ServerPlayer player, String spellId) {
+	/**
+	 * Motivo per cui il giocatore non può lanciare la spell (testo per la barra delle azioni), oppure null se può:
+	 * spell vietata, classe non ammessa, blocco (sigillo) non raggiunto. Senza CastigoBellica restano solo i divieti.
+	 */
+	static String spellDenial(ServerPlayer player, String spellId) {
 		if (!loaded) reload();
-		if (!enabled || EXEMPT.contains(player.getUUID())) return true;
+		if (!enabled || EXEMPT.contains(player.getUUID())) return null;
+		SpellRule rule = spellRule(spellId);
+		if (rule != null && rule.forbidden()) return spellForbiddenMessage;
+		if (rule != null && !rule.classes().isEmpty()) {
+			String[] own = playerClass(player.getUUID());
+			if (own != null) {
+				boolean ok = false;
+				for (String c : rule.classes()) for (String o : own) if (o != null && normalize(o).equals(normalize(c))) ok = true;
+				if (!ok) return spellClassMessage.replace("{classi}", String.join(", ", rule.classes()));
+			}
+		}
 		int need = spellBlock(spellId);
-		if (need <= 1) return true;
-		int[] progress = castigoProgress(player.getUUID());
-		if (progress == null || progress[0] >= need) return true;
+		if (need > 1) {
+			int[] progress = castigoProgress(player.getUUID());
+			if (progress != null && progress[0] < need) return spellMessage.replace("{requisito}", requirementText(new TierRequirement(need, 1)));
+		}
+		return null;
+	}
+
+	/** Spell consentita: nessun divieto, classe ammessa e blocco raggiunto (o permesso di bypass). */
+	public static boolean spellAllowed(ServerPlayer player, String spellId) {
+		if (spellDenial(player, spellId) == null) return true;
 		return hasPermission(player, BYPASS_PERMISSION, "Ignora il blocco degli oggetti per classe di RPG Bridge");
 	}
 
 	/** Avviso nella barra delle azioni per una spell non ancora consentita. */
 	public static void notifySpell(ServerPlayer player, String spellId) {
 		long now = System.currentTimeMillis();
-		if (Boolean.getBoolean("rpgbridge.debugClassLock")) RpgBridgeMod.LOGGER.info("[ClassLock] spell {} bloccata per {} (serve blocco {})", spellId, player.getName().getString(), spellBlock(spellId));
+		String reason = spellDenial(player, spellId);
+		if (Boolean.getBoolean("rpgbridge.debugClassLock")) RpgBridgeMod.LOGGER.info("[ClassLock] spell {} bloccata per {}: {}", spellId, player.getName().getString(), reason);
 		Long last = LAST_MESSAGE.get(player.getUUID());
 		if (last != null && now - last < 1000) return;
 		LAST_MESSAGE.put(player.getUUID(), now);
-		String text = spellMessage.replace("{requisito}", requirementText(new TierRequirement(spellBlock(spellId), 1)));
+		String text = reason == null ? spellMessage.replace("{requisito}", requirementText(new TierRequirement(spellBlock(spellId), 1))) : reason;
 		var server = player.level().getServer();
 		Runnable send = () -> player.sendOverlayMessage(Component.literal(text));
 		if (server.isSameThread()) send.run();

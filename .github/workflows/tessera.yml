@@ -1,0 +1,30 @@
+name: Tessera build
+
+on:
+  push:
+    paths: ['tessera/**', '.github/workflows/tessera.yml']
+  pull_request:
+    paths: ['tessera/**', '.github/workflows/tessera.yml']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tessera
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew build --no-daemon
+      - name: Smoke test su server 26.2 reale
+        run: ./scripts/smoke-test.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tessera
+          path: |
+            tessera/tessera-launcher/build/libs/*.jar
+            tessera/test-plugin/build/libs/*.jar

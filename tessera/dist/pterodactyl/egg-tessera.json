@@ -1,0 +1,56 @@
+{
+  "_comment": "Egg Tessera per Pterodactyl / Pelican. Importalo da Admin > Nests/Eggs > Import.",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-11-23T00:00:00+00:00",
+  "name": "Tessera (Fabric + Bukkit) 26.2",
+  "author": "tessera@example.invalid",
+  "description": "Server Minecraft 26.2 ibrido: mod Fabric in mods/ e plugin Bukkit/Paper in plugins/ (prototipo Tessera).",
+  "features": [
+    "eula",
+    "java_version",
+    "pid_limit"
+  ],
+  "docker_images": {
+    "Java 25": "ghcr.io/pterodactyl/yolks:java_25"
+  },
+  "file_denylist": [],
+  "startup": "TESSERA_MEMORY_MAX=$(({{SERVER_MEMORY}}*85/100))M TESSERA_AUTO_RESTART=false java -Xms64M -Xmx256M -jar tessera-launcher.jar",
+  "config": {
+    "files": "{\"server.properties\": {\"parser\": \"properties\", \"find\": {\"server-ip\": \"0.0.0.0\", \"server-port\": \"{{server.build.default.port}}\", \"query.port\": \"{{server.build.default.port}}\"}}}",
+    "startup": "{\"done\": \")! For help, type \"}",
+    "logs": "{}",
+    "stop": "stop"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Installazione Tessera: scarica il launcher e prepara i file (server vanilla, Fabric, mod Tessera).\nset -e\napt-get update -qq && apt-get install -y -qq curl ca-certificates > /dev/null\nmkdir -p /mnt/server && cd /mnt/server\nif [ -z \"${LAUNCHER_URL}\" ]; then\n  echo \"Imposta la variabile LAUNCHER_URL (URL del file tessera-launcher.jar) oppure carica il jar a mano.\"\n  exit 0\nfi\ncurl -fsSL -o tessera-launcher.jar \"${LAUNCHER_URL}\"\necho \"Launcher scaricato. Il primo avvio scaricherà Minecraft 26.2, Fabric Loader e Fabric API.\"\n",
+      "container": "ghcr.io/pterodactyl/installers:debian",
+      "entrypoint": "bash"
+    }
+  },
+  "variables": [
+    {
+      "name": "URL del launcher",
+      "description": "URL diretto di tessera-launcher.jar (es. l'asset di una release GitHub).",
+      "env_variable": "LAUNCHER_URL",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string",
+      "field_type": "text"
+    },
+    {
+      "name": "Accetta EULA",
+      "description": "true se accetti la EULA di Minecraft (https://aka.ms/MinecraftEULA).",
+      "env_variable": "TESSERA_EULA",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|in:true,false",
+      "field_type": "text"
+    }
+  ]
+}

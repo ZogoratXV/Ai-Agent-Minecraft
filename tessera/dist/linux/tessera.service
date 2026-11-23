@@ -1,0 +1,25 @@
+# Servizio systemd per Tessera.
+# 1. Copia la cartella del server in /opt/tessera e crea l'utente:  sudo useradd -r -d /opt/tessera minecraft
+# 2. sudo cp tessera.service /etc/systemd/system/ && sudo systemctl daemon-reload
+# 3. sudo systemctl enable --now tessera     (log: journalctl -u tessera -f)
+# La console si usa con un plugin/mod RCON oppure avviando a mano con ./start.sh dentro tmux/screen.
+[Unit]
+Description=Tessera - server Minecraft 26.2 con mod Fabric e plugin Bukkit
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=minecraft
+WorkingDirectory=/opt/tessera
+# systemd gestisce già i riavvii: disattiviamo quelli del launcher.
+Environment=TESSERA_AUTO_RESTART=false
+ExecStart=/usr/bin/java -Xmx256M -jar /opt/tessera/tessera-launcher.jar --accept-eula
+# SIGTERM -> il launcher ferma il server, che salva i mondi.
+KillSignal=SIGTERM
+TimeoutStopSec=120
+Restart=on-failure
+RestartSec=15
+StandardInput=null
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,28 @@
+plugins { id 'java' }
+
+evaluationDependsOn(':tessera-core')
+
+def coreJar = project(':tessera-core').tasks.named('jar')
+
+processResources {
+    def props = [
+        version         : project.version,
+        minecraftVersion: rootProject.minecraft_version,
+        loaderVersion   : rootProject.loader_version,
+        fabricApiVersion: rootProject.fabric_api_version,
+    ]
+    inputs.properties(props)
+    filesMatching('launcher-defaults.properties') { expand(props) }
+    // La mod Tessera viaggia dentro il launcher e viene copiata in mods/ a ogni avvio.
+    from(coreJar) {
+        into 'tessera'
+        rename { 'tessera-core.jar' }
+    }
+}
+
+jar {
+    archiveFileName = "tessera-launcher-${project.version}.jar"
+    manifest {
+        attributes('Main-Class': 'dev.tessera.launcher.Main', 'Implementation-Version': project.version)
+    }
+}

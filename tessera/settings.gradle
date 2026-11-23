@@ -1,0 +1,16 @@
+pluginManagement {
+    repositories {
+        maven { name = 'Fabric'; url = 'https://maven.fabricmc.net/' }
+        // Mirror di Maven Central (Central applica rate limit aggressivi su IP condivisi)
+        maven { name = 'PaperMC'; url = 'https://repo.papermc.io/repository/maven-public/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'tessera'
+
+include 'tessera-stubgen'
+include 'tessera-core'
+include 'tessera-launcher'
+include 'test-plugin'

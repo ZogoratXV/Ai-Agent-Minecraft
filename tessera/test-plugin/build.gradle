@@ -1,0 +1,9 @@
+plugins { id 'java' }
+
+dependencies { compileOnly "io.papermc.paper:paper-api:${paper_api_version}" }
+
+processResources {
+    def version = project.version
+    inputs.property 'version', version
+    filesMatching('plugin.yml') { expand 'version': version }
+}

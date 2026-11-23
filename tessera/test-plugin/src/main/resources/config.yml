@@ -1,0 +1,3 @@
+# Configurazione di esempio: viene copiata in plugins/TesseraTest/config.yml
+greeting: "&aCiao &e%player%&a, benvenuto su un server Tessera!"
+protect-bedrock: true

@@ -1,0 +1,19 @@
+subprojects {
+    group = rootProject.group
+    version = rootProject.tessera_version
+
+    repositories {
+        maven { name = 'PaperMC'; url = 'https://repo.papermc.io/repository/maven-public/' }
+        mavenCentral()
+    }
+
+    plugins.withType(JavaPlugin).configureEach {
+        java {
+            toolchain { languageVersion = JavaLanguageVersion.of(25) }
+        }
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = 'UTF-8'
+            options.release = 25
+        }
+    }
+}

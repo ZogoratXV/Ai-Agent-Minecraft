@@ -1,0 +1,19 @@
+# Interfacce Bukkit/Paper per cui viene generata una classe dev.tessera.stub.Stub<Nome>.
+# Le implementazioni in dev.tessera.bukkit estendono questi stub.
+org.bukkit.Server
+org.bukkit.UnsafeValues
+org.bukkit.World
+org.bukkit.block.Block
+org.bukkit.entity.Player
+org.bukkit.command.ConsoleCommandSender
+org.bukkit.plugin.PluginManager
+org.bukkit.plugin.PluginLoader
+org.bukkit.scheduler.BukkitScheduler
+org.bukkit.scheduler.BukkitTask
+io.papermc.paper.InternalAPIBridge
+io.papermc.paper.ServerBuildInfo
+io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager
+io.papermc.paper.registry.RegistryAccess
+org.bukkit.block.BlockState
+org.bukkit.block.BlockType
+org.bukkit.inventory.ItemType

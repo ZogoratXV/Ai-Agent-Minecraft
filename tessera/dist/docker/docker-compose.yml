@@ -1,0 +1,20 @@
+# docker compose -f dist/docker/docker-compose.yml up -d   (dalla cartella tessera/, dopo ./gradlew build)
+# Console: docker attach tessera   (staccarsi con Ctrl+P, Ctrl+Q)
+services:
+  tessera:
+    build:
+      context: ../..
+      dockerfile: dist/docker/Dockerfile
+    image: tessera:26.2
+    container_name: tessera
+    ports:
+      - "25565:25565"
+    environment:
+      TESSERA_EULA: "true"          # accetti la EULA di Minecraft: https://aka.ms/MinecraftEULA
+      TESSERA_MEMORY_MAX: "4G"
+    volumes:
+      - ./data:/data                # mods/, plugins/, mondi, config
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    stop_grace_period: 2m

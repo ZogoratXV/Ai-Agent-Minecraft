@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.tessera.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "server": [
+    "BlockItemMixin",
+    "PlayerListMixin",
+    "ServerGamePacketListenerImplMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

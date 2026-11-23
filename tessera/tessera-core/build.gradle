@@ -1,0 +1,64 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+base { archivesName = 'tessera-core' }
+
+configurations {
+    stubgen
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+    implementation("io.papermc.paper:paper-api:${paper_api_version}") { transitive = false }
+    include("io.papermc.paper:paper-api:${paper_api_version}") { transitive = false }
+
+    stubgen project(':tessera-stubgen')
+    stubgen "io.papermc.paper:paper-api:${paper_api_version}"
+}
+
+// Librerie runtime dell'API Paper che Minecraft 26.2 NON contiene già (guava, gson, fastutil,
+// joml, log4j, slf4j e brigadier arrivano dal server vanilla). Vengono annidate nel jar.
+def adventure = '5.2.0'
+[
+    "net.kyori:adventure-api:${adventure}", "net.kyori:adventure-key:${adventure}",
+    "net.kyori:adventure-text-minimessage:${adventure}", "net.kyori:adventure-text-serializer-gson:${adventure}",
+    "net.kyori:adventure-text-serializer-json:${adventure}", "net.kyori:adventure-text-serializer-legacy:${adventure}",
+    "net.kyori:adventure-text-serializer-plain:${adventure}", "net.kyori:adventure-text-logger-slf4j:${adventure}",
+    'net.kyori:option:1.1.0', 'org.yaml:snakeyaml:2.2', 'net.md-5:bungeecord-chat:1.21-R0.2-deprecated+build.21',
+].each { lib ->
+    dependencies.add('implementation', lib) { transitive = false }
+    dependencies.add('include', lib) { transitive = false }
+}
+dependencies.add('compileOnly', 'org.jetbrains:annotations:26.1.0')
+
+// Genera le classi "Stub*" che implementano le interfacce Bukkit con metodi di ripiego,
+// così le implementazioni reali sovrascrivono solo ciò che Tessera supporta.
+def stubOut = layout.buildDirectory.dir('generated/sources/stubs/java')
+tasks.register('generateStubs', JavaExec) {
+    classpath = configurations.stubgen
+    mainClass = 'dev.tessera.stubgen.StubGenerator'
+    def listFile = file('stubs.txt')
+    inputs.file(listFile)
+    inputs.files(configurations.stubgen)
+    outputs.dir(stubOut)
+    args stubOut.get().asFile.absolutePath, listFile.absolutePath
+}
+sourceSets.main.java.srcDir(stubOut)
+tasks.named('compileJava') {
+    dependsOn 'generateStubs'
+    options.compilerArgs += ['-Xlint:-unchecked', '-Xlint:-deprecation', '-Xlint:-removal']
+}
+
+processResources {
+    def version = project.version
+    inputs.property 'version', version
+    filesMatching('fabric.mod.json') { expand 'version': version }
+}
+
+jar {
+    manifest { attributes('Implementation-Title': 'Tessera', 'Implementation-Version': project.version) }
+}

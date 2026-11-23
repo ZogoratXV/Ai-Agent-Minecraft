@@ -1,0 +1,18 @@
+name: TesseraTest
+version: '${version}'
+main: dev.tessera.testplugin.TesseraTestPlugin
+api-version: '26.2'
+description: Plugin di prova per verificare il layer Bukkit di Tessera
+author: Tessera contributors
+commands:
+  hello:
+    description: Saluta e mostra informazioni sul server
+    usage: /<command> [nome]
+    aliases: [ciao]
+  tesseratest:
+    description: Esegue i controlli automatici dell'API
+    permission: tesseratest.admin
+permissions:
+  tesseratest.admin:
+    description: Accesso ai comandi di test
+    default: op
